@@ -3,7 +3,7 @@ import pathlib
 
 ns = {}
 src = pathlib.Path(__file__).parent / "src"
-exec("import json\nimport re\nDATA_JSON = " + repr((src / "semconv.json").read_text()) + "\n" + (src / "grader.py").read_text(), ns)
+exec("import json\nimport re\nDATA_JSON = " + repr((src / "semconv.json").read_text()) + "\nRELEASES_JSON = " + repr((src / "release-dates.json").read_text()) + "\n" + (src / "grader.py").read_text(), ns)
 audit = ns["audit"]
 
 
@@ -38,3 +38,14 @@ assert got["invented"] == ["db.client.connections.in_use"] and not got["unit_err
 got = audit('span.set_attribute("http.request.method", m)  # custom: "orders.total"')
 assert got["invented"] == [], got
 print("invented-name checks passed")
+
+assert audit('span.set_attribute("http.method", m)')["retired_since"]["http.method"] == {"release": "v1.21.0", "date": "2023-07-13"}
+print("retirement dates attached")
+got = audit('<think>The old key was "http.method", now http.request.method.</think>\n```python\nspan.set_attribute("http.request.method", m)\n```')
+assert got["retired"] == [] and "http.request.method" in got["current"], got
+print("thinking is ignored")
+got = audit('```python\nfrom opentelemetry.semconv._incubating.attributes.cloud_attributes import (\n    CLOUD_PLATFORM,\n    CLOUD_PROVIDER,\n)\n\nr = Resource.create({CLOUD_PROVIDER: "azure", CLOUD_PLATFORM: "azure.vm"})\n```')
+assert {"cloud.platform", "cloud.provider"} <= set(got["current"]), got
+got = audit('```python\nfrom opentelemetry.semconv.trace import SpanAttributes\nfrom opentelemetry.semconv.attributes.http_attributes import HTTP_REQUEST_METHOD\n\nspan.set_attribute(HTTP_REQUEST_METHOD, "GET")\n```')
+assert "http.request.method" in got["current"], got
+print("bare semconv constants recognised")

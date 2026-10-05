@@ -1,0 +1,1651 @@
+{
+  "taskVersion": {
+    "versionNumber": 1,
+    "name": "Semconv Drift: Know",
+    "description": "22 questions on what replaced a retired OpenTelemetry name, including span kind, unit changes, silent drops and two unchanged controls.",
+    "definition": "@kbench.task(\n    name=\"Semconv Drift: Know\",\n    description=\"22 questions on what replaced a retired OpenTelemetry name, including span kind, unit changes, silent drops and two unchanged controls.\",\n)\ndef semconv_know(llm) -> float:\n    df = pd.DataFrame([{\"qid\": q, \"question\": t, \"gold\": g, \"unit\": u} for q, t, g, u in QUESTIONS])\n    runs = know_one.evaluate(\n        llm=[llm],\n        evaluation_data=df,\n        stop_condition=lambda runs: len(runs) == len(df),\n        max_attempts=2,\n        n_jobs=6,\n        timeout=120,\n        on_failure=\"continue\",\n        remove_run_files=True,\n    )\n    rows = [r.result for r in runs if isinstance(getattr(r, \"result\", None), dict)]\n    wrong = [r[\"id\"] for r in rows if not r[\"correct\"]]\n    kbench.assertions.assert_true(not wrong, expectation=\"All answers correct (wrong: \" + \", \".join(wrong) + \")\")\n    return round(sum(r[\"correct\"] for r in rows) / len(QUESTIONS), 4)\n"
+  },
+  "modelVersion": {
+    "slug": "google/gemini-3.1-flash-lite-preview"
+  },
+  "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+  "startTime": "2026-10-04T12:03:16.838069Z",
+  "endTime": "2026-10-04T12:03:21.258312Z",
+  "conversations": [
+    {
+      "id": "Semconv Drift: Know-6af8508a",
+      "metrics": {},
+      "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+    }
+  ],
+  "results": [
+    {
+      "type": "AGGREGATED",
+      "numericResult": {
+        "value": 0.5
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "expectation": "All answers correct (wrong: server_peer, server_peer_port, status, target, db_system, lineno, peer_service, kafka_offset, resend, pool_use_time, rpc_duration)",
+      "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_FAILED",
+      "lineNumber": 247,
+      "definition": "kbench.assertions.assert_true(not wrong, expectation=\"All answers correct (wrong: \" + \", \".join(wrong) + \")\")",
+      "conversationRequestIds": [
+        {
+          "conversationId": "Semconv Drift: Know-6af8508a"
+        }
+      ]
+    }
+  ],
+  "subruns": [
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Know One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:\n    answer = llm.prompt(f\"{question}\\n\\n{INSTRUCTIONS}\", schema=Answer)\n    given = _names(answer.current_name)\n    expected = sorted({n for g in gold for n in _names(g)})\n    name_ok = given == expected\n    unit_ok = (answer.unit or \"\").strip().lower() == unit\n    retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821\n    return {\n        \"id\": qid,\n        \"given\": answer.current_name,\n        \"unit\": answer.unit,\n        \"correct\": name_ok and unit_ok,\n        \"answered_with_retired_name\": bool(retired_answer),\n        \"control\": qid.startswith(\"control_\"),\n    }\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:03:16.849409Z",
+      "endTime": "2026-10-04T12:03:18.185083Z",
+      "conversations": [
+        {
+          "id": "Know One-93dcaa50",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "On an HTTP server span, which attribute replaces net.peer.name?\n\nAnswer for the current OpenTelemetry semantic conventions (v1.44.0). In current_name, give the name to use today; if it has not changed, repeat it; if two names replace it, give both separated by ' and '. In unit, give the UCUM unit for metrics (for example s or ms) and an empty string otherwise."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "\"{\\\"current_name\\\": \\\"server.address\\\", \\\"unit\\\": \\\"\\\"}\""
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 91,
+                "outputTokens": 21,
+                "inputTokensCostNanodollars": "22750",
+                "outputTokensCostNanodollars": "31500",
+                "totalBackendLatencyMs": "413"
+              },
+              "id": "Know One-93dcaa50-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 91,
+            "outputTokens": 21,
+            "inputTokensCostNanodollars": "22750",
+            "outputTokensCostNanodollars": "31500",
+            "totalBackendLatencyMs": "413"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "answered_with_retired_name": false,
+            "given": "server.address",
+            "id": "server_peer",
+            "unit": "",
+            "correct": false,
+            "control": false
+          }
+        }
+      ],
+      "pyRunId": "Know One-Run #6"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Know One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:\n    answer = llm.prompt(f\"{question}\\n\\n{INSTRUCTIONS}\", schema=Answer)\n    given = _names(answer.current_name)\n    expected = sorted({n for g in gold for n in _names(g)})\n    name_ok = given == expected\n    unit_ok = (answer.unit or \"\").strip().lower() == unit\n    retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821\n    return {\n        \"id\": qid,\n        \"given\": answer.current_name,\n        \"unit\": answer.unit,\n        \"correct\": name_ok and unit_ok,\n        \"answered_with_retired_name\": bool(retired_answer),\n        \"control\": qid.startswith(\"control_\"),\n    }\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:03:16.849294Z",
+      "endTime": "2026-10-04T12:03:18.237250Z",
+      "conversations": [
+        {
+          "id": "Know One-076bbdb9",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "On an HTTP server span, which attribute replaces net.peer.port?\n\nAnswer for the current OpenTelemetry semantic conventions (v1.44.0). In current_name, give the name to use today; if it has not changed, repeat it; if two names replace it, give both separated by ' and '. In unit, give the UCUM unit for metrics (for example s or ms) and an empty string otherwise."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "\"{\\\"current_name\\\": \\\"server.port\\\", \\\"unit\\\": \\\"1\\\"}\""
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 91,
+                "outputTokens": 16,
+                "inputTokensCostNanodollars": "22750",
+                "outputTokensCostNanodollars": "24000",
+                "totalBackendLatencyMs": "462"
+              },
+              "id": "Know One-076bbdb9-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 91,
+            "outputTokens": 16,
+            "inputTokensCostNanodollars": "22750",
+            "outputTokensCostNanodollars": "24000",
+            "totalBackendLatencyMs": "462"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "answered_with_retired_name": false,
+            "given": "server.port",
+            "id": "server_peer_port",
+            "unit": "1",
+            "correct": false,
+            "control": false
+          }
+        }
+      ],
+      "pyRunId": "Know One-Run #4"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Know One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:\n    answer = llm.prompt(f\"{question}\\n\\n{INSTRUCTIONS}\", schema=Answer)\n    given = _names(answer.current_name)\n    expected = sorted({n for g in gold for n in _names(g)})\n    name_ok = given == expected\n    unit_ok = (answer.unit or \"\").strip().lower() == unit\n    retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821\n    return {\n        \"id\": qid,\n        \"given\": answer.current_name,\n        \"unit\": answer.unit,\n        \"correct\": name_ok and unit_ok,\n        \"answered_with_retired_name\": bool(retired_answer),\n        \"control\": qid.startswith(\"control_\"),\n    }\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:03:16.849351Z",
+      "endTime": "2026-10-04T12:03:18.248026Z",
+      "conversations": [
+        {
+          "id": "Know One-b140e8b5",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Which attribute replaces http.url?\n\nAnswer for the current OpenTelemetry semantic conventions (v1.44.0). In current_name, give the name to use today; if it has not changed, repeat it; if two names replace it, give both separated by ' and '. In unit, give the UCUM unit for metrics (for example s or ms) and an empty string otherwise."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "\"{\\\"current_name\\\": \\\"url.full\\\", \\\"unit\\\": \\\"\\\"}\""
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 83,
+                "outputTokens": 14,
+                "inputTokensCostNanodollars": "20750",
+                "outputTokensCostNanodollars": "21000",
+                "totalBackendLatencyMs": "501"
+              },
+              "id": "Know One-b140e8b5-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 83,
+            "outputTokens": 14,
+            "inputTokensCostNanodollars": "20750",
+            "outputTokensCostNanodollars": "21000",
+            "totalBackendLatencyMs": "501"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "answered_with_retired_name": false,
+            "given": "url.full",
+            "id": "url",
+            "unit": "",
+            "correct": true,
+            "control": false
+          }
+        }
+      ],
+      "pyRunId": "Know One-Run #5"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Know One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:\n    answer = llm.prompt(f\"{question}\\n\\n{INSTRUCTIONS}\", schema=Answer)\n    given = _names(answer.current_name)\n    expected = sorted({n for g in gold for n in _names(g)})\n    name_ok = given == expected\n    unit_ok = (answer.unit or \"\").strip().lower() == unit\n    retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821\n    return {\n        \"id\": qid,\n        \"given\": answer.current_name,\n        \"unit\": answer.unit,\n        \"correct\": name_ok and unit_ok,\n        \"answered_with_retired_name\": bool(retired_answer),\n        \"control\": qid.startswith(\"control_\"),\n    }\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:03:16.849153Z",
+      "endTime": "2026-10-04T12:03:18.257954Z",
+      "conversations": [
+        {
+          "id": "Know One-1bb5b2dc",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "On an HTTP client span, which attribute replaces net.peer.name?\n\nAnswer for the current OpenTelemetry semantic conventions (v1.44.0). In current_name, give the name to use today; if it has not changed, repeat it; if two names replace it, give both separated by ' and '. In unit, give the UCUM unit for metrics (for example s or ms) and an empty string otherwise."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "\"{\\\"current_name\\\": \\\"server.address\\\", \\\"unit\\\": \\\"\\\"}\""
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 91,
+                "outputTokens": 21,
+                "inputTokensCostNanodollars": "22750",
+                "outputTokensCostNanodollars": "31500",
+                "totalBackendLatencyMs": "544"
+              },
+              "id": "Know One-1bb5b2dc-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 91,
+            "outputTokens": 21,
+            "inputTokensCostNanodollars": "22750",
+            "outputTokensCostNanodollars": "31500",
+            "totalBackendLatencyMs": "544"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "answered_with_retired_name": false,
+            "given": "server.address",
+            "id": "client_peer",
+            "unit": "",
+            "correct": true,
+            "control": false
+          }
+        }
+      ],
+      "pyRunId": "Know One-Run #2"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Know One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:\n    answer = llm.prompt(f\"{question}\\n\\n{INSTRUCTIONS}\", schema=Answer)\n    given = _names(answer.current_name)\n    expected = sorted({n for g in gold for n in _names(g)})\n    name_ok = given == expected\n    unit_ok = (answer.unit or \"\").strip().lower() == unit\n    retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821\n    return {\n        \"id\": qid,\n        \"given\": answer.current_name,\n        \"unit\": answer.unit,\n        \"correct\": name_ok and unit_ok,\n        \"answered_with_retired_name\": bool(retired_answer),\n        \"control\": qid.startswith(\"control_\"),\n    }\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:03:16.849224Z",
+      "endTime": "2026-10-04T12:03:18.347886Z",
+      "conversations": [
+        {
+          "id": "Know One-63f13d0e",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Which attribute replaces http.method?\n\nAnswer for the current OpenTelemetry semantic conventions (v1.44.0). In current_name, give the name to use today; if it has not changed, repeat it; if two names replace it, give both separated by ' and '. In unit, give the UCUM unit for metrics (for example s or ms) and an empty string otherwise."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "\"{\\\"current_name\\\": \\\"http.request.method\\\", \\\"unit\\\": \\\"\\\"}\""
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 83,
+                "outputTokens": 23,
+                "inputTokensCostNanodollars": "20750",
+                "outputTokensCostNanodollars": "34500",
+                "totalBackendLatencyMs": "556"
+              },
+              "id": "Know One-63f13d0e-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 83,
+            "outputTokens": 23,
+            "inputTokensCostNanodollars": "20750",
+            "outputTokensCostNanodollars": "34500",
+            "totalBackendLatencyMs": "556"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "answered_with_retired_name": false,
+            "given": "http.request.method",
+            "id": "method",
+            "unit": "",
+            "correct": true,
+            "control": false
+          }
+        }
+      ],
+      "pyRunId": "Know One-Run #3"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Know One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:\n    answer = llm.prompt(f\"{question}\\n\\n{INSTRUCTIONS}\", schema=Answer)\n    given = _names(answer.current_name)\n    expected = sorted({n for g in gold for n in _names(g)})\n    name_ok = given == expected\n    unit_ok = (answer.unit or \"\").strip().lower() == unit\n    retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821\n    return {\n        \"id\": qid,\n        \"given\": answer.current_name,\n        \"unit\": answer.unit,\n        \"correct\": name_ok and unit_ok,\n        \"answered_with_retired_name\": bool(retired_answer),\n        \"control\": qid.startswith(\"control_\"),\n    }\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:03:16.849022Z",
+      "endTime": "2026-10-04T12:03:18.403845Z",
+      "conversations": [
+        {
+          "id": "Know One-9b102a2f",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Which attribute replaces http.status_code?\n\nAnswer for the current OpenTelemetry semantic conventions (v1.44.0). In current_name, give the name to use today; if it has not changed, repeat it; if two names replace it, give both separated by ' and '. In unit, give the UCUM unit for metrics (for example s or ms) and an empty string otherwise."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "\"{\\\"current_name\\\": \\\"http.response.status_code\\\", \\\"unit\\\": \\\" : \\\"}\""
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 85,
+                "outputTokens": 23,
+                "inputTokensCostNanodollars": "21250",
+                "outputTokensCostNanodollars": "34500",
+                "totalBackendLatencyMs": "600"
+              },
+              "id": "Know One-9b102a2f-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 85,
+            "outputTokens": 23,
+            "inputTokensCostNanodollars": "21250",
+            "outputTokensCostNanodollars": "34500",
+            "totalBackendLatencyMs": "600"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "answered_with_retired_name": false,
+            "given": "http.response.status_code",
+            "id": "status",
+            "unit": " : ",
+            "correct": false,
+            "control": false
+          }
+        }
+      ],
+      "pyRunId": "Know One-Run #1"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Know One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:\n    answer = llm.prompt(f\"{question}\\n\\n{INSTRUCTIONS}\", schema=Answer)\n    given = _names(answer.current_name)\n    expected = sorted({n for g in gold for n in _names(g)})\n    name_ok = given == expected\n    unit_ok = (answer.unit or \"\").strip().lower() == unit\n    retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821\n    return {\n        \"id\": qid,\n        \"given\": answer.current_name,\n        \"unit\": answer.unit,\n        \"correct\": name_ok and unit_ok,\n        \"answered_with_retired_name\": bool(retired_answer),\n        \"control\": qid.startswith(\"control_\"),\n    }\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:03:18.190071Z",
+      "endTime": "2026-10-04T12:03:18.969923Z",
+      "conversations": [
+        {
+          "id": "Know One-e2185961",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Which attributes replace http.target?\n\nAnswer for the current OpenTelemetry semantic conventions (v1.44.0). In current_name, give the name to use today; if it has not changed, repeat it; if two names replace it, give both separated by ' and '. In unit, give the UCUM unit for metrics (for example s or ms) and an empty string otherwise."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "\"{\\\"current_name\\\": \\\"http.request.path and http.request.fragment\\\", \\\"unit\\\": \\\"\\\"}\""
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 83,
+                "outputTokens": 29,
+                "inputTokensCostNanodollars": "20750",
+                "outputTokensCostNanodollars": "43500",
+                "totalBackendLatencyMs": "427"
+              },
+              "id": "Know One-e2185961-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 83,
+            "outputTokens": 29,
+            "inputTokensCostNanodollars": "20750",
+            "outputTokensCostNanodollars": "43500",
+            "totalBackendLatencyMs": "427"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "answered_with_retired_name": false,
+            "given": "http.request.path and http.request.fragment",
+            "id": "target",
+            "unit": "",
+            "correct": false,
+            "control": false
+          }
+        }
+      ],
+      "pyRunId": "Know One-Run #7"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Know One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:\n    answer = llm.prompt(f\"{question}\\n\\n{INSTRUCTIONS}\", schema=Answer)\n    given = _names(answer.current_name)\n    expected = sorted({n for g in gold for n in _names(g)})\n    name_ok = given == expected\n    unit_ok = (answer.unit or \"\").strip().lower() == unit\n    retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821\n    return {\n        \"id\": qid,\n        \"given\": answer.current_name,\n        \"unit\": answer.unit,\n        \"correct\": name_ok and unit_ok,\n        \"answered_with_retired_name\": bool(retired_answer),\n        \"control\": qid.startswith(\"control_\"),\n    }\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:03:18.259808Z",
+      "endTime": "2026-10-04T12:03:19.051533Z",
+      "conversations": [
+        {
+          "id": "Know One-99f39f4c",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Which attribute replaces db.system?\n\nAnswer for the current OpenTelemetry semantic conventions (v1.44.0). In current_name, give the name to use today; if it has not changed, repeat it; if two names replace it, give both separated by ' and '. In unit, give the UCUM unit for metrics (for example s or ms) and an empty string otherwise."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "\"{\\\"current_name\\\": \\\"db.system\\\", \\\"unit\\\": \\\"\\\"}\""
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 83,
+                "outputTokens": 14,
+                "inputTokensCostNanodollars": "20750",
+                "outputTokensCostNanodollars": "21000",
+                "totalBackendLatencyMs": "470"
+              },
+              "id": "Know One-99f39f4c-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 83,
+            "outputTokens": 14,
+            "inputTokensCostNanodollars": "20750",
+            "outputTokensCostNanodollars": "21000",
+            "totalBackendLatencyMs": "470"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "answered_with_retired_name": true,
+            "given": "db.system",
+            "id": "db_system",
+            "unit": "",
+            "correct": false,
+            "control": false
+          }
+        }
+      ],
+      "pyRunId": "Know One-Run #10"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Know One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:\n    answer = llm.prompt(f\"{question}\\n\\n{INSTRUCTIONS}\", schema=Answer)\n    given = _names(answer.current_name)\n    expected = sorted({n for g in gold for n in _names(g)})\n    name_ok = given == expected\n    unit_ok = (answer.unit or \"\").strip().lower() == unit\n    retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821\n    return {\n        \"id\": qid,\n        \"given\": answer.current_name,\n        \"unit\": answer.unit,\n        \"correct\": name_ok and unit_ok,\n        \"answered_with_retired_name\": bool(retired_answer),\n        \"control\": qid.startswith(\"control_\"),\n    }\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:03:18.239508Z",
+      "endTime": "2026-10-04T12:03:19.104324Z",
+      "conversations": [
+        {
+          "id": "Know One-419606b4",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Which attribute replaces http.user_agent?\n\nAnswer for the current OpenTelemetry semantic conventions (v1.44.0). In current_name, give the name to use today; if it has not changed, repeat it; if two names replace it, give both separated by ' and '. In unit, give the UCUM unit for metrics (for example s or ms) and an empty string otherwise."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "\"{\\\"current_name\\\": \\\"user_agent.original\\\", \\\"unit\\\": \\\"\\\"}\""
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 85,
+                "outputTokens": 23,
+                "inputTokensCostNanodollars": "21250",
+                "outputTokensCostNanodollars": "34500",
+                "totalBackendLatencyMs": "530"
+              },
+              "id": "Know One-419606b4-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 85,
+            "outputTokens": 23,
+            "inputTokensCostNanodollars": "21250",
+            "outputTokensCostNanodollars": "34500",
+            "totalBackendLatencyMs": "530"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "answered_with_retired_name": false,
+            "given": "user_agent.original",
+            "id": "user_agent",
+            "unit": "",
+            "correct": true,
+            "control": false
+          }
+        }
+      ],
+      "pyRunId": "Know One-Run #8"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Know One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:\n    answer = llm.prompt(f\"{question}\\n\\n{INSTRUCTIONS}\", schema=Answer)\n    given = _names(answer.current_name)\n    expected = sorted({n for g in gold for n in _names(g)})\n    name_ok = given == expected\n    unit_ok = (answer.unit or \"\").strip().lower() == unit\n    retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821\n    return {\n        \"id\": qid,\n        \"given\": answer.current_name,\n        \"unit\": answer.unit,\n        \"correct\": name_ok and unit_ok,\n        \"answered_with_retired_name\": bool(retired_answer),\n        \"control\": qid.startswith(\"control_\"),\n    }\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:03:18.250186Z",
+      "endTime": "2026-10-04T12:03:19.147841Z",
+      "conversations": [
+        {
+          "id": "Know One-1b62856b",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Which attribute replaces db.statement?\n\nAnswer for the current OpenTelemetry semantic conventions (v1.44.0). In current_name, give the name to use today; if it has not changed, repeat it; if two names replace it, give both separated by ' and '. In unit, give the UCUM unit for metrics (for example s or ms) and an empty string otherwise."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "\"{\\\"current_name\\\": \\\"db.query.text\\\", \\\"unit\\\": \\\"\\\"}\""
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 83,
+                "outputTokens": 23,
+                "inputTokensCostNanodollars": "20750",
+                "outputTokensCostNanodollars": "34500",
+                "totalBackendLatencyMs": "559"
+              },
+              "id": "Know One-1b62856b-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 83,
+            "outputTokens": 23,
+            "inputTokensCostNanodollars": "20750",
+            "outputTokensCostNanodollars": "34500",
+            "totalBackendLatencyMs": "559"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "answered_with_retired_name": false,
+            "given": "db.query.text",
+            "id": "statement",
+            "unit": "",
+            "correct": true,
+            "control": false
+          }
+        }
+      ],
+      "pyRunId": "Know One-Run #9"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Know One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:\n    answer = llm.prompt(f\"{question}\\n\\n{INSTRUCTIONS}\", schema=Answer)\n    given = _names(answer.current_name)\n    expected = sorted({n for g in gold for n in _names(g)})\n    name_ok = given == expected\n    unit_ok = (answer.unit or \"\").strip().lower() == unit\n    retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821\n    return {\n        \"id\": qid,\n        \"given\": answer.current_name,\n        \"unit\": answer.unit,\n        \"correct\": name_ok and unit_ok,\n        \"answered_with_retired_name\": bool(retired_answer),\n        \"control\": qid.startswith(\"control_\"),\n    }\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:03:18.350196Z",
+      "endTime": "2026-10-04T12:03:19.308320Z",
+      "conversations": [
+        {
+          "id": "Know One-c0562c15",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Which attribute replaces db.operation?\n\nAnswer for the current OpenTelemetry semantic conventions (v1.44.0). In current_name, give the name to use today; if it has not changed, repeat it; if two names replace it, give both separated by ' and '. In unit, give the UCUM unit for metrics (for example s or ms) and an empty string otherwise."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "\"{\\\"current_name\\\": \\\"db.operation.name\\\", \\\"unit\\\": \\\"\\\"}\""
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 83,
+                "outputTokens": 23,
+                "inputTokensCostNanodollars": "20750",
+                "outputTokensCostNanodollars": "34500",
+                "totalBackendLatencyMs": "607"
+              },
+              "id": "Know One-c0562c15-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 83,
+            "outputTokens": 23,
+            "inputTokensCostNanodollars": "20750",
+            "outputTokensCostNanodollars": "34500",
+            "totalBackendLatencyMs": "607"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "answered_with_retired_name": false,
+            "given": "db.operation.name",
+            "id": "db_operation",
+            "unit": "",
+            "correct": true,
+            "control": false
+          }
+        }
+      ],
+      "pyRunId": "Know One-Run #11"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Know One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:\n    answer = llm.prompt(f\"{question}\\n\\n{INSTRUCTIONS}\", schema=Answer)\n    given = _names(answer.current_name)\n    expected = sorted({n for g in gold for n in _names(g)})\n    name_ok = given == expected\n    unit_ok = (answer.unit or \"\").strip().lower() == unit\n    retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821\n    return {\n        \"id\": qid,\n        \"given\": answer.current_name,\n        \"unit\": answer.unit,\n        \"correct\": name_ok and unit_ok,\n        \"answered_with_retired_name\": bool(retired_answer),\n        \"control\": qid.startswith(\"control_\"),\n    }\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:03:18.406149Z",
+      "endTime": "2026-10-04T12:03:19.383041Z",
+      "conversations": [
+        {
+          "id": "Know One-47e60ab6",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Which attribute replaces code.filepath?\n\nAnswer for the current OpenTelemetry semantic conventions (v1.44.0). In current_name, give the name to use today; if it has not changed, repeat it; if two names replace it, give both separated by ' and '. In unit, give the UCUM unit for metrics (for example s or ms) and an empty string otherwise."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "\"{\\\"current_name\\\": \\\"code.file.path\\\", \\\"unit\\\": \\\"\\\"}\""
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 83,
+                "outputTokens": 16,
+                "inputTokensCostNanodollars": "20750",
+                "outputTokensCostNanodollars": "24000",
+                "totalBackendLatencyMs": "622"
+              },
+              "id": "Know One-47e60ab6-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 83,
+            "outputTokens": 16,
+            "inputTokensCostNanodollars": "20750",
+            "outputTokensCostNanodollars": "24000",
+            "totalBackendLatencyMs": "622"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "answered_with_retired_name": false,
+            "given": "code.file.path",
+            "id": "filepath",
+            "unit": "",
+            "correct": true,
+            "control": false
+          }
+        }
+      ],
+      "pyRunId": "Know One-Run #12"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Know One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:\n    answer = llm.prompt(f\"{question}\\n\\n{INSTRUCTIONS}\", schema=Answer)\n    given = _names(answer.current_name)\n    expected = sorted({n for g in gold for n in _names(g)})\n    name_ok = given == expected\n    unit_ok = (answer.unit or \"\").strip().lower() == unit\n    retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821\n    return {\n        \"id\": qid,\n        \"given\": answer.current_name,\n        \"unit\": answer.unit,\n        \"correct\": name_ok and unit_ok,\n        \"answered_with_retired_name\": bool(retired_answer),\n        \"control\": qid.startswith(\"control_\"),\n    }\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:03:18.974220Z",
+      "endTime": "2026-10-04T12:03:19.745527Z",
+      "conversations": [
+        {
+          "id": "Know One-ddfce492",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Which attribute replaces code.lineno?\n\nAnswer for the current OpenTelemetry semantic conventions (v1.44.0). In current_name, give the name to use today; if it has not changed, repeat it; if two names replace it, give both separated by ' and '. In unit, give the UCUM unit for metrics (for example s or ms) and an empty string otherwise."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "\"{\\\"current_name\\\": \\\"code.lineno\\\", \\\"unit\\\": \\\"\\\"}\""
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 84,
+                "outputTokens": 22,
+                "inputTokensCostNanodollars": "21000",
+                "outputTokensCostNanodollars": "33000",
+                "totalBackendLatencyMs": "439"
+              },
+              "id": "Know One-ddfce492-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 84,
+            "outputTokens": 22,
+            "inputTokensCostNanodollars": "21000",
+            "outputTokensCostNanodollars": "33000",
+            "totalBackendLatencyMs": "439"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "answered_with_retired_name": true,
+            "given": "code.lineno",
+            "id": "lineno",
+            "unit": "",
+            "correct": false,
+            "control": false
+          }
+        }
+      ],
+      "pyRunId": "Know One-Run #13"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Know One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:\n    answer = llm.prompt(f\"{question}\\n\\n{INSTRUCTIONS}\", schema=Answer)\n    given = _names(answer.current_name)\n    expected = sorted({n for g in gold for n in _names(g)})\n    name_ok = given == expected\n    unit_ok = (answer.unit or \"\").strip().lower() == unit\n    retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821\n    return {\n        \"id\": qid,\n        \"given\": answer.current_name,\n        \"unit\": answer.unit,\n        \"correct\": name_ok and unit_ok,\n        \"answered_with_retired_name\": bool(retired_answer),\n        \"control\": qid.startswith(\"control_\"),\n    }\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:03:19.055971Z",
+      "endTime": "2026-10-04T12:03:19.898507Z",
+      "conversations": [
+        {
+          "id": "Know One-3424a263",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Which resource attribute replaces deployment.environment?\n\nAnswer for the current OpenTelemetry semantic conventions (v1.44.0). In current_name, give the name to use today; if it has not changed, repeat it; if two names replace it, give both separated by ' and '. In unit, give the UCUM unit for metrics (for example s or ms) and an empty string otherwise."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "\"{\\\"current_name\\\": \\\"deployment.environment.name\\\", \\\"unit\\\": \\\"\\\"}\""
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 84,
+                "outputTokens": 23,
+                "inputTokensCostNanodollars": "21000",
+                "outputTokensCostNanodollars": "34500",
+                "totalBackendLatencyMs": "497"
+              },
+              "id": "Know One-3424a263-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 84,
+            "outputTokens": 23,
+            "inputTokensCostNanodollars": "21000",
+            "outputTokensCostNanodollars": "34500",
+            "totalBackendLatencyMs": "497"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "answered_with_retired_name": false,
+            "given": "deployment.environment.name",
+            "id": "deployment",
+            "unit": "",
+            "correct": true,
+            "control": false
+          }
+        }
+      ],
+      "pyRunId": "Know One-Run #14"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Know One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:\n    answer = llm.prompt(f\"{question}\\n\\n{INSTRUCTIONS}\", schema=Answer)\n    given = _names(answer.current_name)\n    expected = sorted({n for g in gold for n in _names(g)})\n    name_ok = given == expected\n    unit_ok = (answer.unit or \"\").strip().lower() == unit\n    retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821\n    return {\n        \"id\": qid,\n        \"given\": answer.current_name,\n        \"unit\": answer.unit,\n        \"correct\": name_ok and unit_ok,\n        \"answered_with_retired_name\": bool(retired_answer),\n        \"control\": qid.startswith(\"control_\"),\n    }\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:03:19.108880Z",
+      "endTime": "2026-10-04T12:03:20.059938Z",
+      "conversations": [
+        {
+          "id": "Know One-8beca084",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Which attribute replaces peer.service?\n\nAnswer for the current OpenTelemetry semantic conventions (v1.44.0). In current_name, give the name to use today; if it has not changed, repeat it; if two names replace it, give both separated by ' and '. In unit, give the UCUM unit for metrics (for example s or ms) and an empty string otherwise."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "\"{\\\"current_name\\\": \\\"server.address and server.port\\\", \\\"unit\\\": \\\"\\\"}\""
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 83,
+                "outputTokens": 18,
+                "inputTokensCostNanodollars": "20750",
+                "outputTokensCostNanodollars": "27000",
+                "totalBackendLatencyMs": "573"
+              },
+              "id": "Know One-8beca084-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 83,
+            "outputTokens": 18,
+            "inputTokensCostNanodollars": "20750",
+            "outputTokensCostNanodollars": "27000",
+            "totalBackendLatencyMs": "573"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "answered_with_retired_name": false,
+            "given": "server.address and server.port",
+            "id": "peer_service",
+            "unit": "",
+            "correct": false,
+            "control": false
+          }
+        }
+      ],
+      "pyRunId": "Know One-Run #15"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Know One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:\n    answer = llm.prompt(f\"{question}\\n\\n{INSTRUCTIONS}\", schema=Answer)\n    given = _names(answer.current_name)\n    expected = sorted({n for g in gold for n in _names(g)})\n    name_ok = given == expected\n    unit_ok = (answer.unit or \"\").strip().lower() == unit\n    retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821\n    return {\n        \"id\": qid,\n        \"given\": answer.current_name,\n        \"unit\": answer.unit,\n        \"correct\": name_ok and unit_ok,\n        \"answered_with_retired_name\": bool(retired_answer),\n        \"control\": qid.startswith(\"control_\"),\n    }\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:03:19.151547Z",
+      "endTime": "2026-10-04T12:03:20.127553Z",
+      "conversations": [
+        {
+          "id": "Know One-1d039932",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Which attribute replaces messaging.kafka.message.offset?\n\nAnswer for the current OpenTelemetry semantic conventions (v1.44.0). In current_name, give the name to use today; if it has not changed, repeat it; if two names replace it, give both separated by ' and '. In unit, give the UCUM unit for metrics (for example s or ms) and an empty string otherwise."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "\"{\\\"current_name\\\": \\\"messaging.kafka.message.offset\\\", \\\"unit\\\": \\\"\\\"}\""
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 87,
+                "outputTokens": 25,
+                "inputTokensCostNanodollars": "21750",
+                "outputTokensCostNanodollars": "37500",
+                "totalBackendLatencyMs": "489"
+              },
+              "id": "Know One-1d039932-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 87,
+            "outputTokens": 25,
+            "inputTokensCostNanodollars": "21750",
+            "outputTokensCostNanodollars": "37500",
+            "totalBackendLatencyMs": "489"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "answered_with_retired_name": true,
+            "given": "messaging.kafka.message.offset",
+            "id": "kafka_offset",
+            "unit": "",
+            "correct": false,
+            "control": false
+          }
+        }
+      ],
+      "pyRunId": "Know One-Run #16"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Know One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:\n    answer = llm.prompt(f\"{question}\\n\\n{INSTRUCTIONS}\", schema=Answer)\n    given = _names(answer.current_name)\n    expected = sorted({n for g in gold for n in _names(g)})\n    name_ok = given == expected\n    unit_ok = (answer.unit or \"\").strip().lower() == unit\n    retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821\n    return {\n        \"id\": qid,\n        \"given\": answer.current_name,\n        \"unit\": answer.unit,\n        \"correct\": name_ok and unit_ok,\n        \"answered_with_retired_name\": bool(retired_answer),\n        \"control\": qid.startswith(\"control_\"),\n    }\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:03:19.386665Z",
+      "endTime": "2026-10-04T12:03:20.149911Z",
+      "conversations": [
+        {
+          "id": "Know One-077c4493",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Which metric replaces http.server.duration, and what is its unit?\n\nAnswer for the current OpenTelemetry semantic conventions (v1.44.0). In current_name, give the name to use today; if it has not changed, repeat it; if two names replace it, give both separated by ' and '. In unit, give the UCUM unit for metrics (for example s or ms) and an empty string otherwise."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "\"{\\\"current_name\\\": \\\"http.server.request.duration\\\", \\\"unit\\\": \\\"s\\\"}\""
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 91,
+                "outputTokens": 27,
+                "inputTokensCostNanodollars": "22750",
+                "outputTokensCostNanodollars": "40500",
+                "totalBackendLatencyMs": "428"
+              },
+              "id": "Know One-077c4493-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 91,
+            "outputTokens": 27,
+            "inputTokensCostNanodollars": "22750",
+            "outputTokensCostNanodollars": "40500",
+            "totalBackendLatencyMs": "428"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "answered_with_retired_name": false,
+            "given": "http.server.request.duration",
+            "id": "server_duration",
+            "unit": "s",
+            "correct": true,
+            "control": false
+          }
+        }
+      ],
+      "pyRunId": "Know One-Run #18"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Know One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:\n    answer = llm.prompt(f\"{question}\\n\\n{INSTRUCTIONS}\", schema=Answer)\n    given = _names(answer.current_name)\n    expected = sorted({n for g in gold for n in _names(g)})\n    name_ok = given == expected\n    unit_ok = (answer.unit or \"\").strip().lower() == unit\n    retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821\n    return {\n        \"id\": qid,\n        \"given\": answer.current_name,\n        \"unit\": answer.unit,\n        \"correct\": name_ok and unit_ok,\n        \"answered_with_retired_name\": bool(retired_answer),\n        \"control\": qid.startswith(\"control_\"),\n    }\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:03:19.312338Z",
+      "endTime": "2026-10-04T12:03:20.299086Z",
+      "conversations": [
+        {
+          "id": "Know One-9997b1f3",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Which attribute replaces http.resend_count?\n\nAnswer for the current OpenTelemetry semantic conventions (v1.44.0). In current_name, give the name to use today; if it has not changed, repeat it; if two names replace it, give both separated by ' and '. In unit, give the UCUM unit for metrics (for example s or ms) and an empty string otherwise."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "\"{\\\"current_name\\\": \\\"http.request.resend_count\\\", \\\"unit\\\": \\\"{count}\\\"}\""
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 86,
+                "outputTokens": 28,
+                "inputTokensCostNanodollars": "21500",
+                "outputTokensCostNanodollars": "42000",
+                "totalBackendLatencyMs": "657"
+              },
+              "id": "Know One-9997b1f3-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 86,
+            "outputTokens": 28,
+            "inputTokensCostNanodollars": "21500",
+            "outputTokensCostNanodollars": "42000",
+            "totalBackendLatencyMs": "657"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "answered_with_retired_name": false,
+            "given": "http.request.resend_count",
+            "id": "resend",
+            "unit": "{count}",
+            "correct": false,
+            "control": false
+          }
+        }
+      ],
+      "pyRunId": "Know One-Run #17"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Know One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:\n    answer = llm.prompt(f\"{question}\\n\\n{INSTRUCTIONS}\", schema=Answer)\n    given = _names(answer.current_name)\n    expected = sorted({n for g in gold for n in _names(g)})\n    name_ok = given == expected\n    unit_ok = (answer.unit or \"\").strip().lower() == unit\n    retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821\n    return {\n        \"id\": qid,\n        \"given\": answer.current_name,\n        \"unit\": answer.unit,\n        \"correct\": name_ok and unit_ok,\n        \"answered_with_retired_name\": bool(retired_answer),\n        \"control\": qid.startswith(\"control_\"),\n    }\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:03:19.750608Z",
+      "endTime": "2026-10-04T12:03:20.639304Z",
+      "conversations": [
+        {
+          "id": "Know One-73a95079",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Which metric replaces db.client.connections.use_time, and what is its unit?\n\nAnswer for the current OpenTelemetry semantic conventions (v1.44.0). In current_name, give the name to use today; if it has not changed, repeat it; if two names replace it, give both separated by ' and '. In unit, give the UCUM unit for metrics (for example s or ms) and an empty string otherwise."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "\"{\\\"current_name\\\": \\\"db.client.connection.time\\\", \\\"unit\\\": \\\"ms\\\"}\""
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 95,
+                "outputTokens": 27,
+                "inputTokensCostNanodollars": "23750",
+                "outputTokensCostNanodollars": "40500",
+                "totalBackendLatencyMs": "536"
+              },
+              "id": "Know One-73a95079-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 95,
+            "outputTokens": 27,
+            "inputTokensCostNanodollars": "23750",
+            "outputTokensCostNanodollars": "40500",
+            "totalBackendLatencyMs": "536"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "answered_with_retired_name": false,
+            "given": "db.client.connection.time",
+            "id": "pool_use_time",
+            "unit": "ms",
+            "correct": false,
+            "control": false
+          }
+        }
+      ],
+      "pyRunId": "Know One-Run #19"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Know One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:\n    answer = llm.prompt(f\"{question}\\n\\n{INSTRUCTIONS}\", schema=Answer)\n    given = _names(answer.current_name)\n    expected = sorted({n for g in gold for n in _names(g)})\n    name_ok = given == expected\n    unit_ok = (answer.unit or \"\").strip().lower() == unit\n    retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821\n    return {\n        \"id\": qid,\n        \"given\": answer.current_name,\n        \"unit\": answer.unit,\n        \"correct\": name_ok and unit_ok,\n        \"answered_with_retired_name\": bool(retired_answer),\n        \"control\": qid.startswith(\"control_\"),\n    }\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:03:19.903348Z",
+      "endTime": "2026-10-04T12:03:20.657501Z",
+      "conversations": [
+        {
+          "id": "Know One-f085c5fb",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Which metric replaces rpc.client.duration, and what is its unit?\n\nAnswer for the current OpenTelemetry semantic conventions (v1.44.0). In current_name, give the name to use today; if it has not changed, repeat it; if two names replace it, give both separated by ' and '. In unit, give the UCUM unit for metrics (for example s or ms) and an empty string otherwise."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "\"{\\\"current_name\\\": \\\"rpc.client.request.duration\\\", \\\"unit\\\": \\\"s\\\"}\""
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 92,
+                "outputTokens": 20,
+                "inputTokensCostNanodollars": "23000",
+                "outputTokensCostNanodollars": "30000",
+                "totalBackendLatencyMs": "415"
+              },
+              "id": "Know One-f085c5fb-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 92,
+            "outputTokens": 20,
+            "inputTokensCostNanodollars": "23000",
+            "outputTokensCostNanodollars": "30000",
+            "totalBackendLatencyMs": "415"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "answered_with_retired_name": false,
+            "given": "rpc.client.request.duration",
+            "id": "rpc_duration",
+            "unit": "s",
+            "correct": false,
+            "control": false
+          }
+        }
+      ],
+      "pyRunId": "Know One-Run #20"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Know One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:\n    answer = llm.prompt(f\"{question}\\n\\n{INSTRUCTIONS}\", schema=Answer)\n    given = _names(answer.current_name)\n    expected = sorted({n for g in gold for n in _names(g)})\n    name_ok = given == expected\n    unit_ok = (answer.unit or \"\").strip().lower() == unit\n    retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821\n    return {\n        \"id\": qid,\n        \"given\": answer.current_name,\n        \"unit\": answer.unit,\n        \"correct\": name_ok and unit_ok,\n        \"answered_with_retired_name\": bool(retired_answer),\n        \"control\": qid.startswith(\"control_\"),\n    }\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:03:20.130008Z",
+      "endTime": "2026-10-04T12:03:20.972803Z",
+      "conversations": [
+        {
+          "id": "Know One-847d7b4e",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Which attribute replaces server.address?\n\nAnswer for the current OpenTelemetry semantic conventions (v1.44.0). In current_name, give the name to use today; if it has not changed, repeat it; if two names replace it, give both separated by ' and '. In unit, give the UCUM unit for metrics (for example s or ms) and an empty string otherwise."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "\"{\\\"current_name\\\": \\\"server.address\\\", \\\"unit\\\": \\\"\\\"}\""
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 83,
+                "outputTokens": 21,
+                "inputTokensCostNanodollars": "20750",
+                "outputTokensCostNanodollars": "31500",
+                "totalBackendLatencyMs": "501"
+              },
+              "id": "Know One-847d7b4e-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 83,
+            "outputTokens": 21,
+            "inputTokensCostNanodollars": "20750",
+            "outputTokensCostNanodollars": "31500",
+            "totalBackendLatencyMs": "501"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "answered_with_retired_name": false,
+            "given": "server.address",
+            "id": "control_server_address",
+            "unit": "",
+            "correct": true,
+            "control": true
+          }
+        }
+      ],
+      "pyRunId": "Know One-Run #22"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Know One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:\n    answer = llm.prompt(f\"{question}\\n\\n{INSTRUCTIONS}\", schema=Answer)\n    given = _names(answer.current_name)\n    expected = sorted({n for g in gold for n in _names(g)})\n    name_ok = given == expected\n    unit_ok = (answer.unit or \"\").strip().lower() == unit\n    retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821\n    return {\n        \"id\": qid,\n        \"given\": answer.current_name,\n        \"unit\": answer.unit,\n        \"correct\": name_ok and unit_ok,\n        \"answered_with_retired_name\": bool(retired_answer),\n        \"control\": qid.startswith(\"control_\"),\n    }\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:03:20.064248Z",
+      "endTime": "2026-10-04T12:03:21.141988Z",
+      "conversations": [
+        {
+          "id": "Know One-30188df9",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Which attribute replaces url.full?\n\nAnswer for the current OpenTelemetry semantic conventions (v1.44.0). In current_name, give the name to use today; if it has not changed, repeat it; if two names replace it, give both separated by ' and '. In unit, give the UCUM unit for metrics (for example s or ms) and an empty string otherwise."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "\"{\\\"current_name\\\": \\\"url.full\\\", \\\"unit\\\": \\\"\\\"}\""
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 83,
+                "outputTokens": 21,
+                "inputTokensCostNanodollars": "20750",
+                "outputTokensCostNanodollars": "31500",
+                "totalBackendLatencyMs": "727"
+              },
+              "id": "Know One-30188df9-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 83,
+            "outputTokens": 21,
+            "inputTokensCostNanodollars": "20750",
+            "outputTokensCostNanodollars": "31500",
+            "totalBackendLatencyMs": "727"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "answered_with_retired_name": false,
+            "given": "url.full",
+            "id": "control_url_full",
+            "unit": "",
+            "correct": true,
+            "control": true
+          }
+        }
+      ],
+      "pyRunId": "Know One-Run #21"
+    }
+  ],
+  "pyRunId": "Semconv Drift: Know-Run #1"
+}

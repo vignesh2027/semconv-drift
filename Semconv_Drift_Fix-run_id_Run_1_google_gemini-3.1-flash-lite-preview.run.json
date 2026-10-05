@@ -1,0 +1,657 @@
+{
+  "taskVersion": {
+    "versionNumber": 1,
+    "name": "Semconv Drift: Fix",
+    "description": "Modernizes 8 snippets of old OpenTelemetry code, with traps for span kind, retired enum values and metrics whose unit changed from ms to s.",
+    "definition": "@kbench.task(\n    name=\"Semconv Drift: Fix\",\n    description=\"Modernizes 8 snippets of old OpenTelemetry code, with traps for span kind, retired enum values and metrics whose unit changed from ms to s.\",\n)\ndef semconv_fix(llm) -> float:\n    df = pd.DataFrame([{\"case_id\": c, \"language\": lang, \"code\": code, \"required\": req, \"check\": chk or \"\"} for c, lang, code, req, chk in CASES])\n    runs = fix_one.evaluate(\n        llm=[llm],\n        evaluation_data=df,\n        stop_condition=lambda runs: len(runs) == len(df),\n        max_attempts=2,\n        n_jobs=4,\n        timeout=240,\n        on_failure=\"continue\",\n        remove_run_files=True,\n    )\n    rows = [r.result for r in runs if isinstance(getattr(r, \"result\", None), dict)]\n    wrong = [r[\"case\"] for r in rows if not r[\"correct\"]]\n    kbench.assertions.assert_true(not wrong, expectation=\"Every snippet fully modernized (failed: \" + \", \".join(wrong) + \")\")\n    return round(sum(r[\"correct\"] for r in rows) / len(CASES), 4)\n"
+  },
+  "modelVersion": {
+    "slug": "google/gemini-3.1-flash-lite-preview"
+  },
+  "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+  "startTime": "2026-10-04T12:06:40.829787Z",
+  "endTime": "2026-10-04T12:06:43.851819Z",
+  "conversations": [
+    {
+      "id": "Semconv Drift: Fix-b9708b96",
+      "metrics": {},
+      "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+    }
+  ],
+  "results": [
+    {
+      "type": "AGGREGATED",
+      "numericResult": {
+        "value": 0.125
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "expectation": "Every snippet fully modernized (failed: server_span, db_span, code_location, resource, enum_value, rpc_ms, go_redis_pool)",
+      "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_FAILED",
+      "lineNumber": 268,
+      "definition": "kbench.assertions.assert_true(not wrong, expectation=\"Every snippet fully modernized (failed: \" + \", \".join(wrong) + \")\")",
+      "conversationRequestIds": [
+        {
+          "conversationId": "Semconv Drift: Fix-b9708b96"
+        }
+      ]
+    }
+  ],
+  "subruns": [
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Fix One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef fix_one(llm, case_id: str, language: str, code: str, required: list, check: str) -> dict:\n    response = llm.prompt(f\"Language: {language}.\\n\\n```\\n{code}\\n```\\n\\n{INSTRUCTIONS}\")\n    out = code_blocks(response)  # noqa: F821\n    found = audit(out)  # noqa: F821\n    names = {n for n in found[\"current\"]}\n    missing = [n for n in required if n not in names]\n    problems = []\n    if check == \"not_server_address\" and \"server.address\" in names:\n        problems.append(\"used server.address on a server span\")\n    if check == \"value_azure_vm\" and not re.search(r\"\"\"[\"']azure\\.vm[\"']\"\"\", out):  # noqa: F821\n        problems.append(\"kept the retired value azure_vm\")\n    if check == \"seconds\":\n        unit = re.search(r\"\"\"(?i)WithUnit\\(\\s*[\"']([^\"']+)[\"']\"\"\", out)  # noqa: F821\n        if not unit or unit.group(1) != \"s\":\n            problems.append(\"metric unit is not s\")\n        if not _SECONDS_CONVERSION.search(out):\n            problems.append(\"values still recorded in milliseconds\")\n    ok = not found[\"retired\"] and not found[\"invented\"] and not missing and not problems and not found[\"unit_errors\"]\n    return {\"case\": case_id, \"retired_left\": found[\"retired\"], \"invented\": found[\"invented\"], \"missing\": missing, \"problems\": problems + found[\"unit_errors\"], \"correct\": ok}\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:06:40.838968Z",
+      "endTime": "2026-10-04T12:06:41.877620Z",
+      "conversations": [
+        {
+          "id": "Fix One-a91d1d86",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Language: TypeScript.\n\n```\ntracer.startActiveSpan('POST /checkout', {kind: SpanKind.SERVER}, (span) => {\n  span.setAttribute('http.method', req.method)\n  span.setAttribute('net.peer.name', req.socket.remoteAddress)\n  span.setAttribute('http.status_code', 200)\n  span.end()\n})\n```\n\nUpdate this code to the current OpenTelemetry semantic conventions (v1.44.0). Keep its behaviour correct: if a replacement changes a unit or a value format, convert the value too. Return one complete code block and nothing else."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "```typescript\ntracer.startActiveSpan('POST /checkout', { kind: SpanKind.SERVER }, (span) => {\n  span.setAttribute('http.request.method', req.method);\n  span.setAttribute('server.address', req.socket.remoteAddress);\n  span.setAttribute('http.response.status_code', 200);\n  span.end();\n});\n```"
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 141,
+                "outputTokens": 88,
+                "inputTokensCostNanodollars": "35250",
+                "outputTokensCostNanodollars": "132000",
+                "totalBackendLatencyMs": "464"
+              },
+              "id": "Fix One-a91d1d86-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 141,
+            "outputTokens": 88,
+            "inputTokensCostNanodollars": "35250",
+            "outputTokensCostNanodollars": "132000",
+            "totalBackendLatencyMs": "464"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "invented": [],
+            "case": "server_span",
+            "missing": [
+              "client.address"
+            ],
+            "problems": [
+              "used server.address on a server span"
+            ],
+            "correct": false,
+            "retired_left": []
+          }
+        }
+      ],
+      "pyRunId": "Fix One-Run #2"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Fix One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef fix_one(llm, case_id: str, language: str, code: str, required: list, check: str) -> dict:\n    response = llm.prompt(f\"Language: {language}.\\n\\n```\\n{code}\\n```\\n\\n{INSTRUCTIONS}\")\n    out = code_blocks(response)  # noqa: F821\n    found = audit(out)  # noqa: F821\n    names = {n for n in found[\"current\"]}\n    missing = [n for n in required if n not in names]\n    problems = []\n    if check == \"not_server_address\" and \"server.address\" in names:\n        problems.append(\"used server.address on a server span\")\n    if check == \"value_azure_vm\" and not re.search(r\"\"\"[\"']azure\\.vm[\"']\"\"\", out):  # noqa: F821\n        problems.append(\"kept the retired value azure_vm\")\n    if check == \"seconds\":\n        unit = re.search(r\"\"\"(?i)WithUnit\\(\\s*[\"']([^\"']+)[\"']\"\"\", out)  # noqa: F821\n        if not unit or unit.group(1) != \"s\":\n            problems.append(\"metric unit is not s\")\n        if not _SECONDS_CONVERSION.search(out):\n            problems.append(\"values still recorded in milliseconds\")\n    ok = not found[\"retired\"] and not found[\"invented\"] and not missing and not problems and not found[\"unit_errors\"]\n    return {\"case\": case_id, \"retired_left\": found[\"retired\"], \"invented\": found[\"invented\"], \"missing\": missing, \"problems\": problems + found[\"unit_errors\"], \"correct\": ok}\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:06:40.839741Z",
+      "endTime": "2026-10-04T12:06:41.881356Z",
+      "conversations": [
+        {
+          "id": "Fix One-384b418f",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Language: Go.\n\n```\nspan.SetAttributes(\n\tattribute.String(\"db.system\", \"postgresql\"),\n\tattribute.String(\"db.statement\", query),\n\tattribute.String(\"db.operation\", \"SELECT\"),\n)\n```\n\nUpdate this code to the current OpenTelemetry semantic conventions (v1.44.0). Keep its behaviour correct: if a replacement changes a unit or a value format, convert the value too. Return one complete code block and nothing else."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "```go\nspan.SetAttributes(\n\tattribute.String(\"db.system\", \"postgresql\"),\n\tattribute.String(\"db.query.text\", query),\n\tattribute.String(\"db.operation.name\", \"SELECT\"),\n)\n```"
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 105,
+                "outputTokens": 54,
+                "inputTokensCostNanodollars": "26250",
+                "outputTokensCostNanodollars": "81000",
+                "totalBackendLatencyMs": "517"
+              },
+              "id": "Fix One-384b418f-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 105,
+            "outputTokens": 54,
+            "inputTokensCostNanodollars": "26250",
+            "outputTokensCostNanodollars": "81000",
+            "totalBackendLatencyMs": "517"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "invented": [],
+            "case": "db_span",
+            "missing": [
+              "db.system.name"
+            ],
+            "problems": [],
+            "correct": false,
+            "retired_left": [
+              "db.system"
+            ]
+          }
+        }
+      ],
+      "pyRunId": "Fix One-Run #4"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Fix One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef fix_one(llm, case_id: str, language: str, code: str, required: list, check: str) -> dict:\n    response = llm.prompt(f\"Language: {language}.\\n\\n```\\n{code}\\n```\\n\\n{INSTRUCTIONS}\")\n    out = code_blocks(response)  # noqa: F821\n    found = audit(out)  # noqa: F821\n    names = {n for n in found[\"current\"]}\n    missing = [n for n in required if n not in names]\n    problems = []\n    if check == \"not_server_address\" and \"server.address\" in names:\n        problems.append(\"used server.address on a server span\")\n    if check == \"value_azure_vm\" and not re.search(r\"\"\"[\"']azure\\.vm[\"']\"\"\", out):  # noqa: F821\n        problems.append(\"kept the retired value azure_vm\")\n    if check == \"seconds\":\n        unit = re.search(r\"\"\"(?i)WithUnit\\(\\s*[\"']([^\"']+)[\"']\"\"\", out)  # noqa: F821\n        if not unit or unit.group(1) != \"s\":\n            problems.append(\"metric unit is not s\")\n        if not _SECONDS_CONVERSION.search(out):\n            problems.append(\"values still recorded in milliseconds\")\n    ok = not found[\"retired\"] and not found[\"invented\"] and not missing and not problems and not found[\"unit_errors\"]\n    return {\"case\": case_id, \"retired_left\": found[\"retired\"], \"invented\": found[\"invented\"], \"missing\": missing, \"problems\": problems + found[\"unit_errors\"], \"correct\": ok}\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:06:40.838845Z",
+      "endTime": "2026-10-04T12:06:42.160597Z",
+      "conversations": [
+        {
+          "id": "Fix One-afc88e5b",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Language: Python.\n\n```\nspan.set_attribute(\"code.filepath\", __file__)\nspan.set_attribute(\"code.lineno\", frame.f_lineno)\n```\n\nUpdate this code to the current OpenTelemetry semantic conventions (v1.44.0). Keep its behaviour correct: if a replacement changes a unit or a value format, convert the value too. Return one complete code block and nothing else."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "```python\nspan.set_attribute(\"code.filepath\", __file__)\nspan.set_attribute(\"code.lineno\", frame.f_lineno)\n```\n\n*Note: As of OpenTelemetry Semantic Conventions v1.44.0, these attributes are still defined under the `code.*` namespace. No breaking changes were introduced for these specific keys in the latest release.*"
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 92,
+                "outputTokens": 82,
+                "inputTokensCostNanodollars": "23000",
+                "outputTokensCostNanodollars": "123000",
+                "totalBackendLatencyMs": "763"
+              },
+              "id": "Fix One-afc88e5b-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 92,
+            "outputTokens": 82,
+            "inputTokensCostNanodollars": "23000",
+            "outputTokensCostNanodollars": "123000",
+            "totalBackendLatencyMs": "763"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "invented": [],
+            "case": "code_location",
+            "missing": [
+              "code.file.path",
+              "code.line.number"
+            ],
+            "problems": [],
+            "correct": false,
+            "retired_left": [
+              "code.filepath",
+              "code.lineno"
+            ]
+          }
+        }
+      ],
+      "pyRunId": "Fix One-Run #1"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Fix One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef fix_one(llm, case_id: str, language: str, code: str, required: list, check: str) -> dict:\n    response = llm.prompt(f\"Language: {language}.\\n\\n```\\n{code}\\n```\\n\\n{INSTRUCTIONS}\")\n    out = code_blocks(response)  # noqa: F821\n    found = audit(out)  # noqa: F821\n    names = {n for n in found[\"current\"]}\n    missing = [n for n in required if n not in names]\n    problems = []\n    if check == \"not_server_address\" and \"server.address\" in names:\n        problems.append(\"used server.address on a server span\")\n    if check == \"value_azure_vm\" and not re.search(r\"\"\"[\"']azure\\.vm[\"']\"\"\", out):  # noqa: F821\n        problems.append(\"kept the retired value azure_vm\")\n    if check == \"seconds\":\n        unit = re.search(r\"\"\"(?i)WithUnit\\(\\s*[\"']([^\"']+)[\"']\"\"\", out)  # noqa: F821\n        if not unit or unit.group(1) != \"s\":\n            problems.append(\"metric unit is not s\")\n        if not _SECONDS_CONVERSION.search(out):\n            problems.append(\"values still recorded in milliseconds\")\n    ok = not found[\"retired\"] and not found[\"invented\"] and not missing and not problems and not found[\"unit_errors\"]\n    return {\"case\": case_id, \"retired_left\": found[\"retired\"], \"invented\": found[\"invented\"], \"missing\": missing, \"problems\": problems + found[\"unit_errors\"], \"correct\": ok}\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:06:40.839043Z",
+      "endTime": "2026-10-04T12:06:42.329846Z",
+      "conversations": [
+        {
+          "id": "Fix One-7c37aa04",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Language: Python.\n\n```\nwith tracer.start_as_current_span(\"GET /quote\", kind=SpanKind.CLIENT) as span:\n    span.set_attribute(\"http.method\", \"GET\")\n    span.set_attribute(\"http.url\", url)\n    span.set_attribute(\"net.peer.name\", host)\n    span.set_attribute(\"http.status_code\", resp.status_code)\n```\n\nUpdate this code to the current OpenTelemetry semantic conventions (v1.44.0). Keep its behaviour correct: if a replacement changes a unit or a value format, convert the value too. Return one complete code block and nothing else."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "```python\nwith tracer.start_as_current_span(\"GET /quote\", kind=SpanKind.CLIENT) as span:\n    span.set_attribute(\"http.request.method\", \"GET\")\n    span.set_attribute(\"url.full\", url)\n    span.set_attribute(\"server.address\", host)\n    span.set_attribute(\"http.response.status_code\", resp.status_code)\n```"
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 150,
+                "outputTokens": 97,
+                "inputTokensCostNanodollars": "37500",
+                "outputTokensCostNanodollars": "145500",
+                "totalBackendLatencyMs": "933"
+              },
+              "id": "Fix One-7c37aa04-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 150,
+            "outputTokens": 97,
+            "inputTokensCostNanodollars": "37500",
+            "outputTokensCostNanodollars": "145500",
+            "totalBackendLatencyMs": "933"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "invented": [],
+            "case": "http_client",
+            "missing": [],
+            "problems": [],
+            "correct": true,
+            "retired_left": []
+          }
+        }
+      ],
+      "pyRunId": "Fix One-Run #3"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Fix One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef fix_one(llm, case_id: str, language: str, code: str, required: list, check: str) -> dict:\n    response = llm.prompt(f\"Language: {language}.\\n\\n```\\n{code}\\n```\\n\\n{INSTRUCTIONS}\")\n    out = code_blocks(response)  # noqa: F821\n    found = audit(out)  # noqa: F821\n    names = {n for n in found[\"current\"]}\n    missing = [n for n in required if n not in names]\n    problems = []\n    if check == \"not_server_address\" and \"server.address\" in names:\n        problems.append(\"used server.address on a server span\")\n    if check == \"value_azure_vm\" and not re.search(r\"\"\"[\"']azure\\.vm[\"']\"\"\", out):  # noqa: F821\n        problems.append(\"kept the retired value azure_vm\")\n    if check == \"seconds\":\n        unit = re.search(r\"\"\"(?i)WithUnit\\(\\s*[\"']([^\"']+)[\"']\"\"\", out)  # noqa: F821\n        if not unit or unit.group(1) != \"s\":\n            problems.append(\"metric unit is not s\")\n        if not _SECONDS_CONVERSION.search(out):\n            problems.append(\"values still recorded in milliseconds\")\n    ok = not found[\"retired\"] and not found[\"invented\"] and not missing and not problems and not found[\"unit_errors\"]\n    return {\"case\": case_id, \"retired_left\": found[\"retired\"], \"invented\": found[\"invented\"], \"missing\": missing, \"problems\": problems + found[\"unit_errors\"], \"correct\": ok}\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:06:41.887283Z",
+      "endTime": "2026-10-04T12:06:42.780434Z",
+      "conversations": [
+        {
+          "id": "Fix One-7f919d01",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Language: TypeScript.\n\n```\nconst resource = new Resource({\n  'service.name': 'billing',\n  'deployment.environment': 'production',\n})\n```\n\nUpdate this code to the current OpenTelemetry semantic conventions (v1.44.0). Keep its behaviour correct: if a replacement changes a unit or a value format, convert the value too. Return one complete code block and nothing else."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "```typescript\nimport { Resource } from '@opentelemetry/resources';\nimport { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';\n\nconst resource = new Resource({\n  [SemanticResourceAttributes.SERVICE_NAME]: 'billing',\n  [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: 'production',\n});\n```"
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 88,
+                "outputTokens": 75,
+                "inputTokensCostNanodollars": "22000",
+                "outputTokensCostNanodollars": "112500",
+                "totalBackendLatencyMs": "538"
+              },
+              "id": "Fix One-7f919d01-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 88,
+            "outputTokens": 75,
+            "inputTokensCostNanodollars": "22000",
+            "outputTokensCostNanodollars": "112500",
+            "totalBackendLatencyMs": "538"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "invented": [],
+            "case": "resource",
+            "missing": [
+              "deployment.environment.name"
+            ],
+            "problems": [],
+            "correct": false,
+            "retired_left": [
+              "deployment.environment"
+            ]
+          }
+        }
+      ],
+      "pyRunId": "Fix One-Run #5"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Fix One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef fix_one(llm, case_id: str, language: str, code: str, required: list, check: str) -> dict:\n    response = llm.prompt(f\"Language: {language}.\\n\\n```\\n{code}\\n```\\n\\n{INSTRUCTIONS}\")\n    out = code_blocks(response)  # noqa: F821\n    found = audit(out)  # noqa: F821\n    names = {n for n in found[\"current\"]}\n    missing = [n for n in required if n not in names]\n    problems = []\n    if check == \"not_server_address\" and \"server.address\" in names:\n        problems.append(\"used server.address on a server span\")\n    if check == \"value_azure_vm\" and not re.search(r\"\"\"[\"']azure\\.vm[\"']\"\"\", out):  # noqa: F821\n        problems.append(\"kept the retired value azure_vm\")\n    if check == \"seconds\":\n        unit = re.search(r\"\"\"(?i)WithUnit\\(\\s*[\"']([^\"']+)[\"']\"\"\", out)  # noqa: F821\n        if not unit or unit.group(1) != \"s\":\n            problems.append(\"metric unit is not s\")\n        if not _SECONDS_CONVERSION.search(out):\n            problems.append(\"values still recorded in milliseconds\")\n    ok = not found[\"retired\"] and not found[\"invented\"] and not missing and not problems and not found[\"unit_errors\"]\n    return {\"case\": case_id, \"retired_left\": found[\"retired\"], \"invented\": found[\"invented\"], \"missing\": missing, \"problems\": problems + found[\"unit_errors\"], \"correct\": ok}\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:06:41.889223Z",
+      "endTime": "2026-10-04T12:06:42.799207Z",
+      "conversations": [
+        {
+          "id": "Fix One-eec18320",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Language: Python.\n\n```\nresource = Resource.create({\"cloud.provider\": \"azure\", \"cloud.platform\": \"azure_vm\"})\n```\n\nUpdate this code to the current OpenTelemetry semantic conventions (v1.44.0). Keep its behaviour correct: if a replacement changes a unit or a value format, convert the value too. Return one complete code block and nothing else."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "```python\nresource = Resource.create({\"cloud.provider\": \"azure\", \"cloud.platform\": \"azure_vm\"})\n```"
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 83,
+                "outputTokens": 28,
+                "inputTokensCostNanodollars": "20750",
+                "outputTokensCostNanodollars": "42000",
+                "totalBackendLatencyMs": "546"
+              },
+              "id": "Fix One-eec18320-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 83,
+            "outputTokens": 28,
+            "inputTokensCostNanodollars": "20750",
+            "outputTokensCostNanodollars": "42000",
+            "totalBackendLatencyMs": "546"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "invented": [],
+            "case": "enum_value",
+            "missing": [],
+            "problems": [
+              "kept the retired value azure_vm"
+            ],
+            "correct": false,
+            "retired_left": []
+          }
+        }
+      ],
+      "pyRunId": "Fix One-Run #6"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Fix One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef fix_one(llm, case_id: str, language: str, code: str, required: list, check: str) -> dict:\n    response = llm.prompt(f\"Language: {language}.\\n\\n```\\n{code}\\n```\\n\\n{INSTRUCTIONS}\")\n    out = code_blocks(response)  # noqa: F821\n    found = audit(out)  # noqa: F821\n    names = {n for n in found[\"current\"]}\n    missing = [n for n in required if n not in names]\n    problems = []\n    if check == \"not_server_address\" and \"server.address\" in names:\n        problems.append(\"used server.address on a server span\")\n    if check == \"value_azure_vm\" and not re.search(r\"\"\"[\"']azure\\.vm[\"']\"\"\", out):  # noqa: F821\n        problems.append(\"kept the retired value azure_vm\")\n    if check == \"seconds\":\n        unit = re.search(r\"\"\"(?i)WithUnit\\(\\s*[\"']([^\"']+)[\"']\"\"\", out)  # noqa: F821\n        if not unit or unit.group(1) != \"s\":\n            problems.append(\"metric unit is not s\")\n        if not _SECONDS_CONVERSION.search(out):\n            problems.append(\"values still recorded in milliseconds\")\n    ok = not found[\"retired\"] and not found[\"invented\"] and not missing and not problems and not found[\"unit_errors\"]\n    return {\"case\": case_id, \"retired_left\": found[\"retired\"], \"invented\": found[\"invented\"], \"missing\": missing, \"problems\": problems + found[\"unit_errors\"], \"correct\": ok}\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:06:42.335431Z",
+      "endTime": "2026-10-04T12:06:43.585991Z",
+      "conversations": [
+        {
+          "id": "Fix One-a228ae8a",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Language: Go.\n\n```\ncreateTime, _ := conf.meter.Float64Histogram(\n\t\"db.client.connections.create_time\",\n\tmetric.WithDescription(\"The time it took to create a new connection.\"),\n\tmetric.WithUnit(\"ms\"),\n)\nstart := time.Now()\nconn, err := dial(ctx)\ncreateTime.Record(ctx, milliseconds(time.Since(start)))\n```\n\nUpdate this code to the current OpenTelemetry semantic conventions (v1.44.0). Keep its behaviour correct: if a replacement changes a unit or a value format, convert the value too. Return one complete code block and nothing else."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "```go\ncreateTime, _ := conf.meter.Float64Histogram(\n\t\"db.client.connections.create_time\",\n\tmetric.WithDescription(\"The time it took to create a new connection.\"),\n\tmetric.WithUnit(\"s\"), // Semantic conventions recommend base units (seconds)\n)\nstart := time.Now()\nconn, err := dial(ctx)\n// Convert ms to seconds as per OpenTelemetry semantic conventions for duration metrics\ncreateTime.Record(ctx, time.Since(start).Seconds())\n```"
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 147,
+                "outputTokens": 116,
+                "inputTokensCostNanodollars": "36750",
+                "outputTokensCostNanodollars": "174000",
+                "totalBackendLatencyMs": "753"
+              },
+              "id": "Fix One-a228ae8a-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 147,
+            "outputTokens": 116,
+            "inputTokensCostNanodollars": "36750",
+            "outputTokensCostNanodollars": "174000",
+            "totalBackendLatencyMs": "753"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "invented": [],
+            "case": "go_redis_pool",
+            "missing": [
+              "db.client.connection.create_time"
+            ],
+            "problems": [],
+            "correct": false,
+            "retired_left": [
+              "db.client.connections.create_time"
+            ]
+          }
+        }
+      ],
+      "pyRunId": "Fix One-Run #8"
+    },
+    {
+      "taskVersion": {
+        "versionNumber": 1,
+        "name": "Fix One",
+        "description": "",
+        "definition": "@kbench.task(store_task=False)\ndef fix_one(llm, case_id: str, language: str, code: str, required: list, check: str) -> dict:\n    response = llm.prompt(f\"Language: {language}.\\n\\n```\\n{code}\\n```\\n\\n{INSTRUCTIONS}\")\n    out = code_blocks(response)  # noqa: F821\n    found = audit(out)  # noqa: F821\n    names = {n for n in found[\"current\"]}\n    missing = [n for n in required if n not in names]\n    problems = []\n    if check == \"not_server_address\" and \"server.address\" in names:\n        problems.append(\"used server.address on a server span\")\n    if check == \"value_azure_vm\" and not re.search(r\"\"\"[\"']azure\\.vm[\"']\"\"\", out):  # noqa: F821\n        problems.append(\"kept the retired value azure_vm\")\n    if check == \"seconds\":\n        unit = re.search(r\"\"\"(?i)WithUnit\\(\\s*[\"']([^\"']+)[\"']\"\"\", out)  # noqa: F821\n        if not unit or unit.group(1) != \"s\":\n            problems.append(\"metric unit is not s\")\n        if not _SECONDS_CONVERSION.search(out):\n            problems.append(\"values still recorded in milliseconds\")\n    ok = not found[\"retired\"] and not found[\"invented\"] and not missing and not problems and not found[\"unit_errors\"]\n    return {\"case\": case_id, \"retired_left\": found[\"retired\"], \"invented\": found[\"invented\"], \"missing\": missing, \"problems\": problems + found[\"unit_errors\"], \"correct\": ok}\n"
+      },
+      "modelVersion": {
+        "slug": "google/gemini-3.1-flash-lite-preview"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "startTime": "2026-10-04T12:06:42.166341Z",
+      "endTime": "2026-10-04T12:06:43.782931Z",
+      "conversations": [
+        {
+          "id": "Fix One-88d7878a",
+          "requests": [
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "Language: Go.\n\n```\ndur, _ := meter.Float64Histogram(\"rpc.client.duration\", metric.WithUnit(\"ms\"))\nstart := time.Now()\nerr := invoker(ctx, method, req, reply, cc, opts...)\ndur.Record(ctx, float64(time.Since(start).Milliseconds()))\n```\n\nUpdate this code to the current OpenTelemetry semantic conventions (v1.44.0). Keep its behaviour correct: if a replacement changes a unit or a value format, convert the value too. Return one complete code block and nothing else."
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_USER",
+                  "senderName": "User"
+                },
+                {
+                  "parts": [
+                    {
+                      "text": "```go\ndur, _ := meter.Float64Histogram(\"rpc.client.duration\",\n\tmetric.WithUnit(\"s\"),\n\tmetric.WithDescription(\"The duration of the RPC call\"),\n)\nstart := time.Now()\nerr := invoker(ctx, method, req, reply, cc, opts...)\ndur.Record(ctx, time.Since(start).Seconds())\n```"
+                    }
+                  ],
+                  "role": "CONTENT_ROLE_ASSISTANT",
+                  "senderName": "google/gemini-3.1-flash-lite-preview"
+                }
+              ],
+              "metrics": {
+                "inputTokens": 128,
+                "outputTokens": 87,
+                "inputTokensCostNanodollars": "32000",
+                "outputTokensCostNanodollars": "130500",
+                "totalBackendLatencyMs": "537"
+              },
+              "id": "Fix One-88d7878a-req-1"
+            }
+          ],
+          "metrics": {
+            "inputTokens": 128,
+            "outputTokens": 87,
+            "inputTokensCostNanodollars": "32000",
+            "outputTokensCostNanodollars": "130500",
+            "totalBackendLatencyMs": "537"
+          },
+          "modelVersionSlug": "model_version_slug for conversation is DEPRECATED"
+        }
+      ],
+      "results": [
+        {
+          "type": "AGGREGATED",
+          "dictResult": {
+            "invented": [],
+            "case": "rpc_ms",
+            "missing": [
+              "rpc.client.call.duration"
+            ],
+            "problems": [],
+            "correct": false,
+            "retired_left": [
+              "rpc.client.duration"
+            ]
+          }
+        }
+      ],
+      "pyRunId": "Fix One-Run #7"
+    }
+  ],
+  "pyRunId": "Semconv Drift: Fix-Run #1"
+}

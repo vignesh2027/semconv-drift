@@ -11,6 +11,7 @@ import json
 import re
 
 INDEX = json.loads(DATA_JSON)  # noqa: F821, injected by build.py
+RELEASE_DATES = json.loads(RELEASES_JSON)  # noqa: F821, tag -> publication date
 
 ATTR = {}
 METRIC = {}
@@ -46,6 +47,9 @@ _CONSTANTS = [
     (re.compile(r"\b\w*(?:Attributes|Attrs)\.([A-Z][A-Z0-9_]+)\b"), False),
     (re.compile(r"\bsemconv\.([A-Z][A-Za-z0-9]+)\b"), True),
 ]
+# Newer Python SDKs export bare constants, for example
+#   from opentelemetry.semconv.attributes.http_attributes import HTTP_REQUEST_METHOD
+_SEMCONV_IMPORT = re.compile(r"from\s+opentelemetry\.semconv[\w.]*\s+import\s+\(?([^)]*?)\)?\s*(?:\n\s*\n|$)", re.S)
 _METRIC_CALL = re.compile(r"(?i)histogram|counter|gauge|meter|instrument")
 # A dotted literal used as an attribute key or a metric name.
 _D = r"""["'`]([a-z][a-z0-9_]*(?:\.[a-z0-9_]+)+)["'`]"""
@@ -71,7 +75,12 @@ def _strip_comments(code):
 
 
 def code_blocks(text):
-    """The code a model returned: fenced blocks if any, otherwise the text."""
+    """The code a model returned: fenced blocks if any, otherwise the text.
+
+    Reasoning models may include their thinking; it is removed first, so a
+    model is graded on the code it wrote, not on names it merely considered.
+    """
+    text = re.sub(r"<think>.*?</think>", "", text, flags=re.S)
     blocks = re.findall(r"```[\w+-]*\n(.*?)```", text, re.S)
     return "\n".join(blocks) if blocks else text
 
@@ -82,6 +91,13 @@ def extract(code):
     names = set()
     units = {}
     keys = set()
+    imported = set()
+    for m in _SEMCONV_IMPORT.finditer(code):
+        imported.update(re.findall(r"\b([A-Z][A-Z0-9_]+)\b", m.group(1)))
+    for const in imported:
+        matches = _BY_NORM.get(_norm(const))
+        if matches and len(matches) == 1:
+            names.add(("a", matches[0]))
     for rx in _KEY_CONTEXT:
         keys.update(m.group(1) for m in rx.finditer(code))
     for line in code.split("\n"):
@@ -135,6 +151,14 @@ def audit(code):
             moved.append(name)
         else:
             current.append(name)
+    # When each retired name was retired. v1.21.0 is the oldest release
+    # scanned, so it means "in v1.21.0 or earlier" (July 2023 or before).
+    retired_since = {}
+    for name in retired:
+        row = ATTR.get(name) or METRIC.get(name) or EVENT.get(name) or {}
+        tag = row.get("di")
+        if tag:
+            retired_since[name] = {"release": tag, "date": RELEASE_DATES.get(tag)}
     unit_errors = []
     for name, unit in units.items():
         row = METRIC.get(name)
@@ -143,6 +167,7 @@ def audit(code):
             unit_errors.append(f"{name} in {unit}, spec says {row['u']}")
     return {
         "retired": retired,
+        "retired_since": retired_since,
         "moved_out": moved,
         "current": current,
         "invented": invented,

@@ -1,0 +1,2101 @@
+{
+  "generated": "2026-10-05",
+  "models": 17,
+  "complete_models": 13,
+  "graded_answers_main": 546,
+  "board": [
+    {
+      "model": "gpt-6-astra",
+      "name": "GPT-6 Astra",
+      "cost_usd": 0.9759800000000001,
+      "output_tokens": 18485,
+      "write": 1.0,
+      "write_ci": [
+        0.757,
+        1
+      ],
+      "write_version": 3,
+      "write_retired": 0,
+      "write_invented": 0,
+      "write_unit_errors": 0,
+      "know": 1.0,
+      "know_ci": [
+        0.851,
+        1
+      ],
+      "know_version": 3,
+      "know_controls_failed": [],
+      "know_retired_answers": 0,
+      "fix": 1.0,
+      "fix_ci": [
+        0.676,
+        1
+      ],
+      "fix_version": 3,
+      "fix_traps": {
+        "server_span": true,
+        "enum_value": true,
+        "rpc_ms": true,
+        "go_redis_pool": true
+      },
+      "complete": true,
+      "overall": 1.0
+    },
+    {
+      "model": "claude-opus-5",
+      "name": "Claude Opus 5",
+      "cost_usd": 1.11926,
+      "output_tokens": 42393,
+      "write": 0.6667,
+      "write_ci": [
+        0.391,
+        0.862
+      ],
+      "write_version": 3,
+      "write_retired": 6,
+      "write_invented": 1,
+      "write_unit_errors": 0,
+      "know": 0.9545,
+      "know_ci": [
+        0.782,
+        0.992
+      ],
+      "know_version": 3,
+      "know_controls_failed": [],
+      "know_retired_answers": 1,
+      "fix": 0.875,
+      "fix_ci": [
+        0.529,
+        0.978
+      ],
+      "fix_version": 3,
+      "fix_traps": {
+        "server_span": true,
+        "enum_value": true,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "complete": true,
+      "overall": 0.8321
+    },
+    {
+      "model": "gemini-3.7-flash",
+      "name": "Gemini 3.7 Flash",
+      "cost_usd": 0.1566915,
+      "output_tokens": 40920,
+      "write": 0.75,
+      "write_ci": [
+        0.468,
+        0.911
+      ],
+      "write_version": 3,
+      "write_retired": 7,
+      "write_invented": 0,
+      "write_unit_errors": 0,
+      "know": 0.9091,
+      "know_ci": [
+        0.722,
+        0.975
+      ],
+      "know_version": 3,
+      "know_controls_failed": [],
+      "know_retired_answers": 1,
+      "fix": 0.75,
+      "fix_ci": [
+        0.409,
+        0.929
+      ],
+      "fix_version": 3,
+      "fix_traps": {
+        "server_span": true,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "hint": 0.5833,
+      "hint_ci": [
+        0.32,
+        0.807
+      ],
+      "hint_version": 1,
+      "hint_retired": 6,
+      "hint_invented": 1,
+      "complete": true,
+      "overall": 0.803
+    },
+    {
+      "model": "gpt-5.5",
+      "name": "GPT-5.5",
+      "cost_usd": 1.359755,
+      "output_tokens": 44463,
+      "write": 0.6667,
+      "write_ci": [
+        0.391,
+        0.862
+      ],
+      "write_version": 3,
+      "write_retired": 5,
+      "write_invented": 0,
+      "write_unit_errors": 0,
+      "know": 0.9091,
+      "know_ci": [
+        0.722,
+        0.975
+      ],
+      "know_version": 3,
+      "know_controls_failed": [],
+      "know_retired_answers": 0,
+      "fix": 0.75,
+      "fix_ci": [
+        0.409,
+        0.929
+      ],
+      "fix_version": 3,
+      "fix_traps": {
+        "server_span": true,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "complete": true,
+      "overall": 0.7753
+    },
+    {
+      "model": "claude-sonnet-5",
+      "name": "Claude Sonnet 5",
+      "cost_usd": 0.230254,
+      "output_tokens": 20648,
+      "write": 0.6667,
+      "write_ci": [
+        0.391,
+        0.862
+      ],
+      "write_version": 3,
+      "write_retired": 9,
+      "write_invented": 0,
+      "write_unit_errors": 0,
+      "know": 0.8182,
+      "know_ci": [
+        0.615,
+        0.927
+      ],
+      "know_version": 3,
+      "know_controls_failed": [],
+      "know_retired_answers": 2,
+      "fix": 0.75,
+      "fix_ci": [
+        0.409,
+        0.929
+      ],
+      "fix_version": 3,
+      "fix_traps": {
+        "server_span": true,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "complete": true,
+      "overall": 0.745
+    },
+    {
+      "model": "gemini-3.8-flash",
+      "name": "Gemini 3.8 Flash",
+      "cost_usd": 0.31631025,
+      "output_tokens": 83485,
+      "write": 0.5833,
+      "write_ci": [
+        0.32,
+        0.807
+      ],
+      "write_version": 3,
+      "write_retired": 8,
+      "write_invented": 0,
+      "write_unit_errors": 0,
+      "know": 0.8636,
+      "know_ci": [
+        0.667,
+        0.953
+      ],
+      "know_version": 3,
+      "know_controls_failed": [],
+      "know_retired_answers": 3,
+      "fix": 0.75,
+      "fix_ci": [
+        0.409,
+        0.929
+      ],
+      "fix_version": 3,
+      "fix_traps": {
+        "server_span": true,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "complete": true,
+      "overall": 0.7323
+    },
+    {
+      "model": "gpt-5.4",
+      "name": "GPT-5.4",
+      "cost_usd": 0.09400750000000002,
+      "output_tokens": 5405,
+      "write": 0.5833,
+      "write_ci": [
+        0.32,
+        0.807
+      ],
+      "write_version": 3,
+      "write_retired": 9,
+      "write_invented": 0,
+      "write_unit_errors": 0,
+      "know": 0.7727,
+      "know_ci": [
+        0.566,
+        0.899
+      ],
+      "know_version": 3,
+      "know_controls_failed": [],
+      "know_retired_answers": 0,
+      "fix": 0.75,
+      "fix_ci": [
+        0.409,
+        0.929
+      ],
+      "fix_version": 3,
+      "fix_traps": {
+        "server_span": true,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "complete": true,
+      "overall": 0.702
+    },
+    {
+      "model": "gemini-3.1-pro-preview",
+      "name": "Gemini 3.1 Pro",
+      "cost_usd": 1.073584,
+      "output_tokens": 88745,
+      "write": 0.25,
+      "write_ci": [
+        0.089,
+        0.532
+      ],
+      "write_version": 3,
+      "write_retired": 17,
+      "write_invented": 0,
+      "write_unit_errors": 0,
+      "know": 0.8182,
+      "know_ci": [
+        0.615,
+        0.927
+      ],
+      "know_version": 3,
+      "know_controls_failed": [],
+      "know_retired_answers": 2,
+      "fix": 0.625,
+      "fix_ci": [
+        0.306,
+        0.863
+      ],
+      "fix_version": 3,
+      "fix_traps": {
+        "server_span": true,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "complete": true,
+      "overall": 0.5644
+    },
+    {
+      "model": "claude-sonnet-4-5",
+      "name": "Claude Sonnet 4.5",
+      "cost_usd": 0.10055700000000001,
+      "output_tokens": 4896,
+      "write": 0.4167,
+      "write_ci": [
+        0.193,
+        0.68
+      ],
+      "write_version": 3,
+      "write_retired": 21,
+      "write_invented": 1,
+      "write_unit_errors": 0,
+      "know": 0.6818,
+      "know_ci": [
+        0.473,
+        0.836
+      ],
+      "know_version": 3,
+      "know_controls_failed": [],
+      "know_retired_answers": 2,
+      "fix": 0.5,
+      "fix_ci": [
+        0.215,
+        0.785
+      ],
+      "fix_version": 3,
+      "fix_traps": {
+        "server_span": true,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "complete": true,
+      "overall": 0.5328
+    },
+    {
+      "model": "gpt-5.4-mini",
+      "name": "GPT-5.4 mini",
+      "cost_usd": 0.02284725,
+      "output_tokens": 4215,
+      "write": 0.3333,
+      "write_ci": [
+        0.138,
+        0.609
+      ],
+      "write_version": 3,
+      "write_retired": 16,
+      "write_invented": 5,
+      "write_unit_errors": 0,
+      "know": 0.6364,
+      "know_ci": [
+        0.43,
+        0.803
+      ],
+      "know_version": 3,
+      "know_controls_failed": [],
+      "know_retired_answers": 2,
+      "fix": 0.375,
+      "fix_ci": [
+        0.137,
+        0.694
+      ],
+      "fix_version": 3,
+      "fix_traps": {
+        "server_span": false,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "complete": true,
+      "overall": 0.4482
+    },
+    {
+      "model": "gemini-2.5-pro",
+      "name": "Gemini 2.5 Pro",
+      "cost_usd": 0.8579424999999999,
+      "output_tokens": 85218,
+      "write": 0.1667,
+      "write_ci": [
+        0.047,
+        0.448
+      ],
+      "write_version": 3,
+      "write_retired": 27,
+      "write_invented": 2,
+      "write_unit_errors": 0,
+      "know": 0.5,
+      "know_ci": [
+        0.307,
+        0.693
+      ],
+      "know_version": 3,
+      "know_controls_failed": [
+        "control_url_full",
+        "control_server_address"
+      ],
+      "know_retired_answers": 7,
+      "fix": 0.125,
+      "fix_ci": [
+        0.022,
+        0.471
+      ],
+      "fix_version": 3,
+      "fix_traps": {
+        "server_span": false,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": false
+      },
+      "complete": true,
+      "overall": 0.2639
+    },
+    {
+      "model": "claude-haiku-4-5",
+      "name": "Claude Haiku 4.5",
+      "cost_usd": 0.043124,
+      "output_tokens": 6817,
+      "write": 0.0,
+      "write_ci": [
+        0,
+        0.243
+      ],
+      "write_version": 3,
+      "write_retired": 32,
+      "write_invented": 4,
+      "write_unit_errors": 0,
+      "know": 0.4545,
+      "know_ci": [
+        0.269,
+        0.653
+      ],
+      "know_version": 3,
+      "know_controls_failed": [],
+      "know_retired_answers": 7,
+      "fix": 0.125,
+      "fix_ci": [
+        0.022,
+        0.471
+      ],
+      "fix_version": 3,
+      "fix_traps": {
+        "server_span": false,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": false
+      },
+      "complete": true,
+      "overall": 0.1932
+    },
+    {
+      "model": "qwen3-235b-a22b-instruct-2507",
+      "name": "Qwen 3 235B",
+      "cost_usd": 0.004907979999999999,
+      "output_tokens": 4118,
+      "write": 0.0,
+      "write_ci": [
+        0,
+        0.243
+      ],
+      "write_version": 3,
+      "write_retired": 43,
+      "write_invented": 6,
+      "write_unit_errors": 0,
+      "know": 0.2273,
+      "know_ci": [
+        0.101,
+        0.434
+      ],
+      "know_version": 3,
+      "know_controls_failed": [],
+      "know_retired_answers": 13,
+      "fix": 0.125,
+      "fix_ci": [
+        0.022,
+        0.471
+      ],
+      "fix_version": 3,
+      "fix_traps": {
+        "server_span": false,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": false
+      },
+      "complete": true,
+      "overall": 0.1174
+    },
+    {
+      "model": "deepseek-r1-0528",
+      "name": "DeepSeek-R1",
+      "cost_usd": 0.41956920000000003,
+      "output_tokens": 77112,
+      "write": 0.0833,
+      "write_ci": [
+        0.015,
+        0.354
+      ],
+      "write_version": 3,
+      "write_retired": 42,
+      "write_invented": 5,
+      "write_unit_errors": 0,
+      "fix": 0.0,
+      "fix_ci": [
+        0,
+        0.324
+      ],
+      "fix_version": 3,
+      "fix_traps": {
+        "server_span": false,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": false
+      },
+      "complete": false
+    },
+    {
+      "model": "gemma-4-31b",
+      "name": "Gemma 4 31B",
+      "cost_usd": 0.0231093,
+      "output_tokens": 37908,
+      "write": 0.1667,
+      "write_ci": [
+        0.047,
+        0.448
+      ],
+      "write_version": 3,
+      "write_retired": 25,
+      "write_invented": 6,
+      "write_unit_errors": 0,
+      "fix": 0.125,
+      "fix_ci": [
+        0.022,
+        0.471
+      ],
+      "fix_version": 3,
+      "fix_traps": {
+        "server_span": false,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": false
+      },
+      "complete": false
+    },
+    {
+      "model": "glm-5",
+      "name": "GLM-5",
+      "cost_usd": 0.21933259999999996,
+      "output_tokens": 67838,
+      "write": 0.25,
+      "write_ci": [
+        0.089,
+        0.532
+      ],
+      "write_version": 3,
+      "write_retired": 19,
+      "write_invented": 0,
+      "write_unit_errors": 0,
+      "fix": 0.75,
+      "fix_ci": [
+        0.409,
+        0.929
+      ],
+      "fix_version": 3,
+      "fix_traps": {
+        "server_span": true,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "complete": false
+    },
+    {
+      "model": "grok-4.5-0708",
+      "name": "Grok 4.5",
+      "cost_usd": 0.0,
+      "output_tokens": 0,
+      "complete": false
+    }
+  ],
+  "matrix": {
+    "write": {
+      "claude-haiku-4-5": {
+        "py_http_server": false,
+        "py_postgres": false,
+        "go_http_client": false,
+        "go_redis": false,
+        "ts_express": false,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": false,
+        "py_pool_metrics": false,
+        "py_code_location": false,
+        "ts_resource": false,
+        "go_peer_service": false
+      },
+      "claude-opus-5": {
+        "py_http_server": true,
+        "py_postgres": true,
+        "go_http_client": true,
+        "go_redis": true,
+        "ts_express": true,
+        "ts_kafka": true,
+        "py_grpc": false,
+        "go_http_metrics": true,
+        "py_pool_metrics": false,
+        "py_code_location": false,
+        "ts_resource": true,
+        "go_peer_service": false
+      },
+      "claude-sonnet-4-5": {
+        "py_http_server": true,
+        "py_postgres": false,
+        "go_http_client": true,
+        "go_redis": false,
+        "ts_express": true,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": true,
+        "py_pool_metrics": false,
+        "py_code_location": false,
+        "ts_resource": false,
+        "go_peer_service": true
+      },
+      "claude-sonnet-5": {
+        "py_http_server": true,
+        "py_postgres": true,
+        "go_http_client": true,
+        "go_redis": false,
+        "ts_express": true,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": true,
+        "py_pool_metrics": true,
+        "py_code_location": true,
+        "ts_resource": true,
+        "go_peer_service": false
+      },
+      "deepseek-r1-0528": {
+        "py_http_server": false,
+        "py_postgres": false,
+        "go_http_client": false,
+        "go_redis": false,
+        "ts_express": false,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": false,
+        "py_pool_metrics": false,
+        "py_code_location": false,
+        "ts_resource": false,
+        "go_peer_service": true
+      },
+      "gemini-2.5-pro": {
+        "py_http_server": false,
+        "py_postgres": false,
+        "go_http_client": true,
+        "go_redis": false,
+        "ts_express": true,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": false,
+        "py_pool_metrics": false,
+        "py_code_location": false,
+        "ts_resource": false,
+        "go_peer_service": false
+      },
+      "gemini-3.1-pro-preview": {
+        "py_http_server": true,
+        "py_postgres": false,
+        "go_http_client": true,
+        "go_redis": false,
+        "ts_express": true,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": false,
+        "py_pool_metrics": false,
+        "py_code_location": false,
+        "ts_resource": false,
+        "go_peer_service": false
+      },
+      "gemini-3.7-flash": {
+        "py_http_server": true,
+        "py_postgres": true,
+        "go_http_client": true,
+        "go_redis": true,
+        "ts_express": true,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": true,
+        "py_pool_metrics": true,
+        "py_code_location": true,
+        "ts_resource": true,
+        "go_peer_service": false
+      },
+      "gemini-3.8-flash": {
+        "py_http_server": true,
+        "py_postgres": true,
+        "go_http_client": true,
+        "go_redis": true,
+        "ts_express": false,
+        "ts_kafka": true,
+        "py_grpc": false,
+        "go_http_metrics": true,
+        "py_pool_metrics": false,
+        "py_code_location": false,
+        "ts_resource": true,
+        "go_peer_service": false
+      },
+      "gemma-4-31b": {
+        "py_http_server": true,
+        "py_postgres": false,
+        "go_http_client": true,
+        "go_redis": false,
+        "ts_express": false,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": false,
+        "py_pool_metrics": false,
+        "py_code_location": false,
+        "ts_resource": false,
+        "go_peer_service": false
+      },
+      "glm-5": {
+        "py_http_server": true,
+        "py_postgres": false,
+        "go_http_client": true,
+        "go_redis": false,
+        "ts_express": true,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": false,
+        "py_pool_metrics": false,
+        "py_code_location": false,
+        "ts_resource": false,
+        "go_peer_service": false
+      },
+      "gpt-5.4": {
+        "py_http_server": true,
+        "py_postgres": true,
+        "go_http_client": true,
+        "go_redis": true,
+        "ts_express": false,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": true,
+        "py_pool_metrics": false,
+        "py_code_location": true,
+        "ts_resource": true,
+        "go_peer_service": false
+      },
+      "gpt-5.4-mini": {
+        "py_http_server": false,
+        "py_postgres": false,
+        "go_http_client": true,
+        "go_redis": false,
+        "ts_express": true,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": true,
+        "py_pool_metrics": false,
+        "py_code_location": false,
+        "ts_resource": false,
+        "go_peer_service": true
+      },
+      "gpt-5.5": {
+        "py_http_server": true,
+        "py_postgres": true,
+        "go_http_client": true,
+        "go_redis": true,
+        "ts_express": true,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": false,
+        "py_pool_metrics": true,
+        "py_code_location": true,
+        "ts_resource": true,
+        "go_peer_service": false
+      },
+      "gpt-6-astra": {
+        "py_http_server": true,
+        "py_postgres": true,
+        "go_http_client": true,
+        "go_redis": true,
+        "ts_express": true,
+        "ts_kafka": true,
+        "py_grpc": true,
+        "go_http_metrics": true,
+        "py_pool_metrics": true,
+        "py_code_location": true,
+        "ts_resource": true,
+        "go_peer_service": true
+      },
+      "qwen3-235b-a22b-instruct-2507": {
+        "py_http_server": false,
+        "py_postgres": false,
+        "go_http_client": false,
+        "go_redis": false,
+        "ts_express": false,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": false,
+        "py_pool_metrics": false,
+        "py_code_location": false,
+        "ts_resource": false,
+        "go_peer_service": false
+      }
+    },
+    "know": {
+      "claude-haiku-4-5": {
+        "server_peer": false,
+        "client_peer": true,
+        "server_peer_port": false,
+        "method": true,
+        "status": true,
+        "url": true,
+        "target": false,
+        "user_agent": true,
+        "statement": true,
+        "db_system": false,
+        "db_operation": true,
+        "filepath": false,
+        "lineno": false,
+        "deployment": false,
+        "peer_service": false,
+        "kafka_offset": false,
+        "resend": true,
+        "server_duration": false,
+        "pool_use_time": false,
+        "rpc_duration": false,
+        "control_url_full": true,
+        "control_server_address": true
+      },
+      "claude-opus-5": {
+        "server_peer": true,
+        "client_peer": true,
+        "server_peer_port": true,
+        "method": true,
+        "status": true,
+        "url": true,
+        "target": true,
+        "user_agent": true,
+        "statement": true,
+        "db_system": true,
+        "db_operation": true,
+        "filepath": true,
+        "lineno": true,
+        "deployment": true,
+        "peer_service": false,
+        "kafka_offset": true,
+        "resend": true,
+        "server_duration": true,
+        "pool_use_time": true,
+        "rpc_duration": true,
+        "control_url_full": true,
+        "control_server_address": true
+      },
+      "claude-sonnet-4-5": {
+        "server_peer": false,
+        "client_peer": true,
+        "server_peer_port": true,
+        "method": true,
+        "status": true,
+        "url": true,
+        "target": true,
+        "user_agent": true,
+        "statement": true,
+        "db_system": false,
+        "db_operation": true,
+        "filepath": false,
+        "lineno": false,
+        "deployment": true,
+        "peer_service": false,
+        "kafka_offset": true,
+        "resend": true,
+        "server_duration": true,
+        "pool_use_time": false,
+        "rpc_duration": false,
+        "control_url_full": true,
+        "control_server_address": true
+      },
+      "claude-sonnet-5": {
+        "server_peer": false,
+        "client_peer": true,
+        "server_peer_port": false,
+        "method": true,
+        "status": true,
+        "url": true,
+        "target": true,
+        "user_agent": true,
+        "statement": true,
+        "db_system": true,
+        "db_operation": true,
+        "filepath": true,
+        "lineno": true,
+        "deployment": true,
+        "peer_service": false,
+        "kafka_offset": true,
+        "resend": true,
+        "server_duration": true,
+        "pool_use_time": true,
+        "rpc_duration": false,
+        "control_url_full": true,
+        "control_server_address": true
+      },
+      "gemini-2.5-pro": {
+        "server_peer": true,
+        "client_peer": true,
+        "server_peer_port": true,
+        "method": true,
+        "status": true,
+        "url": true,
+        "target": true,
+        "user_agent": true,
+        "statement": true,
+        "db_system": false,
+        "db_operation": false,
+        "filepath": false,
+        "lineno": false,
+        "deployment": false,
+        "peer_service": false,
+        "kafka_offset": false,
+        "resend": true,
+        "server_duration": true,
+        "pool_use_time": false,
+        "rpc_duration": false,
+        "control_url_full": false,
+        "control_server_address": false
+      },
+      "gemini-3.1-pro-preview": {
+        "server_peer": true,
+        "client_peer": true,
+        "server_peer_port": false,
+        "method": false,
+        "status": true,
+        "url": true,
+        "target": true,
+        "user_agent": true,
+        "statement": true,
+        "db_system": false,
+        "db_operation": true,
+        "filepath": true,
+        "lineno": true,
+        "deployment": true,
+        "peer_service": false,
+        "kafka_offset": true,
+        "resend": true,
+        "server_duration": true,
+        "pool_use_time": true,
+        "rpc_duration": true,
+        "control_url_full": true,
+        "control_server_address": true
+      },
+      "gemini-3.7-flash": {
+        "server_peer": true,
+        "client_peer": true,
+        "server_peer_port": true,
+        "method": true,
+        "status": true,
+        "url": true,
+        "target": true,
+        "user_agent": true,
+        "statement": true,
+        "db_system": true,
+        "db_operation": true,
+        "filepath": true,
+        "lineno": true,
+        "deployment": true,
+        "peer_service": false,
+        "kafka_offset": true,
+        "resend": true,
+        "server_duration": true,
+        "pool_use_time": true,
+        "rpc_duration": false,
+        "control_url_full": true,
+        "control_server_address": true
+      },
+      "gemini-3.8-flash": {
+        "server_peer": true,
+        "client_peer": true,
+        "server_peer_port": true,
+        "method": true,
+        "status": true,
+        "url": true,
+        "target": true,
+        "user_agent": true,
+        "statement": true,
+        "db_system": true,
+        "db_operation": true,
+        "filepath": false,
+        "lineno": true,
+        "deployment": true,
+        "peer_service": false,
+        "kafka_offset": true,
+        "resend": true,
+        "server_duration": true,
+        "pool_use_time": true,
+        "rpc_duration": false,
+        "control_url_full": true,
+        "control_server_address": true
+      },
+      "gpt-5.4": {
+        "server_peer": false,
+        "client_peer": true,
+        "server_peer_port": false,
+        "method": true,
+        "status": true,
+        "url": true,
+        "target": true,
+        "user_agent": true,
+        "statement": true,
+        "db_system": true,
+        "db_operation": false,
+        "filepath": true,
+        "lineno": true,
+        "deployment": true,
+        "peer_service": false,
+        "kafka_offset": true,
+        "resend": true,
+        "server_duration": true,
+        "pool_use_time": true,
+        "rpc_duration": false,
+        "control_url_full": true,
+        "control_server_address": true
+      },
+      "gpt-5.4-mini": {
+        "server_peer": false,
+        "client_peer": true,
+        "server_peer_port": false,
+        "method": true,
+        "status": true,
+        "url": true,
+        "target": true,
+        "user_agent": true,
+        "statement": true,
+        "db_system": false,
+        "db_operation": true,
+        "filepath": true,
+        "lineno": false,
+        "deployment": true,
+        "peer_service": false,
+        "kafka_offset": true,
+        "resend": false,
+        "server_duration": true,
+        "pool_use_time": false,
+        "rpc_duration": false,
+        "control_url_full": true,
+        "control_server_address": true
+      },
+      "gpt-5.5": {
+        "server_peer": true,
+        "client_peer": true,
+        "server_peer_port": true,
+        "method": true,
+        "status": true,
+        "url": true,
+        "target": true,
+        "user_agent": true,
+        "statement": true,
+        "db_system": true,
+        "db_operation": true,
+        "filepath": true,
+        "lineno": true,
+        "deployment": true,
+        "peer_service": false,
+        "kafka_offset": true,
+        "resend": true,
+        "server_duration": true,
+        "pool_use_time": true,
+        "rpc_duration": false,
+        "control_url_full": true,
+        "control_server_address": true
+      },
+      "gpt-6-astra": {
+        "server_peer": true,
+        "client_peer": true,
+        "server_peer_port": true,
+        "method": true,
+        "status": true,
+        "url": true,
+        "target": true,
+        "user_agent": true,
+        "statement": true,
+        "db_system": true,
+        "db_operation": true,
+        "filepath": true,
+        "lineno": true,
+        "deployment": true,
+        "peer_service": true,
+        "kafka_offset": true,
+        "resend": true,
+        "server_duration": true,
+        "pool_use_time": true,
+        "rpc_duration": true,
+        "control_url_full": true,
+        "control_server_address": true
+      },
+      "qwen3-235b-a22b-instruct-2507": {
+        "server_peer": false,
+        "client_peer": true,
+        "server_peer_port": false,
+        "method": false,
+        "status": false,
+        "url": true,
+        "target": false,
+        "user_agent": true,
+        "statement": false,
+        "db_system": false,
+        "db_operation": false,
+        "filepath": false,
+        "lineno": false,
+        "deployment": false,
+        "peer_service": false,
+        "kafka_offset": false,
+        "resend": false,
+        "server_duration": false,
+        "pool_use_time": false,
+        "rpc_duration": false,
+        "control_url_full": true,
+        "control_server_address": true
+      }
+    },
+    "fix": {
+      "claude-haiku-4-5": {
+        "http_client": true,
+        "server_span": false,
+        "db_span": false,
+        "code_location": false,
+        "resource": false,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": false
+      },
+      "claude-opus-5": {
+        "http_client": true,
+        "server_span": true,
+        "db_span": true,
+        "code_location": true,
+        "resource": true,
+        "enum_value": true,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "claude-sonnet-4-5": {
+        "http_client": true,
+        "server_span": true,
+        "db_span": false,
+        "code_location": false,
+        "resource": true,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "claude-sonnet-5": {
+        "http_client": true,
+        "server_span": true,
+        "db_span": true,
+        "code_location": true,
+        "resource": true,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "deepseek-r1-0528": {
+        "http_client": false,
+        "server_span": false,
+        "db_span": false,
+        "code_location": false,
+        "resource": false,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": false
+      },
+      "gemini-2.5-pro": {
+        "http_client": true,
+        "server_span": false,
+        "db_span": false,
+        "code_location": false,
+        "resource": false,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": false
+      },
+      "gemini-3.1-pro-preview": {
+        "http_client": true,
+        "server_span": true,
+        "db_span": false,
+        "code_location": true,
+        "resource": true,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "gemini-3.7-flash": {
+        "http_client": true,
+        "server_span": true,
+        "db_span": true,
+        "code_location": true,
+        "resource": true,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "gemini-3.8-flash": {
+        "http_client": true,
+        "server_span": true,
+        "db_span": true,
+        "code_location": true,
+        "resource": true,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "gemma-4-31b": {
+        "http_client": true,
+        "server_span": false,
+        "db_span": false,
+        "code_location": false,
+        "resource": false,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": false
+      },
+      "glm-5": {
+        "http_client": true,
+        "server_span": true,
+        "db_span": true,
+        "code_location": true,
+        "resource": true,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "gpt-5.4": {
+        "http_client": true,
+        "server_span": true,
+        "db_span": true,
+        "code_location": true,
+        "resource": true,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "gpt-5.4-mini": {
+        "http_client": true,
+        "server_span": false,
+        "db_span": false,
+        "code_location": false,
+        "resource": true,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "gpt-5.5": {
+        "http_client": true,
+        "server_span": true,
+        "db_span": true,
+        "code_location": true,
+        "resource": true,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "gpt-6-astra": {
+        "http_client": true,
+        "server_span": true,
+        "db_span": true,
+        "code_location": true,
+        "resource": true,
+        "enum_value": true,
+        "rpc_ms": true,
+        "go_redis_pool": true
+      },
+      "qwen3-235b-a22b-instruct-2507": {
+        "http_client": true,
+        "server_span": false,
+        "db_span": false,
+        "code_location": false,
+        "resource": false,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": false
+      }
+    },
+    "hint": {
+      "gemini-3.7-flash": {
+        "py_http_server": true,
+        "py_postgres": true,
+        "go_http_client": true,
+        "go_redis": true,
+        "ts_express": true,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": true,
+        "py_pool_metrics": false,
+        "py_code_location": false,
+        "ts_resource": true,
+        "go_peer_service": false
+      }
+    }
+  },
+  "retired_names_in_write": [
+    {
+      "name": "db.system",
+      "uses": 22,
+      "models": 10,
+      "release": "v1.30.0",
+      "date": "2025-01-24"
+    },
+    {
+      "name": "db.operation",
+      "uses": 16,
+      "models": 9,
+      "release": "v1.26.0",
+      "date": "2024-05-21"
+    },
+    {
+      "name": "rpc.service",
+      "uses": 16,
+      "models": 15,
+      "release": "v1.39.0",
+      "date": "2026-01-12"
+    },
+    {
+      "name": "rpc.grpc.status_code",
+      "uses": 15,
+      "models": 15,
+      "release": "v1.39.0",
+      "date": "2026-01-12"
+    },
+    {
+      "name": "rpc.system",
+      "uses": 15,
+      "models": 15,
+      "release": "v1.39.0",
+      "date": "2026-01-12"
+    },
+    {
+      "name": "db.statement",
+      "uses": 14,
+      "models": 9,
+      "release": "v1.26.0",
+      "date": "2024-05-21"
+    },
+    {
+      "name": "http.method",
+      "uses": 13,
+      "models": 4,
+      "release": "v1.21.0",
+      "date": "2023-07-13"
+    },
+    {
+      "name": "http.status_code",
+      "uses": 12,
+      "models": 4,
+      "release": "v1.21.0",
+      "date": "2023-07-13"
+    },
+    {
+      "name": "messaging.kafka.message.offset",
+      "uses": 11,
+      "models": 11,
+      "release": "v1.27.0",
+      "date": "2024-08-02"
+    },
+    {
+      "name": "code.filepath",
+      "uses": 10,
+      "models": 10,
+      "release": "v1.31.0",
+      "date": "2025-03-11"
+    },
+    {
+      "name": "code.function",
+      "uses": 10,
+      "models": 10,
+      "release": "v1.30.0",
+      "date": "2025-01-24"
+    },
+    {
+      "name": "code.lineno",
+      "uses": 10,
+      "models": 10,
+      "release": "v1.30.0",
+      "date": "2025-01-24"
+    },
+    {
+      "name": "db.client.connections.usage",
+      "uses": 9,
+      "models": 9,
+      "release": "v1.26.0",
+      "date": "2024-05-21"
+    },
+    {
+      "name": "deployment.environment",
+      "uses": 9,
+      "models": 9,
+      "release": "v1.27.0",
+      "date": "2024-08-02"
+    },
+    {
+      "name": "peer.service",
+      "uses": 9,
+      "models": 9,
+      "release": "v1.39.0",
+      "date": "2026-01-12"
+    },
+    {
+      "name": "db.name",
+      "uses": 8,
+      "models": 7,
+      "release": "v1.26.0",
+      "date": "2024-05-21"
+    },
+    {
+      "name": "http.target",
+      "uses": 7,
+      "models": 4,
+      "release": "v1.21.0",
+      "date": "2023-07-13"
+    },
+    {
+      "name": "db.sql.table",
+      "uses": 7,
+      "models": 7,
+      "release": "v1.26.0",
+      "date": "2024-05-21"
+    },
+    {
+      "name": "http.url",
+      "uses": 7,
+      "models": 3,
+      "release": "v1.21.0",
+      "date": "2023-07-13"
+    },
+    {
+      "name": "db.client.connections.wait_time",
+      "uses": 7,
+      "models": 7,
+      "release": "v1.26.0",
+      "date": "2024-05-21"
+    },
+    {
+      "name": "http.scheme",
+      "uses": 6,
+      "models": 3,
+      "release": "v1.21.0",
+      "date": "2023-07-13"
+    },
+    {
+      "name": "messaging.kafka.destination.partition",
+      "uses": 6,
+      "models": 6,
+      "release": "v1.25.0",
+      "date": "2024-04-04"
+    },
+    {
+      "name": "messaging.kafka.consumer.group",
+      "uses": 5,
+      "models": 5,
+      "release": "v1.27.0",
+      "date": "2024-08-02"
+    },
+    {
+      "name": "pool.name",
+      "uses": 5,
+      "models": 5,
+      "release": "v1.26.0",
+      "date": "2024-05-21"
+    },
+    {
+      "name": "messaging.operation",
+      "uses": 5,
+      "models": 5,
+      "release": "v1.26.0",
+      "date": "2024-05-21"
+    },
+    {
+      "name": "db.client.connections.use_time",
+      "uses": 5,
+      "models": 5,
+      "release": "v1.26.0",
+      "date": "2024-05-21"
+    },
+    {
+      "name": "net.peer.name",
+      "uses": 5,
+      "models": 4,
+      "release": "v1.21.0",
+      "date": "2023-07-13"
+    },
+    {
+      "name": "net.peer.port",
+      "uses": 5,
+      "models": 4,
+      "release": "v1.21.0",
+      "date": "2023-07-13"
+    },
+    {
+      "name": "http.client_ip",
+      "uses": 3,
+      "models": 2,
+      "release": "v1.26.0",
+      "date": "2024-05-21"
+    },
+    {
+      "name": "http.host",
+      "uses": 2,
+      "models": 2,
+      "release": "v1.26.0",
+      "date": "2024-05-21"
+    },
+    {
+      "name": "http.flavor",
+      "uses": 2,
+      "models": 2,
+      "release": "v1.24.0",
+      "date": "2023-12-15"
+    },
+    {
+      "name": "rpc.client.duration",
+      "uses": 1,
+      "models": 1,
+      "release": "v1.39.0",
+      "date": "2026-01-12"
+    },
+    {
+      "name": "messaging.process.messages",
+      "uses": 1,
+      "models": 1,
+      "release": "v1.27.0",
+      "date": "2024-08-02"
+    },
+    {
+      "name": "net.sock.family",
+      "uses": 1,
+      "models": 1,
+      "release": "v1.21.0",
+      "date": "2023-07-13"
+    },
+    {
+      "name": "net.sock.peer.name",
+      "uses": 1,
+      "models": 1,
+      "release": "v1.21.0",
+      "date": "2023-07-13"
+    },
+    {
+      "name": "net.host.name",
+      "uses": 1,
+      "models": 1,
+      "release": "v1.21.0",
+      "date": "2023-07-13"
+    },
+    {
+      "name": "messaging.message.payload_size_bytes",
+      "uses": 1,
+      "models": 1,
+      "release": "v1.22.0",
+      "date": "2023-10-12"
+    },
+    {
+      "name": "http.client.duration",
+      "uses": 1,
+      "models": 1,
+      "release": "v1.22.0",
+      "date": "2023-10-12"
+    },
+    {
+      "name": "http.server.duration",
+      "uses": 1,
+      "models": 1,
+      "release": "v1.22.0",
+      "date": "2023-10-12"
+    },
+    {
+      "name": "http.user_agent",
+      "uses": 1,
+      "models": 1,
+      "release": "v1.24.0",
+      "date": "2023-12-15"
+    },
+    {
+      "name": "net.peer.ip",
+      "uses": 1,
+      "models": 1,
+      "release": "v1.26.0",
+      "date": "2024-05-21"
+    }
+  ],
+  "retired_ages_years": [
+    3.23,
+    3.23,
+    2.37,
+    2.37,
+    2.37,
+    2.37,
+    1.69,
+    2.37,
+    1.69,
+    3.23,
+    3.23,
+    3.23,
+    2.17,
+    2.17,
+    0.73,
+    0.73,
+    0.73,
+    2.37,
+    3.23,
+    3.23,
+    3.23,
+    3.23,
+    3.23,
+    2.37,
+    2.37,
+    1.57,
+    1.69,
+    1.69,
+    2.17,
+    3.23,
+    3.23,
+    0.73,
+    0.73,
+    0.73,
+    0.73,
+    0.73,
+    2.37,
+    0.73,
+    2.37,
+    2.37,
+    2.37,
+    2.37,
+    1.69,
+    2.37,
+    2.37,
+    1.69,
+    2.5,
+    2.17,
+    2.37,
+    0.73,
+    0.73,
+    0.73,
+    2.37,
+    2.37,
+    2.37,
+    1.57,
+    1.69,
+    1.69,
+    2.17,
+    2.37,
+    2.37,
+    1.69,
+    2.17,
+    2.17,
+    0.73,
+    0.73,
+    0.73,
+    0.73,
+    2.37,
+    3.23,
+    3.23,
+    2.37,
+    2.37,
+    2.37,
+    2.37,
+    1.69,
+    3.23,
+    3.23,
+    3.23,
+    3.23,
+    3.23,
+    2.37,
+    2.37,
+    1.69,
+    3.23,
+    3.23,
+    3.23,
+    3.23,
+    2.37,
+    3.23,
+    3.23,
+    3.23,
+    3.23,
+    0.73,
+    0.73,
+    0.73,
+    2.81,
+    3.23,
+    3.23,
+    3.23,
+    3.23,
+    2.37,
+    1.69,
+    2.37,
+    2.37,
+    2.37,
+    1.57,
+    1.69,
+    1.69,
+    2.17,
+    2.37,
+    2.37,
+    2.37,
+    2.37,
+    1.69,
+    2.37,
+    2.37,
+    1.69,
+    3.23,
+    3.23,
+    2.5,
+    2.17,
+    2.98,
+    2.37,
+    0.73,
+    0.73,
+    0.73,
+    1.69,
+    2.37,
+    2.37,
+    2.37,
+    2.37,
+    1.57,
+    1.69,
+    1.69,
+    2.17,
+    0.73,
+    1.69,
+    1.69,
+    2.17,
+    2.5,
+    2.17,
+    0.73,
+    0.73,
+    0.73,
+    2.37,
+    2.37,
+    2.37,
+    2.37,
+    1.57,
+    1.69,
+    1.69,
+    2.17,
+    0.73,
+    2.17,
+    2.5,
+    2.17,
+    0.73,
+    0.73,
+    0.73,
+    0.73,
+    0.73,
+    0.73,
+    0.73,
+    2.37,
+    1.57,
+    1.69,
+    1.69,
+    0.73,
+    2.37,
+    2.37,
+    2.37,
+    2.37,
+    1.69,
+    2.37,
+    2.37,
+    1.69,
+    3.23,
+    3.23,
+    2.17,
+    2.37,
+    0.73,
+    0.73,
+    0.73,
+    3.23,
+    3.23,
+    2.98,
+    2.98,
+    1.69,
+    2.37,
+    1.57,
+    1.69,
+    1.69,
+    2.17,
+    1.69,
+    2.37,
+    2.37,
+    1.69,
+    2.5,
+    2.17,
+    2.37,
+    0.73,
+    0.73,
+    0.73,
+    2.37,
+    2.37,
+    2.37,
+    2.37,
+    1.57,
+    1.69,
+    1.69,
+    2.17,
+    0.73,
+    3.23,
+    2.17,
+    2.5,
+    2.17,
+    0.73,
+    0.73,
+    0.73,
+    2.37,
+    0.73,
+    2.37,
+    2.37,
+    2.37,
+    1.69,
+    2.37,
+    2.37,
+    1.69,
+    0.73,
+    0.73,
+    0.73,
+    2.37,
+    2.37,
+    1.57,
+    1.69,
+    1.69,
+    2.17,
+    2.17,
+    0.73,
+    0.73,
+    0.73,
+    0.73,
+    3.23,
+    3.23,
+    3.23,
+    2.81,
+    2.37,
+    2.37,
+    2.37,
+    2.37,
+    2.37,
+    1.69,
+    3.23,
+    3.23,
+    3.23,
+    2.37,
+    2.37,
+    1.69,
+    3.23,
+    3.23,
+    2.37,
+    3.23,
+    3.23,
+    3.23,
+    3.23,
+    2.17,
+    2.17,
+    2.37,
+    0.73,
+    0.73,
+    0.73,
+    2.81,
+    2.37,
+    3.23,
+    3.23,
+    3.23,
+    3.23,
+    3.23,
+    1.57,
+    1.69,
+    1.69,
+    2.17,
+    3.23,
+    3.23,
+    3.23
+  ],
+  "invented_names_in_write": [
+    {
+      "name": "messaging.kafka.partition",
+      "uses": 5,
+      "models": 5
+    },
+    {
+      "name": "db.client.connections.usage_time",
+      "uses": 2,
+      "models": 2
+    },
+    {
+      "name": "messaging.kafka.consumer_group",
+      "uses": 2,
+      "models": 2
+    },
+    {
+      "name": "server.socket.peer.name",
+      "uses": 1,
+      "models": 1
+    },
+    {
+      "name": "db.redis.commands",
+      "uses": 1,
+      "models": 1
+    },
+    {
+      "name": "app.ledger.entry_count",
+      "uses": 1,
+      "models": 1
+    },
+    {
+      "name": "messaging.consumer.group.id",
+      "uses": 1,
+      "models": 1
+    },
+    {
+      "name": "messaging.destination",
+      "uses": 1,
+      "models": 1
+    },
+    {
+      "name": "messaging.destination_kind",
+      "uses": 1,
+      "models": 1
+    },
+    {
+      "name": "messaging.message_offset",
+      "uses": 1,
+      "models": 1
+    },
+    {
+      "name": "user.agent",
+      "uses": 1,
+      "models": 1
+    },
+    {
+      "name": "messaging.consumer.group",
+      "uses": 1,
+      "models": 1
+    },
+    {
+      "name": "http.request.target",
+      "uses": 1,
+      "models": 1
+    },
+    {
+      "name": "db.client.connections.usage_duration",
+      "uses": 1,
+      "models": 1
+    },
+    {
+      "name": "db.client.connections.wait_duration",
+      "uses": 1,
+      "models": 1
+    },
+    {
+      "name": "server.name",
+      "uses": 1,
+      "models": 1
+    },
+    {
+      "name": "url.route",
+      "uses": 1,
+      "models": 1
+    },
+    {
+      "name": "messaging.consumer.messages",
+      "uses": 1,
+      "models": 1
+    },
+    {
+      "name": "messaging.message.offset",
+      "uses": 1,
+      "models": 1
+    },
+    {
+      "name": "messaging.kafka.topic",
+      "uses": 1,
+      "models": 1
+    },
+    {
+      "name": "db.client.connection.use.time",
+      "uses": 1,
+      "models": 1
+    },
+    {
+      "name": "db.client.connection.wait.time",
+      "uses": 1,
+      "models": 1
+    },
+    {
+      "name": "db.client.connections.idle",
+      "uses": 1,
+      "models": 1
+    },
+    {
+      "name": "db.client.connections.in_use",
+      "uses": 1,
+      "models": 1
+    }
+  ],
+  "rpc_outcomes": {
+    "claude-haiku-4-5": "left unchanged",
+    "claude-opus-5": "metric fixed, retired attributes added",
+    "claude-sonnet-4-5": "half fix: new unit, retired name",
+    "claude-sonnet-5": "half fix: new unit, retired name",
+    "deepseek-r1-0528": "left unchanged",
+    "gemini-2.5-pro": "half fix: new unit, retired name",
+    "gemini-3.1-pro-preview": "half fix: new unit, retired name",
+    "gemini-3.7-flash": "renamed to a name that does not exist",
+    "gemini-3.8-flash": "left unchanged",
+    "gemma-4-31b": "half fix: new unit, retired name",
+    "glm-5": "right name, values not converted",
+    "gpt-5.4": "half fix: new unit, retired name",
+    "gpt-5.4-mini": "half fix: new unit, retired name",
+    "gpt-5.5": "renamed to a name that does not exist",
+    "gpt-6-astra": "correct",
+    "qwen3-235b-a22b-instruct-2507": "left unchanged"
+  },
+  "know_wrong_quotes": {
+    "server_peer": [
+      [
+        "claude-haiku-4-5",
+        "server.address"
+      ],
+      [
+        "claude-sonnet-4-5",
+        "server.address"
+      ],
+      [
+        "claude-sonnet-5",
+        "server.address"
+      ],
+      [
+        "gpt-5.4",
+        "server.address"
+      ],
+      [
+        "gpt-5.4-mini",
+        "server.address"
+      ],
+      [
+        "qwen3-235b-a22b-instruct-2507",
+        "server.address"
+      ]
+    ],
+    "control_server_address": [
+      [
+        "gemini-2.5-pro",
+        "server.address and server.socket.address"
+      ]
+    ],
+    "control_url_full": [
+      [
+        "gemini-2.5-pro",
+        "url.original"
+      ]
+    ],
+    "resend": [
+      [
+        "gpt-5.4-mini",
+        "http.request.body.size"
+      ],
+      [
+        "qwen3-235b-a22b-instruct-2507",
+        "http.resend_count"
+      ]
+    ]
+  },
+  "pairs": [
+    {
+      "family": "Claude Sonnet",
+      "older": "claude-sonnet-4-5",
+      "newer": "claude-sonnet-5",
+      "older_overall": 0.5328,
+      "newer_overall": 0.745
+    },
+    {
+      "family": "GPT",
+      "older": "gpt-5.4",
+      "newer": "gpt-5.5",
+      "older_overall": 0.702,
+      "newer_overall": 0.7753
+    },
+    {
+      "family": "Gemini Pro",
+      "older": "gemini-2.5-pro",
+      "newer": "gemini-3.1-pro-preview",
+      "older_overall": 0.2639,
+      "newer_overall": 0.5644
+    }
+  ]
+}

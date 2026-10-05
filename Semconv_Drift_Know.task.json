@@ -1,0 +1,6 @@
+{
+  "versionNumber": 1,
+  "name": "Semconv Drift: Know",
+  "description": "22 questions on what replaced a retired OpenTelemetry name, including span kind, unit changes, silent drops and two unchanged controls.",
+  "definition": "@kbench.task(\n    name=\"Semconv Drift: Know\",\n    description=\"22 questions on what replaced a retired OpenTelemetry name, including span kind, unit changes, silent drops and two unchanged controls.\",\n)\ndef semconv_know(llm) -> float:\n    df = pd.DataFrame([{\"qid\": q, \"question\": t, \"gold\": g, \"unit\": u} for q, t, g, u in QUESTIONS])\n    runs = know_one.evaluate(\n        llm=[llm],\n        evaluation_data=df,\n        stop_condition=lambda runs: len(runs) == len(df),\n        max_attempts=2,\n        n_jobs=6,\n        timeout=120,\n        on_failure=\"continue\",\n        remove_run_files=True,\n    )\n    rows = [r.result for r in runs if isinstance(getattr(r, \"result\", None), dict)]\n    wrong = [r[\"id\"] for r in rows if not r[\"correct\"]]\n    kbench.assertions.assert_true(not wrong, expectation=\"All answers correct (wrong: \" + \", \".join(wrong) + \")\")\n    return round(sum(r[\"correct\"] for r in rows) / len(QUESTIONS), 4)\n"
+}

@@ -1,0 +1,464 @@
+{
+  "schema_version": "ATIF-v1.7",
+  "session_id": "Semconv Drift: Write-Run #1",
+  "trajectory_id": "Semconv Drift: Write-Run #1",
+  "agent": {
+    "name": "kaggle-benchmarks",
+    "version": "0.6.1",
+    "model_name": "google/gemini-3.1-flash-lite-preview"
+  },
+  "steps": [
+    {
+      "step_id": 1,
+      "source": "system",
+      "message": "[placeholder] No conversation recorded.",
+      "timestamp": "2026-10-04T12:06:32.113161Z"
+    }
+  ],
+  "notes": "Converted from kbench run.json for task 'Semconv Drift: Write'. No model turn was recorded, so total_steps is 0 and the first step below is a placeholder.",
+  "final_metrics": {
+    "total_steps": 0,
+    "extra": {
+      "kbench_result": {
+        "score": 0.3333
+      }
+    }
+  },
+  "extra": {
+    "kbench": {
+      "task_version": {
+        "version_number": 1,
+        "name": "Semconv Drift: Write",
+        "description": "Writes OpenTelemetry instrumentation for 12 everyday requests. Score is the share of answers that use only current names and correct time units.",
+        "definition": "@kbench.task(\n    name=\"Semconv Drift: Write\",\n    description=\"Writes OpenTelemetry instrumentation for 12 everyday requests. Score is the share of answers that use only current names and correct time units.\",\n)\ndef semconv_write(llm) -> float:\n    df = pd.DataFrame([{\"case_id\": c, \"language\": lang, \"request\": r} for c, lang, r in CASES])\n    runs = write_one.evaluate(\n        llm=[llm],\n        evaluation_data=df,\n        stop_condition=lambda runs: len(runs) == len(df),\n        max_attempts=2,\n        n_jobs=4,\n        timeout=240,\n        on_failure=\"continue\",\n        remove_run_files=True,\n    )\n    rows = [r.result for r in runs if isinstance(getattr(r, \"result\", None), dict)]\n    retired_total = sum(len(r[\"retired\"]) for r in rows)\n    kbench.assertions.assert_true(\n        retired_total == 0,\n        expectation=f\"No retired names in generated code (found {retired_total}: \"\n        + \", \".join(sorted({n for r in rows for n in r[\"retired\"]}))\n        + \")\",\n    )\n    return round(sum(r[\"clean\"] for r in rows) / len(CASES), 4)\n"
+      },
+      "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+      "end_time": "2026-10-04T12:06:39.390882Z",
+      "assertions": [
+        {
+          "expectation": "No retired names in generated code (found 23: code.filepath, code.function, code.lineno, db.client.connections.create_time, db.client.connections.usage, db.client.connections.wait_time, db.name, db.operation, db.sql.table, db.statement, db.system, deployment.environment, net.peer.name, net.peer.port, peer.service, rpc.grpc.status_code, rpc.service, rpc.system)",
+          "status": "BENCHMARK_TASK_RUN_ASSERTION_STATUS_FAILED",
+          "line_number": 222,
+          "definition": "kbench.assertions.assert_true(",
+          "conversation_request_ids": [
+            {
+              "conversation_id": "Semconv Drift: Write-0f8e80cb"
+            }
+          ]
+        }
+      ],
+      "subruns": [
+        {
+          "py_run_id": "Write One-Run #1",
+          "task_name": "Write One",
+          "model_name": "google/gemini-3.1-flash-lite-preview",
+          "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+          "rewards": {
+            "clean": 0.0,
+            "instrumented": 1.0
+          }
+        },
+        {
+          "py_run_id": "Write One-Run #4",
+          "task_name": "Write One",
+          "model_name": "google/gemini-3.1-flash-lite-preview",
+          "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+          "rewards": {
+            "clean": 0.0,
+            "instrumented": 1.0
+          }
+        },
+        {
+          "py_run_id": "Write One-Run #3",
+          "task_name": "Write One",
+          "model_name": "google/gemini-3.1-flash-lite-preview",
+          "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+          "rewards": {
+            "clean": 1.0,
+            "instrumented": 1.0
+          }
+        },
+        {
+          "py_run_id": "Write One-Run #2",
+          "task_name": "Write One",
+          "model_name": "google/gemini-3.1-flash-lite-preview",
+          "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+          "rewards": {
+            "clean": 1.0,
+            "instrumented": 1.0
+          }
+        },
+        {
+          "py_run_id": "Write One-Run #5",
+          "task_name": "Write One",
+          "model_name": "google/gemini-3.1-flash-lite-preview",
+          "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+          "rewards": {
+            "clean": 1.0,
+            "instrumented": 1.0
+          }
+        },
+        {
+          "py_run_id": "Write One-Run #7",
+          "task_name": "Write One",
+          "model_name": "google/gemini-3.1-flash-lite-preview",
+          "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+          "rewards": {
+            "clean": 0.0,
+            "instrumented": 1.0
+          }
+        },
+        {
+          "py_run_id": "Write One-Run #6",
+          "task_name": "Write One",
+          "model_name": "google/gemini-3.1-flash-lite-preview",
+          "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+          "rewards": {
+            "clean": 0.0,
+            "instrumented": 1.0
+          }
+        },
+        {
+          "py_run_id": "Write One-Run #8",
+          "task_name": "Write One",
+          "model_name": "google/gemini-3.1-flash-lite-preview",
+          "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+          "rewards": {
+            "clean": 1.0,
+            "instrumented": 1.0
+          }
+        },
+        {
+          "py_run_id": "Write One-Run #10",
+          "task_name": "Write One",
+          "model_name": "google/gemini-3.1-flash-lite-preview",
+          "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+          "rewards": {
+            "clean": 0.0,
+            "instrumented": 1.0
+          }
+        },
+        {
+          "py_run_id": "Write One-Run #11",
+          "task_name": "Write One",
+          "model_name": "google/gemini-3.1-flash-lite-preview",
+          "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+          "rewards": {
+            "clean": 0.0,
+            "instrumented": 1.0
+          }
+        },
+        {
+          "py_run_id": "Write One-Run #9",
+          "task_name": "Write One",
+          "model_name": "google/gemini-3.1-flash-lite-preview",
+          "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+          "rewards": {
+            "clean": 0.0,
+            "instrumented": 1.0
+          }
+        },
+        {
+          "py_run_id": "Write One-Run #12",
+          "task_name": "Write One",
+          "model_name": "google/gemini-3.1-flash-lite-preview",
+          "state": "BENCHMARK_TASK_RUN_STATE_COMPLETED",
+          "rewards": {
+            "clean": 0.0,
+            "instrumented": 1.0
+          }
+        }
+      ],
+      "conversion_warnings": [
+        {
+          "kind": "subrun_path_unknown",
+          "detail": "Write One-Run #1"
+        },
+        {
+          "kind": "subrun_path_unknown",
+          "detail": "Write One-Run #4"
+        },
+        {
+          "kind": "subrun_path_unknown",
+          "detail": "Write One-Run #3"
+        },
+        {
+          "kind": "subrun_path_unknown",
+          "detail": "Write One-Run #2"
+        },
+        {
+          "kind": "subrun_path_unknown",
+          "detail": "Write One-Run #5"
+        },
+        {
+          "kind": "subrun_path_unknown",
+          "detail": "Write One-Run #7"
+        },
+        {
+          "kind": "subrun_path_unknown",
+          "detail": "Write One-Run #6"
+        },
+        {
+          "kind": "subrun_path_unknown",
+          "detail": "Write One-Run #8"
+        },
+        {
+          "kind": "subrun_path_unknown",
+          "detail": "Write One-Run #10"
+        },
+        {
+          "kind": "subrun_path_unknown",
+          "detail": "Write One-Run #11"
+        },
+        {
+          "kind": "subrun_path_unknown",
+          "detail": "Write One-Run #9"
+        },
+        {
+          "kind": "subrun_path_unknown",
+          "detail": "Write One-Run #12"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "unit_errors is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "invented is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "case is a str"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "retired is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "current is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "unit_errors is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "invented is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "case is a str"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "retired is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "current is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "unit_errors is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "invented is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "case is a str"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "retired is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "current is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "unit_errors is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "invented is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "case is a str"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "retired is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "current is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "unit_errors is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "invented is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "case is a str"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "retired is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "current is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "unit_errors is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "invented is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "case is a str"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "retired is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "current is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "unit_errors is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "invented is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "case is a str"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "retired is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "current is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "unit_errors is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "invented is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "case is a str"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "retired is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "current is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "unit_errors is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "invented is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "case is a str"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "retired is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "current is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "unit_errors is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "invented is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "case is a str"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "retired is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "current is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "unit_errors is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "invented is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "case is a str"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "retired is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "current is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "unit_errors is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "invented is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "case is a str"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "retired is a list"
+        },
+        {
+          "kind": "reward_leaf_unusable",
+          "detail": "current is a list"
+        }
+      ]
+    }
+  }
+}

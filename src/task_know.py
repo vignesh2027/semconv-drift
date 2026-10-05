@@ -4,6 +4,10 @@ from dataclasses import dataclass
 import kaggle_benchmarks as kbench
 import pandas as pd
 
+# Kaggle reserves quota for the maximum possible output of every call, so the
+# cap keeps each reservation small. It is far above what an answer needs.
+LIMITS = {"max_tokens": 3000}
+
 
 @dataclass
 class Answer:
@@ -51,11 +55,12 @@ def _names(text):
 
 @kbench.task(store_task=False)
 def know_one(llm, qid: str, question: str, gold: list, unit: str) -> dict:
-    answer = llm.prompt(f"{question}\n\n{INSTRUCTIONS}", schema=Answer)
+    answer = llm.prompt(f"{question}\n\n{INSTRUCTIONS}", schema=Answer, extra_api_params=LIMITS)
     given = _names(answer.current_name)
     expected = sorted({n for g in gold for n in _names(g)})
     name_ok = given == expected
-    unit_ok = (answer.unit or "").strip().lower() == unit
+    # Units are only graded on metric questions; for attributes the field is ignored.
+    unit_ok = not unit or (answer.unit or "").strip().lower() == unit
     retired_answer = [n for n in given if n in ATTR and is_retired(ATTR[n]) or n in METRIC and is_retired(METRIC[n])]  # noqa: F821
     return {
         "id": qid,
@@ -77,13 +82,16 @@ def semconv_know(llm) -> float:
         llm=[llm],
         evaluation_data=df,
         stop_condition=lambda runs: len(runs) == len(df),
-        max_attempts=2,
-        n_jobs=6,
+        max_attempts=3,
+        n_jobs=1,
         timeout=120,
         on_failure="continue",
         remove_run_files=True,
     )
     rows = [r.result for r in runs if isinstance(getattr(r, "result", None), dict)]
+    if len(rows) != len(df):
+        # A case that never ran must not count as a model failure.
+        raise RuntimeError(f"Only {len(rows)} of {len(df)} cases completed; not scoring a partial run.")
     wrong = [r["id"] for r in rows if not r["correct"]]
     kbench.assertions.assert_true(not wrong, expectation="All answers correct (wrong: " + ", ".join(wrong) + ")")
     return round(sum(r["correct"] for r in rows) / len(QUESTIONS), 4)

@@ -2,9 +2,14 @@
 import kaggle_benchmarks as kbench
 import pandas as pd
 
+# Kaggle reserves quota for the maximum possible output of every call, so the
+# cap keeps each reservation small. It is far above what an answer needs.
+LIMITS = {"max_tokens": 6000}
+
 INSTRUCTIONS = (
     "Update this code to the current OpenTelemetry semantic conventions (v1.44.0). Keep its behaviour "
-    "correct: if a replacement changes a unit or a value format, convert the value too. Return one "
+    "correct: if a replacement changes a unit or a value format, convert the value too. Write attribute "
+    "keys, metric names and attribute values as string literals rather than SDK constants. Return one "
     "complete code block and nothing else."
 )
 
@@ -66,7 +71,7 @@ _SECONDS_CONVERSION = re.compile(  # noqa: F821
 
 @kbench.task(store_task=False)
 def fix_one(llm, case_id: str, language: str, code: str, required: list, check: str) -> dict:
-    response = llm.prompt(f"Language: {language}.\n\n```\n{code}\n```\n\n{INSTRUCTIONS}")
+    response = llm.prompt(f"Language: {language}.\n\n```\n{code}\n```\n\n{INSTRUCTIONS}", extra_api_params=LIMITS)
     out = code_blocks(response)  # noqa: F821
     found = audit(out)  # noqa: F821
     names = {n for n in found["current"]}
@@ -83,7 +88,7 @@ def fix_one(llm, case_id: str, language: str, code: str, required: list, check: 
         if not _SECONDS_CONVERSION.search(out):
             problems.append("values still recorded in milliseconds")
     ok = not found["retired"] and not found["invented"] and not missing and not problems and not found["unit_errors"]
-    return {"case": case_id, "retired_left": found["retired"], "invented": found["invented"], "missing": missing, "problems": problems + found["unit_errors"], "correct": ok}
+    return {"case": case_id, "retired_left": found["retired"], "retired_since": found["retired_since"], "invented": found["invented"], "missing": missing, "problems": problems + found["unit_errors"], "correct": ok}
 
 
 @kbench.task(
@@ -96,13 +101,16 @@ def semconv_fix(llm) -> float:
         llm=[llm],
         evaluation_data=df,
         stop_condition=lambda runs: len(runs) == len(df),
-        max_attempts=2,
-        n_jobs=4,
+        max_attempts=3,
+        n_jobs=1,
         timeout=240,
         on_failure="continue",
         remove_run_files=True,
     )
     rows = [r.result for r in runs if isinstance(getattr(r, "result", None), dict)]
+    if len(rows) != len(df):
+        # A case that never ran must not count as a model failure.
+        raise RuntimeError(f"Only {len(rows)} of {len(df)} cases completed; not scoring a partial run.")
     wrong = [r["case"] for r in rows if not r["correct"]]
     kbench.assertions.assert_true(not wrong, expectation="Every snippet fully modernized (failed: " + ", ".join(wrong) + ")")
     return round(sum(r["correct"] for r in rows) / len(CASES), 4)

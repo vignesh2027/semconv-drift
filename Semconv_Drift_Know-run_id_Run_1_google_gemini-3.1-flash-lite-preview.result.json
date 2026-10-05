@@ -1,0 +1,29 @@
+{
+  "task_name": "Semconv Drift: Know",
+  "source": "Semconv Drift: Know",
+  "trial_name": "Semconv Drift: Know-Run #1",
+  "trial_uri": "kbench://not-a-harbor-trial",
+  "task_id": {
+    "path": "kbench://not-a-harbor-task"
+  },
+  "task_checksum": "unknown (kbench)",
+  "config": {
+    "task": {
+      "path": "kbench://not-a-harbor-task"
+    }
+  },
+  "agent_info": {
+    "name": "kaggle-benchmarks",
+    "version": "0.6.1",
+    "model_info": {
+      "name": "google/gemini-3.1-flash-lite-preview"
+    }
+  },
+  "verifier_result": {
+    "rewards": {
+      "score": 0.5
+    }
+  },
+  "started_at": "2026-10-04T12:03:16.838069Z",
+  "finished_at": "2026-10-04T12:03:21.258312Z"
+}

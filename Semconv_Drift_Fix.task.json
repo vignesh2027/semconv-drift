@@ -1,0 +1,6 @@
+{
+  "versionNumber": 1,
+  "name": "Semconv Drift: Fix",
+  "description": "Modernizes 8 snippets of old OpenTelemetry code, with traps for span kind, retired enum values and metrics whose unit changed from ms to s.",
+  "definition": "@kbench.task(\n    name=\"Semconv Drift: Fix\",\n    description=\"Modernizes 8 snippets of old OpenTelemetry code, with traps for span kind, retired enum values and metrics whose unit changed from ms to s.\",\n)\ndef semconv_fix(llm) -> float:\n    df = pd.DataFrame([{\"case_id\": c, \"language\": lang, \"code\": code, \"required\": req, \"check\": chk or \"\"} for c, lang, code, req, chk in CASES])\n    runs = fix_one.evaluate(\n        llm=[llm],\n        evaluation_data=df,\n        stop_condition=lambda runs: len(runs) == len(df),\n        max_attempts=2,\n        n_jobs=4,\n        timeout=240,\n        on_failure=\"continue\",\n        remove_run_files=True,\n    )\n    rows = [r.result for r in runs if isinstance(getattr(r, \"result\", None), dict)]\n    wrong = [r[\"case\"] for r in rows if not r[\"correct\"]]\n    kbench.assertions.assert_true(not wrong, expectation=\"Every snippet fully modernized (failed: \" + \", \".join(wrong) + \")\")\n    return round(sum(r[\"correct\"] for r in rows) / len(CASES), 4)\n"
+}

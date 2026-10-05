@@ -1,4 +1,6 @@
-# Task 1: Write. Does the model use retired names when it writes new code?
+# Task 4: Write with a version hint. The same 12 requests as Write, plus one
+# sentence saying which spec version is current and that names have changed.
+# The difference from Write measures how much a single line of context helps.
 from dataclasses import dataclass
 
 import kaggle_benchmarks as kbench
@@ -8,7 +10,12 @@ import pandas as pd
 # cap keeps each reservation small. It is far above what an answer needs.
 LIMITS = {"max_tokens": 6000}
 
-INSTRUCTIONS = (
+HINT = (
+    "Target OpenTelemetry semantic conventions v1.44.0 (released August 2026). Many attribute and metric "
+    "names were renamed or removed between 2023 and 2026, so do not rely on older names. "
+)
+
+INSTRUCTIONS = HINT + (
     "Follow the current OpenTelemetry semantic conventions. Write attribute keys and metric names as "
     "string literals rather than SDK constants. Return one complete code block and nothing else."
 )
@@ -30,7 +37,7 @@ CASES = [
 
 
 @kbench.task(store_task=False)
-def write_one(llm, case_id: str, language: str, request: str) -> dict:
+def write_hint_one(llm, case_id: str, language: str, request: str) -> dict:
     response = llm.prompt(f"Language: {language}.\n{request}\n\n{INSTRUCTIONS}", extra_api_params=LIMITS)
     found = audit(response)  # noqa: F821, from the inlined grader
     instrumented = len(found["current"]) + len(found["retired"]) + len(found["moved_out"]) + len(found["invented"]) >= 3
@@ -47,12 +54,12 @@ def write_one(llm, case_id: str, language: str, request: str) -> dict:
 
 
 @kbench.task(
-    name="Semconv Drift: Write",
-    description="Writes OpenTelemetry instrumentation for 12 everyday requests. Score is the share of answers that use only current names and correct time units.",
+    name="Semconv Drift: Write with version hint",
+    description="The 12 Write requests plus one sentence naming the current spec version and warning that names changed. Measures how much a single line of context reduces drift.",
 )
-def semconv_write(llm) -> float:
+def semconv_write_hint(llm) -> float:
     df = pd.DataFrame([{"case_id": c, "language": lang, "request": r} for c, lang, r in CASES])
-    runs = write_one.evaluate(
+    runs = write_hint_one.evaluate(
         llm=[llm],
         evaluation_data=df,
         stop_condition=lambda runs: len(runs) == len(df),
@@ -76,4 +83,4 @@ def semconv_write(llm) -> float:
     return round(sum(r["clean"] for r in rows) / len(CASES), 4)
 
 
-semconv_write.run(kbench.llm)
+semconv_write_hint.run(kbench.llm)

@@ -1,0 +1,6 @@
+{
+  "versionNumber": 1,
+  "name": "Semconv Drift: Write",
+  "description": "Writes OpenTelemetry instrumentation for 12 everyday requests. Score is the share of answers that use only current names and correct time units.",
+  "definition": "@kbench.task(\n    name=\"Semconv Drift: Write\",\n    description=\"Writes OpenTelemetry instrumentation for 12 everyday requests. Score is the share of answers that use only current names and correct time units.\",\n)\ndef semconv_write(llm) -> float:\n    df = pd.DataFrame([{\"case_id\": c, \"language\": lang, \"request\": r} for c, lang, r in CASES])\n    runs = write_one.evaluate(\n        llm=[llm],\n        evaluation_data=df,\n        stop_condition=lambda runs: len(runs) == len(df),\n        max_attempts=2,\n        n_jobs=4,\n        timeout=240,\n        on_failure=\"continue\",\n        remove_run_files=True,\n    )\n    rows = [r.result for r in runs if isinstance(getattr(r, \"result\", None), dict)]\n    retired_total = sum(len(r[\"retired\"]) for r in rows)\n    kbench.assertions.assert_true(\n        retired_total == 0,\n        expectation=f\"No retired names in generated code (found {retired_total}: \"\n        + \", \".join(sorted({n for r in rows for n in r[\"retired\"]}))\n        + \")\",\n    )\n    return round(sum(r[\"clean\"] for r in rows) / len(CASES), 4)\n"
+}

@@ -55,13 +55,13 @@ def check_fix(source):
     return len(ast.literal_eval(cases))
 
 
-for name in ["write", "know", "fix"]:
+for name in ["write", "know", "fix", "write_hint"]:
     body = (SRC / f"task_{name}.py").read_text()
     if name == "know":
         n = check_know(body)
     elif name == "fix":
         n = check_fix(body)
-    else:
+    else:  # write and write_hint share the CASES layout
         tree = ast.parse(body)
         n = len(ast.literal_eval(next(x.value for x in tree.body if isinstance(x, ast.Assign) and x.targets[0].id == "CASES")))
     head, _, rest = body.partition("\n\n")
@@ -73,7 +73,8 @@ for name in ["write", "know", "fix"]:
         "# Attrition dataset (Sanity project y9raau23), OpenTelemetry semantic conventions v1.21.0 to v1.44.0.\n"
         "import json\nimport re\n"
         f"{header}\n\n"
-        f"DATA_JSON = {json.dumps(data)}\n\n"
+        f"DATA_JSON = {json.dumps(data)}\n"
+        f"RELEASES_JSON = {json.dumps((SRC / 'release-dates.json').read_text())}\n\n"
         f"{grader}\n\n"
         f"{without_imports.split(chr(10), 1)[1].lstrip()}"
     )
