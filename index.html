@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Semconv Drift</title>
+<meta name="description" content="A Kaggle benchmark that measures whether AI models write OpenTelemetry code with semantic convention names the spec already retired. Graded in code, no AI judge.">
+<meta property="og:title" content="Semconv Drift">
+<meta property="og:description" content="Do AI models write OpenTelemetry code with names the spec already retired? A Kaggle benchmark graded in code against 26 spec releases.">
+<meta property="og:image" content="https://vignesh2027.github.io/semconv-drift/results/charts/01_leaderboard.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%233b6fd8'/%3E%3Cpath d='M8 21l5-6 4 4 7-9' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f8fb; --panel: #ffffff; --ink: #1b2333; --muted: #5d6578; --line: #e3e6ee;
+  --accent: #3b6fd8; --accent-soft: #e4ecfc; --good: #1f9d68; --bad: #d64545; --warn: #d98a1c;
+  --code-bg: #eef1f7; --shadow: 0 1px 2px rgba(20, 30, 50, .05), 0 4px 16px rgba(20, 30, 50, .04);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e131d; --panel: #151c29; --ink: #e6e9f0; --muted: #98a1b4; --line: #263042;
+    --accent: #6d97f0; --accent-soft: #1c2a47; --good: #3cc58b; --bad: #f07272; --warn: #f0b04d;
+    --code-bg: #1d2535; --shadow: none;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e131d; --panel: #151c29; --ink: #e6e9f0; --muted: #98a1b4; --line: #263042;
+  --accent: #6d97f0; --accent-soft: #1c2a47; --good: #3cc58b; --bad: #f07272; --warn: #f0b04d;
+  --code-bg: #1d2535; --shadow: none;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: .88em; background: var(--code-bg); padding: .1em .35em; border-radius: 4px; overflow-wrap: anywhere; }
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+header.top { border-bottom: 1px solid var(--line); background: var(--panel); position: sticky; top: 0; z-index: 5; }
+header.top .wrap { display: flex; align-items: center; gap: 16px; height: 56px; }
+.brand { font-weight: 700; color: var(--ink); display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+.brand svg { flex: none; }
+nav.links { margin-left: auto; display: flex; gap: 18px; font-size: 14px; font-weight: 500; }
+nav.links a { color: var(--muted); }
+nav.links a:hover { color: var(--ink); text-decoration: none; }
+#theme { background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 8px; width: 34px; height: 34px; cursor: pointer; font-size: 15px; flex: none; }
+@media (max-width: 680px) { nav.links .opt { display: none; } }
+.hero { padding: 56px 0 32px; }
+.eyebrow { color: var(--accent); font-weight: 600; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+h1 { font-size: clamp(28px, 5vw, 44px); line-height: 1.15; margin: 10px 0 16px; letter-spacing: -.02em; }
+.lede { font-size: 18px; color: var(--muted); max-width: 720px; margin: 0; }
+.cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 9px; font-weight: 600; font-size: 15px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn:hover { text-decoration: none; filter: brightness(1.05); }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 36px 0 8px; }
+.stat { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; box-shadow: var(--shadow); }
+.stat b { display: block; font-size: 26px; letter-spacing: -.01em; }
+.stat span { color: var(--muted); font-size: 13px; }
+@media (max-width: 680px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+section { padding: 36px 0; scroll-margin-top: 56px; }
+h2 { font-size: 26px; letter-spacing: -.01em; margin: 0 0 8px; }
+h3 { font-size: 18px; margin: 28px 0 6px; }
+.sub { color: var(--muted); margin: 0 0 20px; max-width: 760px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); }
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 600; cursor: pointer; user-select: none; }
+th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
+th[aria-sort]::after { content: " ↓"; }
+th[aria-sort="ascending"]::after { content: " ↑"; }
+tr:last-child td { border-bottom: none; }
+td.model { font-weight: 600; }
+.rank { color: var(--muted); width: 1%; }
+.bar { position: relative; min-width: 128px; }
+.bar::before { content: ""; position: absolute; left: 12px; top: 50%; height: 6px; transform: translateY(-50%); border-radius: 3px; background: var(--accent-soft); width: calc(100% - 70px); }
+.bar i { position: absolute; left: 12px; top: 50%; height: 6px; transform: translateY(-50%); border-radius: 3px; background: var(--accent); width: calc((100% - 70px) * var(--v)); }
+.bar b { position: relative; display: block; text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+.pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+.pill.bad { background: color-mix(in srgb, var(--bad) 14%, transparent); color: var(--bad); }
+.pill.good { background: color-mix(in srgb, var(--good) 14%, transparent); color: var(--good); }
+.pending { color: var(--muted); font-style: italic; }
+.note { color: var(--muted); font-size: 13px; margin: 10px 2px 0; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 820px) { .grid2 { grid-template-columns: 1fr; } }
+figure { margin: 0; padding: 16px; }
+figure img { width: 100%; height: auto; display: block; border-radius: 8px; background: #fff; }
+figcaption { color: var(--muted); font-size: 14px; margin-top: 10px; }
+.finding { padding: 20px; }
+.finding h3 { margin-top: 0; }
+.finding p { margin: 0 0 12px; }
+.tasks { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+@media (max-width: 680px) { .tasks { grid-template-columns: 1fr; } }
+.task { padding: 18px; }
+.task h3 { margin: 0 0 4px; display: flex; justify-content: space-between; gap: 8px; }
+.task h3 small { color: var(--muted); font-weight: 500; font-size: 13px; }
+.task p { margin: 0 0 10px; color: var(--muted); font-size: 15px; }
+ul.clean { padding-left: 20px; margin: 0; }
+ul.clean li { margin: 6px 0; }
+footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; padding: 28px 0 40px; margin-top: 24px; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#"><svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#3b6fd8"/><path d="M8 21l5-6 4 4 7-9" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Semconv Drift</a>
+    <nav class="links">
+      <a href="#leaderboard">Leaderboard</a>
+      <a class="opt" href="#findings">Findings</a>
+      <a class="opt" href="#method">Method</a>
+      <a href="https://github.com/vignesh2027/semconv-drift">GitHub</a>
+    </nav>
+    <button id="theme" type="button" aria-label="Toggle dark mode">◐</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <div class="eyebrow">A Kaggle benchmark for OpenTelemetry</div>
+    <h1>Do AI models write telemetry code with names the spec already retired?</h1>
+    <p class="lede">OpenTelemetry renames attributes and metrics between releases. The old names still compile, still export and still store, so nothing fails until a dashboard quietly stops matching. Semconv Drift measures how often models write them, graded in code against every release of the spec. No AI judge.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://www.kaggle.com/benchmarks/applesone/semconv-drift">View on Kaggle</a>
+      <a class="btn" href="https://github.com/vignesh2027/semconv-drift">Source and data</a>
+      <a class="btn" href="#leaderboard">Leaderboard</a>
+    </div>
+    <div class="stats" id="stats">
+      <div class="stat"><b id="s-models">…</b><span>models tested</span></div>
+      <div class="stat"><b id="s-answers">…</b><span>graded answers</span></div>
+      <div class="stat"><b>1,563</b><span>names in the ground truth</span></div>
+      <div class="stat"><b>26</b><span>spec releases, v1.21.0 to v1.44.0</span></div>
+    </div>
+  </div>
+
+  <section id="leaderboard">
+    <h2>Leaderboard</h2>
+    <p class="sub">Overall is the mean of Write, Know and Fix. Click a column to sort. "Retired" counts retired names written across the 12 Write requests. Hover a score for its 95% Wilson interval.</p>
+    <div class="card table-wrap">
+      <table id="board">
+        <thead><tr>
+          <th class="rank" data-k="rank">#</th>
+          <th data-k="name">Model</th>
+          <th class="num" data-k="overall">Overall</th>
+          <th class="num" data-k="write">Write</th>
+          <th class="num" data-k="know">Know</th>
+          <th class="num" data-k="fix">Fix</th>
+          <th class="num" data-k="hint">Write + hint</th>
+          <th class="num" data-k="write_retired">Retired</th>
+          <th class="num" data-k="cost_usd">Cost</th>
+        </tr></thead>
+        <tbody><tr><td colspan="9" class="pending">Loading results…</td></tr></tbody>
+      </table>
+    </div>
+    <p class="note" id="board-note"></p>
+  </section>
+
+  <section id="findings">
+    <h2>Findings</h2>
+    <p class="sub">Every chart is generated from the Kaggle runs by <code>charts.py</code>. Numbers update with each analysis run.</p>
+
+    <div class="card"><figure>
+      <img src="results/charts/01_leaderboard.png" alt="Leaderboard chart: overall score per model with Write, Know and Fix shown as markers" loading="lazy">
+      <figcaption>Write is where most models lose ground. Knowing the current name when asked is not the same as writing it in code.</figcaption>
+    </figure></div>
+
+    <h3>The retired names are old, not new</h3>
+    <p class="sub" id="f-age">Most retired names that models write were retired more than a year before the run. This is stale training data, not a fast-moving spec.</p>
+    <div class="grid2">
+      <div class="card"><figure><img src="results/charts/03_retired_age.png" alt="Histogram of how long ago each retired name was retired" loading="lazy"><figcaption>Years since the spec retired each name a model wrote.</figcaption></figure></div>
+      <div class="card"><figure><img src="results/charts/04_top_retired_names.png" alt="The most frequently written retired names" loading="lazy"><figcaption id="f-top"><code>db.system</code> leads: renamed to <code>db.system.name</code> in v1.30.0 (January 2025).</figcaption></figure></div>
+    </div>
+
+    <h3>The half fix</h3>
+    <div class="card"><figure>
+      <img src="results/charts/06_half_fix.png" alt="Outcomes when models were asked to modernize rpc.client.duration" loading="lazy">
+      <figcaption>Asked to modernize <code>rpc.client.duration</code> (milliseconds), most models converted the values to seconds but kept the retired name. The result matches neither spec version: queries on the old name read values 1,000 times too small, and queries on the new name, <code>rpc.client.call.duration</code>, find nothing.</figcaption>
+    </figure></div>
+
+    <h3>Generations and price</h3>
+    <div class="grid2">
+      <div class="card"><figure><img src="results/charts/05_generations.png" alt="Older and newer model in the same family" loading="lazy"><figcaption>In every family pair, the newer model drifts less.</figcaption></figure></div>
+      <div class="card"><figure><img src="results/charts/07_cost_vs_score.png" alt="Cost of the full run against overall score" loading="lazy"><figcaption>Above the bottom of the table, spending more does not reliably buy current names.</figcaption></figure></div>
+    </div>
+
+    <h3>Every case, every model</h3>
+    <div class="card"><figure>
+      <img src="results/charts/02_heatmap.png" alt="Heatmap of pass and fail for each model and case" loading="lazy">
+      <figcaption>Green is correct, red is wrong. W: Write, K: Know, F: Fix.</figcaption>
+    </figure></div>
+
+    <div id="hint-block" hidden>
+      <h3>What one sentence of context changes</h3>
+      <div class="card"><figure>
+        <img src="results/charts/08_version_hint.png" alt="Write score without and with a one-sentence version hint" loading="lazy">
+        <figcaption>The same 12 Write requests with one added sentence naming the current spec version.</figcaption>
+      </figure></div>
+    </div>
+  </section>
+
+  <section id="method">
+    <h2>How it works</h2>
+    <p class="sub">Four tasks on Kaggle Benchmarks. Every answer is graded by <code>grader.py</code> against the spec's own release history, so every score is reproducible.</p>
+    <div class="tasks">
+      <div class="card task"><h3>Write <small>12 cases</small></h3><p>Instrument everyday code: HTTP server and client, Postgres, Redis, Kafka, gRPC, metrics and resources, in Python, Go and TypeScript. Clean only if every name is current and time units are right.</p><a href="https://www.kaggle.com/benchmarks/tasks/applesone/semconv-drift-write">Open task</a></div>
+      <div class="card task"><h3>Know <small>22 cases</small></h3><p>What replaced a retired name. Includes span-kind traps, silently dropped metrics and two controls whose right answer is "unchanged".</p><a href="https://www.kaggle.com/benchmarks/tasks/applesone/semconv-drift-know">Open task</a></div>
+      <div class="card task"><h3>Fix <small>8 cases</small></h3><p>Modernize old snippets, including real code from redis/go-redis. Units must be converted, and an enum value trap checks values as well as keys.</p><a href="https://www.kaggle.com/benchmarks/tasks/applesone/semconv-drift-fix">Open task</a></div>
+      <div class="card task"><h3>Write with version hint <small>12 cases</small></h3><p>The Write requests plus one sentence naming the current spec version. The difference measures what one line of context buys.</p><a href="https://www.kaggle.com/benchmarks/tasks/applesone/semconv-drift-write-with-version-hint">Open task</a></div>
+    </div>
+    <h3>Grading rules</h3>
+    <ul class="clean">
+      <li><b>Retired:</b> deprecated or dropped by the spec, with the release and date that retired it. Names that moved to the GenAI repository are not counted.</li>
+      <li><b>Invented:</b> a key under a namespace the spec owns (<code>http.</code>, <code>db.</code>, <code>messaging.</code> …) that no release from v1.0.0 to v1.44.0 defined.</li>
+      <li><b>Units:</b> only time units (<code>ms</code> against <code>s</code>), where a mistake corrupts data.</li>
+      <li><b>Reasoning</b> text is removed first, so a model is judged on the code it wrote.</li>
+      <li><b>The answer key is checked too:</b> <code>build.py</code> verifies every gold answer against the ground truth before building the tasks.</li>
+    </ul>
+    <h3>Ground truth</h3>
+    <p class="sub">Exported from the public <a href="https://github.com/vignesh2027/attrition">Attrition</a> dataset, built from every tagged release of <a href="https://github.com/open-telemetry/semantic-conventions">open-telemetry/semantic-conventions</a>.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Built by <a href="https://github.com/vignesh2027">Vignesh S</a> for the DEV Kaggle Benchmarking Challenge. Code under the MIT License; spec data from OpenTelemetry under Apache 2.0.</span>
+    <span id="updated"></span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  try { var saved = localStorage.getItem("theme"); if (saved) root.setAttribute("data-theme", saved); } catch (e) {}
+  document.getElementById("theme").addEventListener("click", function () {
+    var dark = root.getAttribute("data-theme") ? root.getAttribute("data-theme") === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    var next = dark ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch (e) {}
+  });
+
+  var pct = function (v) { return v == null ? null : Math.round(v * 100); };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+  var rows = [], sortKey = "overall", asc = false;
+
+  function cell(v, ci) {
+    if (v == null) return '<td class="num pending">pending</td>';
+    var title = ci ? ' title="95% interval: ' + pct(ci[0]) + "% to " + pct(ci[1]) + '%"' : "";
+    return '<td class="num bar"' + title + ' style="--v:' + v + '"><i></i><b>' + pct(v) + "%</b></td>";
+  }
+
+  function render() {
+    var sorted = rows.slice().sort(function (a, b) {
+      var x = a[sortKey], y = b[sortKey];
+      if (sortKey === "name") return asc ? String(x).localeCompare(y) : String(y).localeCompare(x);
+      if (x == null) return 1; if (y == null) return -1;
+      return asc ? x - y : y - x;
+    });
+    document.querySelector("#board tbody").innerHTML = sorted.map(function (r) {
+      var retired = r.write_retired == null ? '<td class="num pending">n/a</td>'
+        : '<td class="num"><span class="pill ' + (r.write_retired ? "bad" : "good") + '">' + r.write_retired + "</span></td>";
+      return "<tr><td class=\"rank\">" + (r.rank || "") + '</td><td class="model">' + esc(r.name) + "</td>" +
+        (r.overall == null ? '<td class="num pending">pending</td>' : cell(r.overall)) +
+        cell(r.write, r.write_ci) + cell(r.know, r.know_ci) + cell(r.fix, r.fix_ci) + cell(r.hint, r.hint_ci) + retired +
+        '<td class="num">$' + (r.cost_usd || 0).toFixed(2) + "</td></tr>";
+    }).join("");
+    document.querySelectorAll("#board th").forEach(function (th) {
+      if (th.dataset.k === sortKey) th.setAttribute("aria-sort", asc ? "ascending" : "descending"); else th.removeAttribute("aria-sort");
+    });
+  }
+
+  document.querySelectorAll("#board th").forEach(function (th) {
+    th.addEventListener("click", function () {
+      var k = th.dataset.k === "rank" ? "overall" : th.dataset.k;
+      if (k === sortKey) asc = !asc; else { sortKey = k; asc = k === "name"; }
+      render();
+    });
+  });
+
+  fetch("results/summary.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (S) {
+    rows = S.board.filter(function (r) { return r.write != null || r.know != null || r.fix != null; });
+    var n = 0;
+    rows.forEach(function (r) { if (r.complete) r.rank = ++n; });
+    document.getElementById("s-models").textContent = rows.length;
+    document.getElementById("s-answers").textContent = S.graded_answers_main.toLocaleString("en-US");
+    var partial = rows.filter(function (r) { return !r.complete; }).map(function (r) { return r.name; });
+    document.getElementById("board-note").textContent =
+      S.complete_models + " models have complete runs on Write, Know and Fix." +
+      (partial.length ? " Still running: " + partial.join(", ") + "." : "");
+    var ages = S.retired_ages_years || [];
+    if (ages.length) {
+      var old = ages.filter(function (a) { return a >= 1; }).length;
+      document.getElementById("f-age").textContent = old + " of the " + ages.length +
+        " retired names that models wrote (" + Math.round(old / ages.length * 100) +
+        "%) had been retired for more than a year when the benchmark ran. This is stale training data, not a fast-moving spec.";
+    }
+    if (rows.some(function (r) { return r.hint != null && r.model !== "gemini-3.7-flash"; })) document.getElementById("hint-block").hidden = false;
+    document.getElementById("updated").textContent = "Results generated " + S.generated;
+    render();
+  }).catch(function () {
+    document.querySelector("#board tbody").innerHTML = '<tr><td colspan="9" class="pending">Could not load results/summary.json. See results/report.md on GitHub.</td></tr>';
+  });
+})();
+</script>
+</body>
+</html>

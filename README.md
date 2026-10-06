@@ -4,7 +4,7 @@
 
 OpenTelemetry's semantic conventions name everything telemetry records: `http.request.method`, `db.system.name`, `http.server.request.duration`. Those names change between releases. A model trained on older tutorials keeps writing the old ones, and nothing fails loudly: the data still flows, while dashboards and alerts quietly stop matching.
 
-**[Kaggle benchmark](https://www.kaggle.com/benchmarks/applesone/semconv-drift)** · Tasks: [Write](https://www.kaggle.com/benchmarks/tasks/applesone/semconv-drift-write) · [Know](https://www.kaggle.com/benchmarks/tasks/applesone/semconv-drift-know) · [Fix](https://www.kaggle.com/benchmarks/tasks/applesone/semconv-drift-fix) · [Write with version hint](https://www.kaggle.com/benchmarks/tasks/applesone/semconv-drift-write-with-version-hint) · [Results](results/report.md)
+**[Website](https://vignesh2027.github.io/semconv-drift/)** · **[Kaggle benchmark](https://www.kaggle.com/benchmarks/applesone/semconv-drift)** · Tasks: [Write](https://www.kaggle.com/benchmarks/tasks/applesone/semconv-drift-write) · [Know](https://www.kaggle.com/benchmarks/tasks/applesone/semconv-drift-know) · [Fix](https://www.kaggle.com/benchmarks/tasks/applesone/semconv-drift-fix) · [Write with version hint](https://www.kaggle.com/benchmarks/tasks/applesone/semconv-drift-write-with-version-hint) · [Results](results/report.md)
 
 Semconv Drift measures that on Kaggle Benchmarks, with four tasks and no AI judge. Every answer is graded in code against 1,563 attribute, metric and event names from 26 releases of the specification (v1.21.0 to v1.44.0).
 
