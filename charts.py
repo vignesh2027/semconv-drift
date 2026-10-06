@@ -31,7 +31,7 @@ def finish(fig, ax, name, note=None):
     if note:
         fig.text(0.01, 0.01, note, color=MUTED, fontsize=9)
     fig.tight_layout(rect=(0, 0.03 if note else 0, 1, 1))
-    fig.savefig(OUT / name)
+    fig.savefig(OUT / name, bbox_inches="tight", pad_inches=0.25)
     plt.close(fig)
     print("saved", name)
 
@@ -123,8 +123,8 @@ finish(fig, ax, "05_generations.png")
 out = S["rpc_outcomes"]
 cats = ["correct", "metric fixed, retired attributes added", "half fix: new unit, retired name", "renamed to a name that does not exist", "right name, values not converted", "left unchanged"]
 cat_color = {cats[0]: GOOD, cats[1]: "#7cc9a5", cats[2]: WARN, cats[3]: "#8e6bd6", cats[4]: "#c98a2a", cats[5]: BAD}
-counts = collections.Counter(out.get(m, "other") for m in order)
-fig, ax = plt.subplots(figsize=(11, 3.4))
+counts = collections.Counter(out.values())  # every model with a Fix result
+fig, ax = plt.subplots(figsize=(11, 2.9))
 left = 0
 for c in cats:
     n = counts.get(c, 0)
@@ -133,11 +133,10 @@ for c in cats:
         ax.text(left + n / 2, 0, f"{n}", ha="center", va="center", color="white", fontsize=13, fontweight="bold")
         left += n
 ax.set_yticks([])
-ax.set_xlim(0, len(order))
-ax.legend([plt.Rectangle((0, 0), 1, 1, color=cat_color[c]) for c in cats if counts.get(c)], [c for c in cats if counts.get(c)], frameon=False, loc="upper center", bbox_to_anchor=(0.5, -0.45), ncol=3, fontsize=10)
-ax.set_xlabel("Models")
+ax.set_xlim(0, len(out))
+ax.legend([plt.Rectangle((0, 0), 1, 1, color=cat_color[c]) for c in cats if counts.get(c)], [c for c in cats if counts.get(c)], frameon=False, loc="upper center", bbox_to_anchor=(0.5, -0.3), ncol=3, fontsize=10)
 ax.set_title("Fixing rpc.client.duration (ms): most models fixed the unit and kept the retired name")
-finish(fig, ax, "06_half_fix.png", "The half fix records seconds under a name the old spec defined in milliseconds, so it matches neither version.")
+finish(fig, ax, "06_half_fix.png", f"{len(out)} models with a Fix result. The half fix records seconds under a name the old spec defined in milliseconds, so it matches neither version.")
 
 # 7. Cost against score.
 fig, ax = plt.subplots(figsize=(10, 6))
@@ -192,3 +191,17 @@ if rows:
     n = sum(1 for v in vals if v)
     ax.set_title(f"{n} of {len(rows)} models knew the new name and wrote the old one anyway")
     finish(fig, ax, "10_knew_but_wrote.png", "Same model, same name: asked directly it gives the current name; asked to write code it uses the retired one.")
+
+# Cover image for the DEV post (1000 x 420).
+fig = plt.figure(figsize=(10, 4.2), dpi=200)
+fig.patch.set_facecolor("#0e131d")
+fig.text(0.05, 0.80, "SEMCONV DRIFT", color="#6d97f0", fontsize=13, fontweight="bold")
+fig.text(0.05, 0.60, "AI models still write OpenTelemetry", color="white", fontsize=25, fontweight="bold")
+fig.text(0.05, 0.47, "names the spec retired years ago", color="white", fontsize=25, fontweight="bold")
+fig.text(0.05, 0.31, 'attribute.String("db.system", "redis")', color="#f07272", fontsize=15, family="DejaVu Sans Mono")
+fig.text(0.05, 0.22, 'retired in v1.30.0; the current name is db.system.name', color="#98a1b4", fontsize=11)
+fig.text(0.05, 0.07, f"{sum(1 for r in S['board'] if r.get('write') is not None)} models  ·  4 Kaggle tasks  ·  1,563 names from 26 spec releases  ·  no AI judge",
+         color="#98a1b4", fontsize=11)
+fig.savefig(OUT / "00_cover.png", facecolor=fig.get_facecolor())
+plt.close(fig)
+print("saved 00_cover.png")
