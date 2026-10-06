@@ -4,6 +4,8 @@
 
 OpenTelemetry's semantic conventions name everything telemetry records: `http.request.method`, `db.system.name`, `http.server.request.duration`. Those names change between releases. A model trained on older tutorials keeps writing the old ones, and nothing fails loudly: the data still flows, while dashboards and alerts quietly stop matching.
 
+**[Kaggle benchmark](https://www.kaggle.com/benchmarks/applesone/semconv-drift)** · Tasks: [Write](https://www.kaggle.com/benchmarks/tasks/applesone/semconv-drift-write) · [Know](https://www.kaggle.com/benchmarks/tasks/applesone/semconv-drift-know) · [Fix](https://www.kaggle.com/benchmarks/tasks/applesone/semconv-drift-fix) · [Write with version hint](https://www.kaggle.com/benchmarks/tasks/applesone/semconv-drift-write-with-version-hint) · [Results](results/report.md)
+
 Semconv Drift measures that on Kaggle Benchmarks, with four tasks and no AI judge. Every answer is graded in code against 1,563 attribute, metric and event names from 26 releases of the specification (v1.21.0 to v1.44.0).
 
 | Task | Cases | What it asks | What counts as correct |
@@ -54,6 +56,10 @@ python3 analyze.py && python charts.py
 
 ## Results
 
-See [results/report.md](results/report.md) and the charts in [results/charts](results/charts). The write-up is on DEV.
+![Leaderboard](results/charts/01_leaderboard.png)
+
+![The half fix on rpc.client.duration](results/charts/06_half_fix.png)
+
+The full table is in [results/report.md](results/report.md), every chart is in [results/charts](results/charts), and the raw numbers are in [results/summary.json](results/summary.json). The write-up is on DEV.
 
 Data from open-telemetry/semantic-conventions, Apache License 2.0. Built by [vignesh2027](https://github.com/vignesh2027) for the DEV Kaggle Benchmarking Challenge. MIT License.
