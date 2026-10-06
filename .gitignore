@@ -5,3 +5,5 @@ sim/__pycache__/
 results/runs/
 sim/__pycache__/
 .kb/
+Semconv_Drift_*
+__pycache__/
