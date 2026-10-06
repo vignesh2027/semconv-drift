@@ -23,7 +23,12 @@ TASKS = {
     "hint": ("semconv-drift-write-with-version-hint", 12),
 }
 MAIN = ["write", "know", "fix"]
-TODAY = datetime.date(2026, 10, 5)
+TODAY = datetime.date(2026, 10, 6)
+# The Kaggle grader knows v1.21.0 onward, so a name dropped before July 2023
+# comes back as "invented". It still fails the case either way; here it is
+# relabelled as retired, using every name from spec releases v1.0.0 to v1.20.0.
+PRE_V121 = {r["n"] for r in json.loads((ROOT / "src" / "pre-v1.21-names.json").read_text())}
+OLDEST = {"release": "v1.21.0", "date": json.loads((ROOT / "src" / "release-dates.json").read_text())["v1.21.0"]}
 PAIRS = [
     ("Claude Sonnet", "claude-sonnet-4-5", "claude-sonnet-5"),
     ("GPT", "gpt-5.4", "gpt-5.5"),
@@ -59,8 +64,11 @@ def latest_runs(key):
         version = int(f.relative_to(RUNS / key).parts[1])
         run = json.loads(f.read_text())
         model = short(run["modelVersion"]["slug"])
-        if model not in best or version > best[model][0]:
-            best[model] = (version, run)
+        # Newest version first; within a version, a complete run beats an errored retry.
+        rank = (version, len(cases(run)), run.get("endTime") or "")
+        if model not in best or rank > best[model][2]:
+            best[model] = (version, run, rank)
+    return {m: (v, r) for m, (v, r, _) in best.items()}
     return best
 
 
@@ -129,6 +137,12 @@ def main():
                 continue
             version, run = entry
             cs = cases(run)
+            for c in cs:
+                old = [x for x in c.get("invented", []) if x in PRE_V121]
+                if old:
+                    c["invented"] = [x for x in c["invented"] if x not in PRE_V121]
+                    c["retired"] = c.get("retired", []) + old
+                    c.setdefault("retired_since", {}).update({x: OLDEST for x in old})
             n = TASKS[key][1]
             ok = len(cs) == n and score(run) is not None
             if key in MAIN:

@@ -18,7 +18,7 @@ Semconv Drift measures that on Kaggle Benchmarks, with four tasks and no AI judg
 `src/grader.py` extracts every semantic convention name from a model's code: string keys, metric names, event names, SDK constants in Go, TypeScript, Java and Python, and enum values next to their key. It then looks each one up in the ground truth.
 
 - **Retired**: deprecated or dropped by the spec. Names that moved to the separate GenAI repository are not counted as retired.
-- **Invented**: a key under a namespace the spec owns (`http.`, `db.`, `messaging.` ...) that no release ever defined. Custom keys outside those namespaces are allowed, as OpenTelemetry allows them.
+- **Invented**: a key under a namespace the spec owns (`http.`, `db.`, `messaging.` ...) that no release ever defined. Custom keys outside those namespaces are allowed, as OpenTelemetry allows them. The task grader only knows v1.21.0 onward, so `analyze.py` relabels names that existed in spec releases v1.0.0 to v1.20.0 (`src/pre-v1.21-names.json`) as retired before July 2023. Either way the case fails, so scores do not change.
 - **Unit errors**: only time units (`ms` against `s`), where a mistake corrupts data.
 - Reasoning models' thinking is removed before grading, so a model is judged on the code it wrote, not on names it considered.
 

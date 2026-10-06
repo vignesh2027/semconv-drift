@@ -41,8 +41,8 @@ fig, ax = plt.subplots(figsize=(11, 0.48 * len(board) + 1.6))
 rows = list(reversed(board))
 y = range(len(rows))
 ax.barh(y, [r["overall"] * 100 for r in rows], color="#dbe5fb", height=0.7, label="Overall")
-for key, color, marker in (("write", ACCENT, "o"), ("know", GOOD, "s"), ("fix", WARN, "D")):
-    ax.scatter([r[key] * 100 for r in rows], y, color=color, marker=marker, s=46, zorder=3, label=key.capitalize())
+for key, color, marker, dy in (("write", ACCENT, "o", 0.2), ("know", GOOD, "s", 0), ("fix", WARN, "D", -0.2)):
+    ax.scatter([r[key] * 100 for r in rows], [i + dy for i in y], color=color, marker=marker, s=46, zorder=3, label=key.capitalize())
 for i, r in enumerate(rows):
     ax.text(108, i, f"{r['overall'] * 100:.0f}%", va="center", ha="right", color=INK, fontsize=10, fontweight="bold")
 ax.text(108, len(rows) - 0.3, "Overall", ha="right", color=MUTED, fontsize=9)
@@ -77,7 +77,7 @@ ages = S["retired_ages_years"]
 fig, ax = plt.subplots(figsize=(11, 5))
 bins = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5]
 ax.hist(ages, bins=bins, color=BAD, edgecolor="white")
-ax.set_xlabel("Years since the spec retired the name (as of 5 Oct 2026)")
+ax.set_xlabel("Years since the spec retired the name (as of 6 Oct 2026)")
 ax.set_ylabel("Uses in generated code")
 older = sum(1 for a in ages if a >= 1)
 ax.set_title(f"{older} of {len(ages)} retired names written were retired more than a year ago")
@@ -124,7 +124,7 @@ out = S["rpc_outcomes"]
 cats = ["correct", "metric fixed, retired attributes added", "half fix: new unit, retired name", "renamed to a name that does not exist", "right name, values not converted", "left unchanged"]
 cat_color = {cats[0]: GOOD, cats[1]: "#7cc9a5", cats[2]: WARN, cats[3]: "#8e6bd6", cats[4]: "#c98a2a", cats[5]: BAD}
 counts = collections.Counter(out.get(m, "other") for m in order)
-fig, ax = plt.subplots(figsize=(11, 4.2))
+fig, ax = plt.subplots(figsize=(11, 3.4))
 left = 0
 for c in cats:
     n = counts.get(c, 0)
@@ -134,7 +134,7 @@ for c in cats:
         left += n
 ax.set_yticks([])
 ax.set_xlim(0, len(order))
-ax.legend([plt.Rectangle((0, 0), 1, 1, color=cat_color[c]) for c in cats if counts.get(c)], [c for c in cats if counts.get(c)], frameon=False, loc="upper center", bbox_to_anchor=(0.5, -0.35), ncol=2)
+ax.legend([plt.Rectangle((0, 0), 1, 1, color=cat_color[c]) for c in cats if counts.get(c)], [c for c in cats if counts.get(c)], frameon=False, loc="upper center", bbox_to_anchor=(0.5, -0.45), ncol=3, fontsize=10)
 ax.set_xlabel("Models")
 ax.set_title("Fixing rpc.client.duration (ms): most models fixed the unit and kept the retired name")
 finish(fig, ax, "06_half_fix.png", "The half fix records seconds under a name the old spec defined in milliseconds, so it matches neither version.")
@@ -175,4 +175,4 @@ if inv:
     ax.barh([i["name"] for i in reversed(inv)], [i["uses"] for i in reversed(inv)], color="#8e6bd6")
     ax.set_xlabel("Uses in the Write task")
     ax.set_title("Names no version of the spec ever defined")
-    finish(fig, ax, "09_invented_names.png", "Keys under a namespace the spec owns (messaging., db., ...) that the spec does not define.")
+    finish(fig, ax, "09_invented_names.png", "Keys under a namespace the spec owns (messaging., db., ...) that no release from v1.0.0 to v1.44.0 defined.")
