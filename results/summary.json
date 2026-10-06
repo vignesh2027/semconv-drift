@@ -39,7 +39,8 @@
         "go_redis_pool": true
       },
       "complete": true,
-      "overall": 1.0
+      "overall": 1.0,
+      "knew_but_wrote": 0
     },
     {
       "model": "claude-opus-5",
@@ -76,7 +77,8 @@
         "go_redis_pool": true
       },
       "complete": true,
-      "overall": 0.8321
+      "overall": 0.8321,
+      "knew_but_wrote": 1
     },
     {
       "model": "gemini-3.7-flash",
@@ -121,7 +123,8 @@
       "hint_retired": 6,
       "hint_invented": 1,
       "complete": true,
-      "overall": 0.803
+      "overall": 0.803,
+      "knew_but_wrote": 1
     },
     {
       "model": "gpt-5.5",
@@ -158,7 +161,8 @@
         "go_redis_pool": true
       },
       "complete": true,
-      "overall": 0.7753
+      "overall": 0.7753,
+      "knew_but_wrote": 1
     },
     {
       "model": "claude-sonnet-5",
@@ -195,7 +199,8 @@
         "go_redis_pool": true
       },
       "complete": true,
-      "overall": 0.745
+      "overall": 0.745,
+      "knew_but_wrote": 4
     },
     {
       "model": "gemini-3.8-flash",
@@ -232,7 +237,8 @@
         "go_redis_pool": true
       },
       "complete": true,
-      "overall": 0.7323
+      "overall": 0.7323,
+      "knew_but_wrote": 1
     },
     {
       "model": "gpt-5.4",
@@ -269,7 +275,8 @@
         "go_redis_pool": true
       },
       "complete": true,
-      "overall": 0.702
+      "overall": 0.702,
+      "knew_but_wrote": 2
     },
     {
       "model": "gemini-3.1-pro-preview",
@@ -306,7 +313,8 @@
         "go_redis_pool": true
       },
       "complete": true,
-      "overall": 0.5644
+      "overall": 0.5644,
+      "knew_but_wrote": 5
     },
     {
       "model": "claude-sonnet-4-5",
@@ -343,7 +351,8 @@
         "go_redis_pool": true
       },
       "complete": true,
-      "overall": 0.5328
+      "overall": 0.5328,
+      "knew_but_wrote": 6
     },
     {
       "model": "gpt-5.4-mini",
@@ -380,7 +389,8 @@
         "go_redis_pool": true
       },
       "complete": true,
-      "overall": 0.4482
+      "overall": 0.4482,
+      "knew_but_wrote": 5
     },
     {
       "model": "gemini-2.5-pro",
@@ -420,7 +430,8 @@
         "go_redis_pool": false
       },
       "complete": true,
-      "overall": 0.2639
+      "overall": 0.2639,
+      "knew_but_wrote": 4
     },
     {
       "model": "claude-haiku-4-5",
@@ -457,7 +468,8 @@
         "go_redis_pool": false
       },
       "complete": true,
-      "overall": 0.1932
+      "overall": 0.1932,
+      "knew_but_wrote": 10
     },
     {
       "model": "qwen3-235b-a22b-instruct-2507",
@@ -494,7 +506,8 @@
         "go_redis_pool": false
       },
       "complete": true,
-      "overall": 0.1174
+      "overall": 0.1174,
+      "knew_but_wrote": 6
     },
     {
       "model": "deepseek-r1-0528",
@@ -2090,6 +2103,203 @@
         "qwen3-235b-a22b-instruct-2507",
         "http.resend_count"
       ]
+    ]
+  },
+  "knew_but_wrote": {
+    "claude-haiku-4-5": [
+      {
+        "name": "db.operation",
+        "uses": 2,
+        "know_answer": "db.operation.name"
+      },
+      {
+        "name": "db.statement",
+        "uses": 1,
+        "know_answer": "db.query.text"
+      },
+      {
+        "name": "http.method",
+        "uses": 3,
+        "know_answer": "http.request.method"
+      },
+      {
+        "name": "http.status_code",
+        "uses": 2,
+        "know_answer": "http.response.status_code"
+      },
+      {
+        "name": "http.url",
+        "uses": 2,
+        "know_answer": "url.full"
+      }
+    ],
+    "claude-opus-5": [
+      {
+        "name": "rpc.client.duration",
+        "uses": 1,
+        "know_answer": "rpc.client.call.duration"
+      }
+    ],
+    "claude-sonnet-4-5": [
+      {
+        "name": "db.operation",
+        "uses": 2,
+        "know_answer": "db.operation.name"
+      },
+      {
+        "name": "db.statement",
+        "uses": 2,
+        "know_answer": "db.query.text"
+      },
+      {
+        "name": "deployment.environment",
+        "uses": 1,
+        "know_answer": "deployment.environment.name"
+      },
+      {
+        "name": "messaging.kafka.message.offset",
+        "uses": 1,
+        "know_answer": "messaging.kafka.offset"
+      }
+    ],
+    "claude-sonnet-5": [
+      {
+        "name": "db.operation",
+        "uses": 1,
+        "know_answer": "db.operation.name"
+      },
+      {
+        "name": "db.statement",
+        "uses": 1,
+        "know_answer": "db.query.text"
+      },
+      {
+        "name": "db.system",
+        "uses": 1,
+        "know_answer": "db.system.name"
+      },
+      {
+        "name": "messaging.kafka.message.offset",
+        "uses": 1,
+        "know_answer": "messaging.kafka.offset"
+      }
+    ],
+    "gemini-2.5-pro": [
+      {
+        "name": "db.statement",
+        "uses": 2,
+        "know_answer": "db.query.text"
+      },
+      {
+        "name": "net.peer.name",
+        "uses": 1,
+        "know_answer": "server.address"
+      },
+      {
+        "name": "net.peer.port",
+        "uses": 1,
+        "know_answer": "client.port"
+      }
+    ],
+    "gemini-3.1-pro-preview": [
+      {
+        "name": "code.filepath",
+        "uses": 1,
+        "know_answer": "code.file.path"
+      },
+      {
+        "name": "code.lineno",
+        "uses": 1,
+        "know_answer": "code.line.number"
+      },
+      {
+        "name": "db.client.connections.use_time",
+        "uses": 1,
+        "know_answer": "db.client.connection.use_time"
+      },
+      {
+        "name": "deployment.environment",
+        "uses": 1,
+        "know_answer": "deployment.environment.name"
+      },
+      {
+        "name": "messaging.kafka.message.offset",
+        "uses": 1,
+        "know_answer": "messaging.kafka.offset"
+      }
+    ],
+    "gemini-3.7-flash": [
+      {
+        "name": "messaging.kafka.message.offset",
+        "uses": 1,
+        "know_answer": "messaging.kafka.offset"
+      }
+    ],
+    "gemini-3.8-flash": [
+      {
+        "name": "code.lineno",
+        "uses": 1,
+        "know_answer": "code.line.number"
+      }
+    ],
+    "gpt-5.4": [
+      {
+        "name": "http.target",
+        "uses": 1,
+        "know_answer": "url.path and url.query"
+      },
+      {
+        "name": "messaging.kafka.message.offset",
+        "uses": 1,
+        "know_answer": "messaging.kafka.offset"
+      }
+    ],
+    "gpt-5.4-mini": [
+      {
+        "name": "code.filepath",
+        "uses": 1,
+        "know_answer": "code.file.path"
+      },
+      {
+        "name": "db.operation",
+        "uses": 2,
+        "know_answer": "db.operation.name"
+      },
+      {
+        "name": "db.statement",
+        "uses": 1,
+        "know_answer": "db.query.text"
+      },
+      {
+        "name": "deployment.environment",
+        "uses": 1,
+        "know_answer": "deployment.environment.name"
+      }
+    ],
+    "gpt-5.5": [
+      {
+        "name": "messaging.kafka.message.offset",
+        "uses": 1,
+        "know_answer": "messaging.kafka.offset"
+      }
+    ],
+    "gpt-6-astra": [],
+    "qwen3-235b-a22b-instruct-2507": [
+      {
+        "name": "http.url",
+        "uses": 4,
+        "know_answer": "url.full"
+      },
+      {
+        "name": "http.user_agent",
+        "uses": 1,
+        "know_answer": "user_agent.original"
+      },
+      {
+        "name": "net.peer.name",
+        "uses": 1,
+        "know_answer": "server.address"
+      }
     ]
   },
   "pairs": [

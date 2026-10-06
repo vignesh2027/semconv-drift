@@ -176,3 +176,19 @@ if inv:
     ax.set_xlabel("Uses in the Write task")
     ax.set_title("Names no version of the spec ever defined")
     finish(fig, ax, "09_invented_names.png", "Keys under a namespace the spec owns (messaging., db., ...) that no release from v1.0.0 to v1.44.0 defined.")
+
+# 10. Knew it, wrote it anyway.
+kbw = S.get("knew_but_wrote", {})
+rows = sorted([r for r in board if r["model"] in kbw], key=lambda r: r.get("knew_but_wrote", 0))
+if rows:
+    fig, ax = plt.subplots(figsize=(10, 0.45 * len(rows) + 1.8))
+    vals = [r.get("knew_but_wrote", 0) for r in rows]
+    ax.barh([r["name"] for r in rows], vals, color=[BAD if v else GOOD for v in vals])
+    for i, r in enumerate(rows):
+        names = ", ".join(b["name"] for b in kbw[r["model"]][:3]) + (" ..." if len(kbw[r["model"]]) > 3 else "")
+        ax.text(vals[i] + 0.15, i, names or "none", va="center", fontsize=9, color=MUTED)
+    ax.set_xlim(0, max(vals) * 2.4 + 1)
+    ax.set_xlabel("Retired names written in Write that the same model correctly replaced in Know")
+    n = sum(1 for v in vals if v)
+    ax.set_title(f"{n} of {len(rows)} models knew the new name and wrote the old one anyway")
+    finish(fig, ax, "10_knew_but_wrote.png", "Same model, same name: asked directly it gives the current name; asked to write code it uses the retired one.")

@@ -4,6 +4,7 @@ Writes results/summary.json and results/report.md. Only the newest task
 version is used for each task, and a run counts only when every case completed.
 Usage: python3 analyze.py [--no-download]
 """
+import ast
 import collections
 import datetime
 import json
@@ -207,6 +208,22 @@ def main():
             row["overall"] = round(sum(row[k] for k in MAIN) / 3, 4)
         board.append(row)
 
+    # Knew it, wrote it anyway: retired names a model wrote in Write although the
+    # same model named the correct replacement for them in Know.
+    tree = ast.parse((ROOT / "src" / "task_know.py").read_text())
+    questions = ast.literal_eval(next(n.value for n in tree.body if isinstance(n, ast.Assign) and n.targets[0].id == "QUESTIONS"))
+    asked = {qid: re.findall(r"[a-z][a-z0-9_]*(?:\.[a-z0-9_]+)+", text)[0] for qid, text, _, _ in questions}
+    knew_but_wrote = {}
+    for row in board:
+        m = row["model"]
+        if not row["complete"]:
+            continue
+        knew = {asked[c["id"]]: c.get("given") for c in cases(runs["know"][m][1]) if c.get("correct")}
+        wrote = collections.Counter(n for c in cases(runs["write"][m][1]) for n in c["retired"])
+        both = [{"name": n, "uses": wrote[n], "know_answer": knew[n]} for n in sorted(wrote) if n in knew]
+        knew_but_wrote[m] = both
+        row["knew_but_wrote"] = sum(b["uses"] for b in both)
+
     board.sort(key=lambda r: (-(r.get("overall") if r.get("overall") is not None else -1), r["model"]))
     done = [r for r in board if r["complete"]]
     graded = sum(TASKS[k][1] for k in MAIN) * len(done)
@@ -224,6 +241,7 @@ def main():
         "invented_names_in_write": [{"name": n, "uses": c, "models": len(invented_models[n])} for n, c in invented.most_common()],
         "rpc_outcomes": rpc_outcomes,
         "know_wrong_quotes": quotes,
+        "knew_but_wrote": knew_but_wrote,
         "pairs": [
             {"family": fam, "older": a, "newer": b,
              "older_overall": next((r.get("overall") for r in board if r["model"] == a), None),
