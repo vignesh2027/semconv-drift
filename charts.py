@@ -37,12 +37,15 @@ def finish(fig, ax, name, note=None):
 
 
 # 1. Leaderboard: overall with each task as a dot.
-fig, ax = plt.subplots(figsize=(11, 0.48 * len(board) + 1.6))
-rows = list(reversed(board))
+lb = sorted([r for r in S["board"] if r.get("overall") is not None], key=lambda r: -r["overall"])
+fig, ax = plt.subplots(figsize=(11, 0.48 * len(lb) + 1.6))
+rows = list(reversed(lb))
 y = range(len(rows))
 ax.barh(y, [r["overall"] * 100 for r in rows], color="#dbe5fb", height=0.7, label="Overall")
-for key, color, marker, dy in (("write", ACCENT, "o", 0.2), ("know", GOOD, "s", 0), ("fix", WARN, "D", -0.2)):
-    ax.scatter([r[key] * 100 for r in rows], [i + dy for i in y], color=color, marker=marker, s=46, zorder=3, label=key.capitalize())
+for key, label, color, marker, dy in (("write", "Write", ACCENT, "o", 0.24), ("know", "Know", GOOD, "s", 0.08),
+                                      ("fix", "Fix", WARN, "D", -0.08), ("hint", "Write + hint", "#8e6bd6", "^", -0.24)):
+    pts = [(r[key] * 100, i + dy) for i, r in enumerate(rows) if r.get(key) is not None]
+    ax.scatter([x for x, _ in pts], [yy for _, yy in pts], color=color, marker=marker, s=40, zorder=3, label=label)
 for i, r in enumerate(rows):
     ax.text(108, i, f"{r['overall'] * 100:.0f}%", va="center", ha="right", color=INK, fontsize=10, fontweight="bold")
 ax.text(108, len(rows) - 0.3, "Overall", ha="right", color=MUTED, fontsize=9)
@@ -51,9 +54,9 @@ ax.set_xlim(0, 109)
 ax.set_xlabel("Score (%)")
 ax.grid(axis="x", color=GRID)
 ax.set_axisbelow(True)
-ax.legend(loc="lower right", frameon=False, ncol=4)
-ax.set_title("Semconv Drift leaderboard: Write, Know and Fix")
-finish(fig, ax, "01_leaderboard.png", f"{S['graded_answers_main']} graded answers, deterministic grading against 1,563 names from 26 spec releases.")
+ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.08), frameon=False, ncol=5)
+ax.set_title("Semconv Drift leaderboard (bar = overall, the Kaggle average of task scores)")
+finish(fig, ax, "01_leaderboard.png", f"{S['graded_answers_all']} graded answers, deterministic grading against 1,563 names from 26 spec releases.")
 
 # 2. Heatmap of every case.
 order = [r["model"] for r in board]
@@ -152,20 +155,34 @@ ax.set_title("Price is a weak guide to drift")
 finish(fig, ax, "07_cost_vs_score.png")
 
 # 8. Version hint effect.
-hint = [r for r in board if r.get("hint") is not None]
+hint = [r for r in S["board"] if r.get("hint_retired") is not None and r.get("write_retired") is not None]
+reps = S.get("write_repeats", {})
 if hint:
-    hint.sort(key=lambda r: r["write"])
-    fig, ax = plt.subplots(figsize=(10, 0.5 * len(hint) + 1.8))
+    hint.sort(key=lambda r: r["write_retired"])
+    fig, ax = plt.subplots(figsize=(11, 0.55 * len(hint) + 2))
     for i, r in enumerate(hint):
-        a, b = r["write"] * 100, r["hint"] * 100
-        ax.annotate("", xy=(b, i), xytext=(a, i), arrowprops=dict(arrowstyle="->", color=GOOD if b > a else BAD if b < a else MUTED, lw=2))
-        ax.scatter([a], [i], color=MUTED, s=40, zorder=3)
+        a, b = r["write_retired"], r["hint_retired"]
+        ax.plot([a, b], [i, i], color=GRID, lw=7, zorder=1, solid_capstyle="round")
+        ax.scatter([a], [i], color=MUTED, s=70, zorder=3)
+        ax.scatter([b], [i], color=GOOD if b < a else BAD if b > a else MUTED, s=70, zorder=3)
+        rep = reps.get(r["model"])
+        if rep:  # the same Write prompt run a second time: how far nothing-changed moves
+            ax.scatter([rep["retired"][0]], [i], marker="|", color=INK, s=260, lw=2, zorder=4)
+        right = max(a, b, rep["retired"][0] if rep else 0)
+        ax.text(right + 1.2, i, f"{a} to {b}", va="center", fontsize=9, color=MUTED)
     ax.set_yticks(range(len(hint)), [r["name"] for r in hint])
-    ax.set_xlim(-2, 102)
-    ax.set_xlabel("Write score (%): without hint (grey dot) to with one-sentence version hint (arrow)")
+    ax.set_xlim(-1, max(max(r["write_retired"], r["hint_retired"]) for r in hint) * 1.2 + 4)
+    ax.set_xlabel("Retired names written across the 12 Write requests")
     ax.grid(axis="x", color=GRID)
-    ax.set_title("What one sentence of context changes")
-    finish(fig, ax, "08_version_hint.png")
+    ax.set_axisbelow(True)
+    tw, th = sum(r["write_retired"] for r in hint), sum(r["hint_retired"] for r in hint)
+    ax.set_title(f"One sentence of context: {tw} retired names became {th} ({(1 - th / tw) * 100:.0f}% fewer)")
+    handles = [plt.Line2D([], [], marker="o", ls="", color=MUTED, label="Write"),
+               plt.Line2D([], [], marker="o", ls="", color=GOOD, label="Write + version hint")]
+    if reps:
+        handles.append(plt.Line2D([], [], marker="|", ls="", color=INK, markersize=14, mew=2, label="Write, other run of the same prompt (noise)"))
+    ax.legend(handles=handles, frameon=False, loc="lower right")
+    finish(fig, ax, "08_version_hint.png", "Same 12 requests plus one sentence naming spec v1.44.0. The tick is another run of the unchanged Write prompt, which shows run-to-run noise.")
 
 # 9. Invented names.
 inv = S["invented_names_in_write"][:10]

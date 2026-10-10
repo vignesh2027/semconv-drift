@@ -1,14 +1,16 @@
 {
   "generated": "2026-10-06",
-  "models": 17,
+  "models": 18,
   "complete_models": 13,
   "graded_answers_main": 546,
+  "graded_answers_all": 830,
+  "repeat_answers": 84,
   "board": [
     {
       "model": "gpt-6-astra",
       "name": "GPT-6 Astra",
-      "cost_usd": 0.9759800000000001,
-      "output_tokens": 18485,
+      "cost_usd": 1.01173,
+      "output_tokens": 19200,
       "write": 1.0,
       "write_ci": [
         0.757,
@@ -38,8 +40,17 @@
         "rpc_ms": true,
         "go_redis_pool": true
       },
+      "hint": 0.9167,
+      "hint_ci": [
+        0.646,
+        0.985
+      ],
+      "hint_version": 1,
+      "hint_retired": 0,
+      "hint_invented": 0,
       "complete": true,
-      "overall": 1.0,
+      "overall": 0.9792,
+      "tasks_scored": 4,
       "knew_but_wrote": 0
     },
     {
@@ -76,92 +87,17 @@
         "rpc_ms": false,
         "go_redis_pool": true
       },
-      "complete": true,
-      "overall": 0.8321,
-      "knew_but_wrote": 1
-    },
-    {
-      "model": "gemini-3.7-flash",
-      "name": "Gemini 3.7 Flash",
-      "cost_usd": 0.1566915,
-      "output_tokens": 40920,
-      "write": 0.75,
-      "write_ci": [
+      "hint": 0.75,
+      "hint_ci": [
         0.468,
         0.911
       ],
-      "write_version": 3,
-      "write_retired": 7,
-      "write_invented": 0,
-      "write_unit_errors": 0,
-      "know": 0.9091,
-      "know_ci": [
-        0.722,
-        0.975
-      ],
-      "know_version": 3,
-      "know_controls_failed": [],
-      "know_retired_answers": 1,
-      "fix": 0.75,
-      "fix_ci": [
-        0.409,
-        0.929
-      ],
-      "fix_version": 3,
-      "fix_traps": {
-        "server_span": true,
-        "enum_value": false,
-        "rpc_ms": false,
-        "go_redis_pool": true
-      },
-      "hint": 0.5833,
-      "hint_ci": [
-        0.32,
-        0.807
-      ],
       "hint_version": 1,
-      "hint_retired": 6,
-      "hint_invented": 1,
+      "hint_retired": 5,
+      "hint_invented": 0,
       "complete": true,
-      "overall": 0.803,
-      "knew_but_wrote": 1
-    },
-    {
-      "model": "gpt-5.5",
-      "name": "GPT-5.5",
-      "cost_usd": 1.359755,
-      "output_tokens": 44463,
-      "write": 0.6667,
-      "write_ci": [
-        0.391,
-        0.862
-      ],
-      "write_version": 3,
-      "write_retired": 5,
-      "write_invented": 0,
-      "write_unit_errors": 0,
-      "know": 0.9091,
-      "know_ci": [
-        0.722,
-        0.975
-      ],
-      "know_version": 3,
-      "know_controls_failed": [],
-      "know_retired_answers": 0,
-      "fix": 0.75,
-      "fix_ci": [
-        0.409,
-        0.929
-      ],
-      "fix_version": 3,
-      "fix_traps": {
-        "server_span": true,
-        "enum_value": false,
-        "rpc_ms": false,
-        "go_redis_pool": true
-      },
-      "complete": true,
-      "overall": 0.7753,
+      "overall": 0.8115,
+      "tasks_scored": 4,
       "knew_but_wrote": 1
     },
     {
@@ -198,60 +134,31 @@
         "rpc_ms": false,
         "go_redis_pool": true
       },
-      "complete": true,
-      "overall": 0.745,
-      "knew_but_wrote": 4
-    },
-    {
-      "model": "gemini-3.8-flash",
-      "name": "Gemini 3.8 Flash",
-      "cost_usd": 0.31631025,
-      "output_tokens": 83485,
-      "write": 0.5833,
-      "write_ci": [
-        0.32,
-        0.807
-      ],
-      "write_version": 3,
-      "write_retired": 8,
-      "write_invented": 0,
-      "write_unit_errors": 0,
-      "know": 0.8636,
-      "know_ci": [
-        0.667,
+      "hint": 0.8333,
+      "hint_ci": [
+        0.552,
         0.953
       ],
-      "know_version": 3,
-      "know_controls_failed": [],
-      "know_retired_answers": 3,
-      "fix": 0.75,
-      "fix_ci": [
-        0.409,
-        0.929
-      ],
-      "fix_version": 3,
-      "fix_traps": {
-        "server_span": true,
-        "enum_value": false,
-        "rpc_ms": false,
-        "go_redis_pool": true
-      },
+      "hint_version": 1,
+      "hint_retired": 4,
+      "hint_invented": 0,
       "complete": true,
-      "overall": 0.7323,
-      "knew_but_wrote": 1
+      "overall": 0.7671,
+      "tasks_scored": 4,
+      "knew_but_wrote": 4
     },
     {
       "model": "gpt-5.4",
       "name": "GPT-5.4",
-      "cost_usd": 0.09400750000000002,
-      "output_tokens": 5405,
-      "write": 0.5833,
+      "cost_usd": 0.09852249999999999,
+      "output_tokens": 5706,
+      "write": 0.6667,
       "write_ci": [
-        0.32,
-        0.807
+        0.391,
+        0.862
       ],
       "write_version": 3,
-      "write_retired": 9,
+      "write_retired": 8,
       "write_invented": 0,
       "write_unit_errors": 0,
       "know": 0.7727,
@@ -274,36 +181,45 @@
         "rpc_ms": false,
         "go_redis_pool": true
       },
+      "hint": 0.8333,
+      "hint_ci": [
+        0.552,
+        0.953
+      ],
+      "hint_version": 1,
+      "hint_retired": 5,
+      "hint_invented": 0,
       "complete": true,
-      "overall": 0.702,
+      "overall": 0.7557,
+      "tasks_scored": 4,
       "knew_but_wrote": 2
     },
     {
-      "model": "gemini-3.1-pro-preview",
-      "name": "Gemini 3.1 Pro",
-      "cost_usd": 1.073584,
-      "output_tokens": 88745,
-      "write": 0.25,
+      "model": "gpt-5.5",
+      "name": "GPT-5.5",
+      "cost_usd": 1.359755,
+      "output_tokens": 44463,
+      "write": 0.6667,
       "write_ci": [
-        0.089,
-        0.532
+        0.391,
+        0.862
       ],
       "write_version": 3,
-      "write_retired": 17,
+      "write_retired": 5,
       "write_invented": 0,
       "write_unit_errors": 0,
-      "know": 0.8182,
+      "know": 0.9091,
       "know_ci": [
-        0.615,
-        0.927
+        0.722,
+        0.975
       ],
       "know_version": 3,
       "know_controls_failed": [],
-      "know_retired_answers": 2,
-      "fix": 0.625,
+      "know_retired_answers": 0,
+      "fix": 0.75,
       "fix_ci": [
-        0.306,
-        0.863
+        0.409,
+        0.929
       ],
       "fix_version": 3,
       "fix_traps": {
@@ -312,9 +228,112 @@
         "rpc_ms": false,
         "go_redis_pool": true
       },
+      "hint": 0.6667,
+      "hint_ci": [
+        0.391,
+        0.862
+      ],
+      "hint_version": 1,
+      "hint_retired": 5,
+      "hint_invented": 0,
       "complete": true,
-      "overall": 0.5644,
-      "knew_but_wrote": 5
+      "overall": 0.7481,
+      "tasks_scored": 4,
+      "knew_but_wrote": 1
+    },
+    {
+      "model": "gemini-3.7-flash",
+      "name": "Gemini 3.7 Flash",
+      "cost_usd": 0.19097775,
+      "output_tokens": 50063,
+      "write": 0.5833,
+      "write_ci": [
+        0.32,
+        0.807
+      ],
+      "write_version": 3,
+      "write_retired": 9,
+      "write_invented": 0,
+      "write_unit_errors": 0,
+      "know": 0.9091,
+      "know_ci": [
+        0.722,
+        0.975
+      ],
+      "know_version": 3,
+      "know_controls_failed": [],
+      "know_retired_answers": 1,
+      "fix": 0.75,
+      "fix_ci": [
+        0.409,
+        0.929
+      ],
+      "fix_version": 3,
+      "fix_traps": {
+        "server_span": true,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "hint": 0.5833,
+      "hint_ci": [
+        0.32,
+        0.807
+      ],
+      "hint_version": 1,
+      "hint_retired": 6,
+      "hint_invented": 1,
+      "complete": true,
+      "overall": 0.7064,
+      "tasks_scored": 4,
+      "knew_but_wrote": 3
+    },
+    {
+      "model": "gemini-3.8-flash",
+      "name": "Gemini 3.8 Flash",
+      "cost_usd": 0.310344,
+      "output_tokens": 81894,
+      "write": 0.5833,
+      "write_ci": [
+        0.32,
+        0.807
+      ],
+      "write_version": 3,
+      "write_retired": 8,
+      "write_invented": 0,
+      "write_unit_errors": 0,
+      "know": 0.9091,
+      "know_ci": [
+        0.722,
+        0.975
+      ],
+      "know_version": 3,
+      "know_controls_failed": [],
+      "know_retired_answers": 2,
+      "fix": 0.75,
+      "fix_ci": [
+        0.409,
+        0.929
+      ],
+      "fix_version": 3,
+      "fix_traps": {
+        "server_span": true,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "hint": 0.5833,
+      "hint_ci": [
+        0.32,
+        0.807
+      ],
+      "hint_version": 1,
+      "hint_retired": 9,
+      "hint_invented": 0,
+      "complete": true,
+      "overall": 0.7064,
+      "tasks_scored": 4,
+      "knew_but_wrote": 2
     },
     {
       "model": "claude-sonnet-4-5",
@@ -350,23 +369,79 @@
         "rpc_ms": false,
         "go_redis_pool": true
       },
+      "hint": 0.5,
+      "hint_ci": [
+        0.254,
+        0.746
+      ],
+      "hint_version": 1,
+      "hint_retired": 11,
+      "hint_invented": 1,
       "complete": true,
-      "overall": 0.5328,
+      "overall": 0.5246,
+      "tasks_scored": 4,
       "knew_but_wrote": 6
+    },
+    {
+      "model": "gemini-3.1-pro-preview",
+      "name": "Gemini 3.1 Pro",
+      "cost_usd": 1.073584,
+      "output_tokens": 88745,
+      "write": 0.25,
+      "write_ci": [
+        0.089,
+        0.532
+      ],
+      "write_version": 3,
+      "write_retired": 17,
+      "write_invented": 0,
+      "write_unit_errors": 0,
+      "know": 0.8182,
+      "know_ci": [
+        0.615,
+        0.927
+      ],
+      "know_version": 3,
+      "know_controls_failed": [],
+      "know_retired_answers": 2,
+      "fix": 0.625,
+      "fix_ci": [
+        0.306,
+        0.863
+      ],
+      "fix_version": 3,
+      "fix_traps": {
+        "server_span": true,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "hint": 0.3333,
+      "hint_ci": [
+        0.138,
+        0.609
+      ],
+      "hint_version": 1,
+      "hint_retired": 8,
+      "hint_invented": 2,
+      "complete": true,
+      "overall": 0.5066,
+      "tasks_scored": 4,
+      "knew_but_wrote": 5
     },
     {
       "model": "gpt-5.4-mini",
       "name": "GPT-5.4 mini",
-      "cost_usd": 0.02284725,
-      "output_tokens": 4215,
+      "cost_usd": 0.023117249999999995,
+      "output_tokens": 4275,
       "write": 0.3333,
       "write_ci": [
         0.138,
         0.609
       ],
       "write_version": 3,
-      "write_retired": 17,
-      "write_invented": 4,
+      "write_retired": 19,
+      "write_invented": 1,
       "write_unit_errors": 0,
       "know": 0.6364,
       "know_ci": [
@@ -388,9 +463,56 @@
         "rpc_ms": false,
         "go_redis_pool": true
       },
+      "hint": 0.5833,
+      "hint_ci": [
+        0.32,
+        0.807
+      ],
+      "hint_version": 1,
+      "hint_retired": 9,
+      "hint_invented": 4,
       "complete": true,
-      "overall": 0.4482,
-      "knew_but_wrote": 5
+      "overall": 0.482,
+      "tasks_scored": 4,
+      "knew_but_wrote": 8
+    },
+    {
+      "model": "glm-5",
+      "name": "GLM-5",
+      "cost_usd": 0.23358539999999997,
+      "output_tokens": 72292,
+      "write": 0.1667,
+      "write_ci": [
+        0.047,
+        0.448
+      ],
+      "write_version": 3,
+      "write_retired": 17,
+      "write_invented": 1,
+      "write_unit_errors": 0,
+      "fix": 0.75,
+      "fix_ci": [
+        0.409,
+        0.929
+      ],
+      "fix_version": 3,
+      "fix_traps": {
+        "server_span": true,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": true
+      },
+      "hint": 0.4167,
+      "hint_ci": [
+        0.193,
+        0.68
+      ],
+      "hint_version": 1,
+      "hint_retired": 9,
+      "hint_invented": 0,
+      "complete": false,
+      "overall": 0.4445,
+      "tasks_scored": 3
     },
     {
       "model": "gemini-2.5-pro",
@@ -429,24 +551,71 @@
         "rpc_ms": false,
         "go_redis_pool": false
       },
+      "hint": 0.25,
+      "hint_ci": [
+        0.089,
+        0.532
+      ],
+      "hint_version": 1,
+      "hint_retired": 21,
+      "hint_invented": 4,
       "complete": true,
-      "overall": 0.2639,
+      "overall": 0.2604,
+      "tasks_scored": 4,
       "knew_but_wrote": 4
+    },
+    {
+      "model": "gemma-4-31b",
+      "name": "Gemma 4 31B",
+      "cost_usd": 0.0227415,
+      "output_tokens": 37295,
+      "write": 0.3333,
+      "write_ci": [
+        0.138,
+        0.609
+      ],
+      "write_version": 3,
+      "write_retired": 24,
+      "write_invented": 4,
+      "write_unit_errors": 0,
+      "fix": 0.125,
+      "fix_ci": [
+        0.022,
+        0.471
+      ],
+      "fix_version": 3,
+      "fix_traps": {
+        "server_span": false,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": false
+      },
+      "hint": 0.25,
+      "hint_ci": [
+        0.089,
+        0.532
+      ],
+      "hint_version": 1,
+      "hint_retired": 19,
+      "hint_invented": 5,
+      "complete": false,
+      "overall": 0.2361,
+      "tasks_scored": 3
     },
     {
       "model": "claude-haiku-4-5",
       "name": "Claude Haiku 4.5",
-      "cost_usd": 0.043124,
-      "output_tokens": 6817,
+      "cost_usd": 0.043494,
+      "output_tokens": 6891,
       "write": 0.0,
       "write_ci": [
         0,
         0.243
       ],
       "write_version": 3,
-      "write_retired": 33,
-      "write_invented": 3,
-      "write_unit_errors": 0,
+      "write_retired": 40,
+      "write_invented": 1,
+      "write_unit_errors": 2,
       "know": 0.4545,
       "know_ci": [
         0.269,
@@ -467,22 +636,31 @@
         "rpc_ms": false,
         "go_redis_pool": false
       },
+      "hint": 0.25,
+      "hint_ci": [
+        0.089,
+        0.532
+      ],
+      "hint_version": 1,
+      "hint_retired": 18,
+      "hint_invented": 7,
       "complete": true,
-      "overall": 0.1932,
-      "knew_but_wrote": 10
+      "overall": 0.2074,
+      "tasks_scored": 4,
+      "knew_but_wrote": 16
     },
     {
       "model": "qwen3-235b-a22b-instruct-2507",
       "name": "Qwen 3 235B",
-      "cost_usd": 0.004907979999999999,
-      "output_tokens": 4118,
+      "cost_usd": 0.0047962199999999995,
+      "output_tokens": 3991,
       "write": 0.0,
       "write_ci": [
         0,
         0.243
       ],
       "write_version": 3,
-      "write_retired": 44,
+      "write_retired": 49,
       "write_invented": 5,
       "write_unit_errors": 0,
       "know": 0.2273,
@@ -505,8 +683,17 @@
         "rpc_ms": false,
         "go_redis_pool": false
       },
+      "hint": 0.25,
+      "hint_ci": [
+        0.089,
+        0.532
+      ],
+      "hint_version": 1,
+      "hint_retired": 28,
+      "hint_invented": 5,
       "complete": true,
-      "overall": 0.1174,
+      "overall": 0.1506,
+      "tasks_scored": 4,
       "knew_but_wrote": 6
     },
     {
@@ -535,26 +722,36 @@
         "rpc_ms": false,
         "go_redis_pool": false
       },
-      "complete": false
+      "hint": 0.0833,
+      "hint_ci": [
+        0.015,
+        0.354
+      ],
+      "hint_version": 1,
+      "hint_retired": 24,
+      "hint_invented": 1,
+      "complete": false,
+      "overall": 0.0555,
+      "tasks_scored": 3
     },
     {
-      "model": "gemma-4-31b",
-      "name": "Gemma 4 31B",
-      "cost_usd": 0.0231093,
-      "output_tokens": 37908,
-      "write": 0.1667,
+      "model": "gpt-oss-120b",
+      "name": "gpt-oss-120b",
+      "cost_usd": 0.0065772,
+      "output_tokens": 17397,
+      "write": 0.0,
       "write_ci": [
-        0.047,
-        0.448
+        0,
+        0.243
       ],
       "write_version": 3,
-      "write_retired": 27,
+      "write_retired": 52,
       "write_invented": 4,
-      "write_unit_errors": 0,
-      "fix": 0.125,
+      "write_unit_errors": 2,
+      "fix": 0.0,
       "fix_ci": [
-        0.022,
-        0.471
+        0,
+        0.324
       ],
       "fix_version": 3,
       "fix_traps": {
@@ -563,35 +760,17 @@
         "rpc_ms": false,
         "go_redis_pool": false
       },
-      "complete": false
-    },
-    {
-      "model": "glm-5",
-      "name": "GLM-5",
-      "cost_usd": 0.21933259999999996,
-      "output_tokens": 67838,
-      "write": 0.25,
-      "write_ci": [
-        0.089,
-        0.532
+      "hint": 0.0,
+      "hint_ci": [
+        0,
+        0.243
       ],
-      "write_version": 3,
-      "write_retired": 19,
-      "write_invented": 0,
-      "write_unit_errors": 0,
-      "fix": 0.75,
-      "fix_ci": [
-        0.409,
-        0.929
-      ],
-      "fix_version": 3,
-      "fix_traps": {
-        "server_span": true,
-        "enum_value": false,
-        "rpc_ms": false,
-        "go_redis_pool": true
-      },
-      "complete": false
+      "hint_version": 1,
+      "hint_retired": 49,
+      "hint_invented": 1,
+      "complete": false,
+      "overall": 0.0,
+      "tasks_scored": 3
     },
     {
       "model": "grok-4.5-0708",
@@ -710,8 +889,8 @@
         "ts_kafka": false,
         "py_grpc": false,
         "go_http_metrics": true,
-        "py_pool_metrics": true,
-        "py_code_location": true,
+        "py_pool_metrics": false,
+        "py_code_location": false,
         "ts_resource": true,
         "go_peer_service": false
       },
@@ -734,21 +913,21 @@
         "py_postgres": false,
         "go_http_client": true,
         "go_redis": false,
-        "ts_express": false,
+        "ts_express": true,
         "ts_kafka": false,
         "py_grpc": false,
         "go_http_metrics": false,
         "py_pool_metrics": false,
         "py_code_location": false,
         "ts_resource": false,
-        "go_peer_service": false
+        "go_peer_service": true
       },
       "glm-5": {
         "py_http_server": true,
         "py_postgres": false,
         "go_http_client": true,
         "go_redis": false,
-        "ts_express": true,
+        "ts_express": false,
         "ts_kafka": false,
         "py_grpc": false,
         "go_http_metrics": false,
@@ -761,18 +940,18 @@
         "py_http_server": true,
         "py_postgres": true,
         "go_http_client": true,
-        "go_redis": true,
-        "ts_express": false,
+        "go_redis": false,
+        "ts_express": true,
         "ts_kafka": false,
         "py_grpc": false,
         "go_http_metrics": true,
         "py_pool_metrics": false,
         "py_code_location": true,
         "ts_resource": true,
-        "go_peer_service": false
+        "go_peer_service": true
       },
       "gpt-5.4-mini": {
-        "py_http_server": false,
+        "py_http_server": true,
         "py_postgres": false,
         "go_http_client": true,
         "go_redis": false,
@@ -783,7 +962,7 @@
         "py_pool_metrics": false,
         "py_code_location": false,
         "ts_resource": false,
-        "go_peer_service": true
+        "go_peer_service": false
       },
       "gpt-5.5": {
         "py_http_server": true,
@@ -812,6 +991,20 @@
         "py_code_location": true,
         "ts_resource": true,
         "go_peer_service": true
+      },
+      "gpt-oss-120b": {
+        "py_http_server": false,
+        "py_postgres": false,
+        "go_http_client": false,
+        "go_redis": false,
+        "ts_express": false,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": false,
+        "py_pool_metrics": false,
+        "py_code_location": false,
+        "ts_resource": false,
+        "go_peer_service": false
       },
       "qwen3-235b-a22b-instruct-2507": {
         "py_http_server": false,
@@ -1009,7 +1202,7 @@
         "statement": true,
         "db_system": true,
         "db_operation": true,
-        "filepath": false,
+        "filepath": true,
         "lineno": true,
         "deployment": true,
         "peer_service": false,
@@ -1293,6 +1486,16 @@
         "rpc_ms": true,
         "go_redis_pool": true
       },
+      "gpt-oss-120b": {
+        "http_client": false,
+        "server_span": false,
+        "db_span": false,
+        "code_location": false,
+        "resource": false,
+        "enum_value": false,
+        "rpc_ms": false,
+        "go_redis_pool": false
+      },
       "qwen3-235b-a22b-instruct-2507": {
         "http_client": true,
         "server_span": false,
@@ -1305,6 +1508,104 @@
       }
     },
     "hint": {
+      "claude-haiku-4-5": {
+        "py_http_server": true,
+        "py_postgres": false,
+        "go_http_client": true,
+        "go_redis": false,
+        "ts_express": true,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": false,
+        "py_pool_metrics": false,
+        "py_code_location": false,
+        "ts_resource": false,
+        "go_peer_service": false
+      },
+      "claude-opus-5": {
+        "py_http_server": true,
+        "py_postgres": true,
+        "go_http_client": true,
+        "go_redis": true,
+        "ts_express": true,
+        "ts_kafka": true,
+        "py_grpc": false,
+        "go_http_metrics": true,
+        "py_pool_metrics": false,
+        "py_code_location": true,
+        "ts_resource": true,
+        "go_peer_service": false
+      },
+      "claude-sonnet-4-5": {
+        "py_http_server": true,
+        "py_postgres": false,
+        "go_http_client": true,
+        "go_redis": false,
+        "ts_express": true,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": true,
+        "py_pool_metrics": true,
+        "py_code_location": false,
+        "ts_resource": true,
+        "go_peer_service": false
+      },
+      "claude-sonnet-5": {
+        "py_http_server": true,
+        "py_postgres": true,
+        "go_http_client": true,
+        "go_redis": true,
+        "ts_express": true,
+        "ts_kafka": true,
+        "py_grpc": false,
+        "go_http_metrics": true,
+        "py_pool_metrics": true,
+        "py_code_location": true,
+        "ts_resource": true,
+        "go_peer_service": false
+      },
+      "deepseek-r1-0528": {
+        "py_http_server": true,
+        "py_postgres": false,
+        "go_http_client": false,
+        "go_redis": false,
+        "ts_express": false,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": false,
+        "py_pool_metrics": false,
+        "py_code_location": false,
+        "ts_resource": false,
+        "go_peer_service": false
+      },
+      "gemini-2.5-pro": {
+        "py_http_server": false,
+        "py_postgres": false,
+        "go_http_client": true,
+        "go_redis": false,
+        "ts_express": true,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": true,
+        "py_pool_metrics": false,
+        "py_code_location": false,
+        "ts_resource": false,
+        "go_peer_service": false
+      },
+      "gemini-3.1-pro-preview": {
+        "py_http_server": true,
+        "py_postgres": false,
+        "go_http_client": true,
+        "go_redis": false,
+        "ts_express": true,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": false,
+        "py_pool_metrics": false,
+        "py_code_location": false,
+        "ts_resource": true,
+        "go_peer_service": false
+      },
       "gemini-3.7-flash": {
         "py_http_server": true,
         "py_postgres": true,
@@ -1318,93 +1619,261 @@
         "py_code_location": false,
         "ts_resource": true,
         "go_peer_service": false
+      },
+      "gemini-3.8-flash": {
+        "py_http_server": true,
+        "py_postgres": true,
+        "go_http_client": true,
+        "go_redis": true,
+        "ts_express": true,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": true,
+        "py_pool_metrics": false,
+        "py_code_location": false,
+        "ts_resource": true,
+        "go_peer_service": false
+      },
+      "gemma-4-31b": {
+        "py_http_server": true,
+        "py_postgres": false,
+        "go_http_client": true,
+        "go_redis": false,
+        "ts_express": true,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": false,
+        "py_pool_metrics": false,
+        "py_code_location": false,
+        "ts_resource": false,
+        "go_peer_service": false
+      },
+      "glm-5": {
+        "py_http_server": true,
+        "py_postgres": true,
+        "go_http_client": true,
+        "go_redis": true,
+        "ts_express": false,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": false,
+        "py_pool_metrics": false,
+        "py_code_location": false,
+        "ts_resource": true,
+        "go_peer_service": false
+      },
+      "gpt-5.4": {
+        "py_http_server": true,
+        "py_postgres": true,
+        "go_http_client": true,
+        "go_redis": true,
+        "ts_express": true,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": true,
+        "py_pool_metrics": true,
+        "py_code_location": true,
+        "ts_resource": true,
+        "go_peer_service": true
+      },
+      "gpt-5.4-mini": {
+        "py_http_server": true,
+        "py_postgres": true,
+        "go_http_client": true,
+        "go_redis": false,
+        "ts_express": true,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": true,
+        "py_pool_metrics": false,
+        "py_code_location": true,
+        "ts_resource": true,
+        "go_peer_service": false
+      },
+      "gpt-5.5": {
+        "py_http_server": true,
+        "py_postgres": true,
+        "go_http_client": true,
+        "go_redis": true,
+        "ts_express": true,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": false,
+        "py_pool_metrics": true,
+        "py_code_location": true,
+        "ts_resource": true,
+        "go_peer_service": false
+      },
+      "gpt-6-astra": {
+        "py_http_server": true,
+        "py_postgres": true,
+        "go_http_client": true,
+        "go_redis": true,
+        "ts_express": true,
+        "ts_kafka": true,
+        "py_grpc": true,
+        "go_http_metrics": true,
+        "py_pool_metrics": false,
+        "py_code_location": true,
+        "ts_resource": true,
+        "go_peer_service": true
+      },
+      "gpt-oss-120b": {
+        "py_http_server": false,
+        "py_postgres": false,
+        "go_http_client": false,
+        "go_redis": false,
+        "ts_express": false,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": false,
+        "py_pool_metrics": false,
+        "py_code_location": false,
+        "ts_resource": false,
+        "go_peer_service": false
+      },
+      "qwen3-235b-a22b-instruct-2507": {
+        "py_http_server": false,
+        "py_postgres": false,
+        "go_http_client": true,
+        "go_redis": false,
+        "ts_express": true,
+        "ts_kafka": false,
+        "py_grpc": false,
+        "go_http_metrics": true,
+        "py_pool_metrics": false,
+        "py_code_location": false,
+        "ts_resource": false,
+        "go_peer_service": false
       }
     }
   },
   "retired_names_in_write": [
     {
       "name": "db.system",
-      "uses": 22,
-      "models": 10,
+      "uses": 24,
+      "models": 12,
       "release": "v1.30.0",
       "date": "2025-01-24"
     },
     {
-      "name": "db.operation",
-      "uses": 16,
-      "models": 9,
-      "release": "v1.26.0",
-      "date": "2024-05-21"
-    },
-    {
-      "name": "rpc.service",
-      "uses": 16,
-      "models": 15,
-      "release": "v1.39.0",
-      "date": "2026-01-12"
-    },
-    {
-      "name": "rpc.grpc.status_code",
-      "uses": 15,
-      "models": 15,
-      "release": "v1.39.0",
-      "date": "2026-01-12"
-    },
-    {
-      "name": "rpc.system",
-      "uses": 15,
-      "models": 15,
-      "release": "v1.39.0",
-      "date": "2026-01-12"
-    },
-    {
-      "name": "db.statement",
-      "uses": 14,
-      "models": 9,
-      "release": "v1.26.0",
-      "date": "2024-05-21"
-    },
-    {
       "name": "http.method",
-      "uses": 13,
-      "models": 4,
+      "uses": 20,
+      "models": 5,
       "release": "v1.21.0",
       "date": "2023-07-13"
     },
     {
       "name": "http.status_code",
+      "uses": 20,
+      "models": 5,
+      "release": "v1.21.0",
+      "date": "2023-07-13"
+    },
+    {
+      "name": "db.operation",
+      "uses": 20,
+      "models": 10,
+      "release": "v1.26.0",
+      "date": "2024-05-21"
+    },
+    {
+      "name": "db.statement",
+      "uses": 18,
+      "models": 10,
+      "release": "v1.26.0",
+      "date": "2024-05-21"
+    },
+    {
+      "name": "rpc.service",
+      "uses": 18,
+      "models": 16,
+      "release": "v1.39.0",
+      "date": "2026-01-12"
+    },
+    {
+      "name": "rpc.grpc.status_code",
+      "uses": 16,
+      "models": 16,
+      "release": "v1.39.0",
+      "date": "2026-01-12"
+    },
+    {
+      "name": "rpc.system",
+      "uses": 16,
+      "models": 16,
+      "release": "v1.39.0",
+      "date": "2026-01-12"
+    },
+    {
+      "name": "code.filepath",
       "uses": 12,
-      "models": 4,
+      "models": 12,
+      "release": "v1.31.0",
+      "date": "2025-03-11"
+    },
+    {
+      "name": "code.lineno",
+      "uses": 12,
+      "models": 12,
+      "release": "v1.30.0",
+      "date": "2025-01-24"
+    },
+    {
+      "name": "code.function",
+      "uses": 11,
+      "models": 11,
+      "release": "v1.30.0",
+      "date": "2025-01-24"
+    },
+    {
+      "name": "net.peer.name",
+      "uses": 11,
+      "models": 6,
+      "release": "v1.21.0",
+      "date": "2023-07-13"
+    },
+    {
+      "name": "net.peer.port",
+      "uses": 11,
+      "models": 6,
       "release": "v1.21.0",
       "date": "2023-07-13"
     },
     {
       "name": "messaging.kafka.message.offset",
-      "uses": 11,
-      "models": 11,
+      "uses": 10,
+      "models": 10,
       "release": "v1.27.0",
       "date": "2024-08-02"
     },
     {
-      "name": "code.filepath",
+      "name": "deployment.environment",
       "uses": 10,
       "models": 10,
-      "release": "v1.31.0",
-      "date": "2025-03-11"
+      "release": "v1.27.0",
+      "date": "2024-08-02"
     },
     {
-      "name": "code.function",
-      "uses": 10,
-      "models": 10,
-      "release": "v1.30.0",
-      "date": "2025-01-24"
+      "name": "db.name",
+      "uses": 9,
+      "models": 8,
+      "release": "v1.26.0",
+      "date": "2024-05-21"
     },
     {
-      "name": "code.lineno",
-      "uses": 10,
-      "models": 10,
-      "release": "v1.30.0",
-      "date": "2025-01-24"
+      "name": "db.sql.table",
+      "uses": 9,
+      "models": 9,
+      "release": "v1.26.0",
+      "date": "2024-05-21"
+    },
+    {
+      "name": "http.scheme",
+      "uses": 9,
+      "models": 4,
+      "release": "v1.21.0",
+      "date": "2023-07-13"
     },
     {
       "name": "db.client.connections.usage",
@@ -1414,13 +1883,6 @@
       "date": "2024-05-21"
     },
     {
-      "name": "deployment.environment",
-      "uses": 9,
-      "models": 9,
-      "release": "v1.27.0",
-      "date": "2024-08-02"
-    },
-    {
       "name": "peer.service",
       "uses": 9,
       "models": 9,
@@ -1428,30 +1890,16 @@
       "date": "2026-01-12"
     },
     {
-      "name": "db.name",
+      "name": "http.url",
       "uses": 8,
-      "models": 7,
-      "release": "v1.26.0",
-      "date": "2024-05-21"
-    },
-    {
-      "name": "http.target",
-      "uses": 7,
       "models": 4,
       "release": "v1.21.0",
       "date": "2023-07-13"
     },
     {
-      "name": "db.sql.table",
-      "uses": 7,
-      "models": 7,
-      "release": "v1.26.0",
-      "date": "2024-05-21"
-    },
-    {
-      "name": "http.url",
-      "uses": 7,
-      "models": 3,
+      "name": "http.target",
+      "uses": 8,
+      "models": 5,
       "release": "v1.21.0",
       "date": "2023-07-13"
     },
@@ -1463,84 +1911,77 @@
       "date": "2024-05-21"
     },
     {
-      "name": "http.scheme",
-      "uses": 6,
-      "models": 3,
-      "release": "v1.21.0",
-      "date": "2023-07-13"
-    },
-    {
-      "name": "messaging.kafka.destination.partition",
+      "name": "messaging.kafka.partition",
       "uses": 6,
       "models": 6,
-      "release": "v1.25.0",
-      "date": "2024-04-04"
-    },
-    {
-      "name": "messaging.kafka.consumer.group",
-      "uses": 5,
-      "models": 5,
-      "release": "v1.27.0",
-      "date": "2024-08-02"
-    },
-    {
-      "name": "messaging.kafka.partition",
-      "uses": 5,
-      "models": 5,
       "release": "v1.21.0",
       "date": "2023-07-13"
     },
     {
       "name": "pool.name",
-      "uses": 5,
-      "models": 5,
+      "uses": 6,
+      "models": 6,
       "release": "v1.26.0",
       "date": "2024-05-21"
     },
     {
-      "name": "messaging.operation",
+      "name": "http.client_ip",
       "uses": 5,
-      "models": 5,
+      "models": 4,
+      "release": "v1.26.0",
+      "date": "2024-05-21"
+    },
+    {
+      "name": "messaging.kafka.destination.partition",
+      "uses": 4,
+      "models": 4,
+      "release": "v1.25.0",
+      "date": "2024-04-04"
+    },
+    {
+      "name": "messaging.operation",
+      "uses": 4,
+      "models": 4,
       "release": "v1.26.0",
       "date": "2024-05-21"
     },
     {
       "name": "db.client.connections.use_time",
-      "uses": 5,
-      "models": 5,
+      "uses": 4,
+      "models": 4,
       "release": "v1.26.0",
       "date": "2024-05-21"
     },
     {
-      "name": "net.peer.name",
-      "uses": 5,
-      "models": 4,
+      "name": "messaging.kafka.consumer.group",
+      "uses": 3,
+      "models": 3,
+      "release": "v1.27.0",
+      "date": "2024-08-02"
+    },
+    {
+      "name": "messaging.destination",
+      "uses": 3,
+      "models": 3,
       "release": "v1.21.0",
       "date": "2023-07-13"
     },
     {
-      "name": "net.peer.port",
-      "uses": 5,
-      "models": 4,
+      "name": "messaging.kafka.consumer_group",
+      "uses": 3,
+      "models": 3,
       "release": "v1.21.0",
       "date": "2023-07-13"
     },
     {
-      "name": "http.client_ip",
+      "name": "http.host",
       "uses": 3,
       "models": 2,
       "release": "v1.26.0",
       "date": "2024-05-21"
     },
     {
-      "name": "http.host",
-      "uses": 2,
-      "models": 2,
-      "release": "v1.26.0",
-      "date": "2024-05-21"
-    },
-    {
-      "name": "messaging.kafka.consumer_group",
+      "name": "messaging.destination_kind",
       "uses": 2,
       "models": 2,
       "release": "v1.21.0",
@@ -1552,6 +1993,34 @@
       "models": 2,
       "release": "v1.24.0",
       "date": "2023-12-15"
+    },
+    {
+      "name": "http.user_agent",
+      "uses": 2,
+      "models": 2,
+      "release": "v1.24.0",
+      "date": "2023-12-15"
+    },
+    {
+      "name": "net.peer.ip",
+      "uses": 2,
+      "models": 2,
+      "release": "v1.26.0",
+      "date": "2024-05-21"
+    },
+    {
+      "name": "db.redis.database_index",
+      "uses": 1,
+      "models": 1,
+      "release": "v1.26.0",
+      "date": "2024-05-21"
+    },
+    {
+      "name": "db.client.connections.create_time",
+      "uses": 1,
+      "models": 1,
+      "release": "v1.26.0",
+      "date": "2024-05-21"
     },
     {
       "name": "rpc.client.duration",
@@ -1582,20 +2051,6 @@
       "date": "2023-07-13"
     },
     {
-      "name": "messaging.destination",
-      "uses": 1,
-      "models": 1,
-      "release": "v1.21.0",
-      "date": "2023-07-13"
-    },
-    {
-      "name": "messaging.destination_kind",
-      "uses": 1,
-      "models": 1,
-      "release": "v1.21.0",
-      "date": "2023-07-13"
-    },
-    {
       "name": "net.host.name",
       "uses": 1,
       "models": 1,
@@ -1610,6 +2065,13 @@
       "date": "2023-10-12"
     },
     {
+      "name": "http.server_name",
+      "uses": 1,
+      "models": 1,
+      "release": "v1.26.0",
+      "date": "2024-05-21"
+    },
+    {
       "name": "http.client.duration",
       "uses": 1,
       "models": 1,
@@ -1622,20 +2084,6 @@
       "models": 1,
       "release": "v1.22.0",
       "date": "2023-10-12"
-    },
-    {
-      "name": "http.user_agent",
-      "uses": 1,
-      "models": 1,
-      "release": "v1.24.0",
-      "date": "2023-12-15"
-    },
-    {
-      "name": "net.peer.ip",
-      "uses": 1,
-      "models": 1,
-      "release": "v1.26.0",
-      "date": "2024-05-21"
     }
   ],
   "retired_ages_years": [
@@ -1646,23 +2094,30 @@
     2.38,
     2.38,
     1.7,
+    3.23,
+    3.23,
+    3.23,
+    2.38,
+    2.38,
     2.38,
     1.7,
-    3.23,
-    3.23,
-    3.23,
-    2.18,
-    2.18,
-    3.23,
-    0.73,
-    0.73,
-    0.73,
     2.38,
     3.23,
     3.23,
     3.23,
     3.23,
+    2.18,
+    2.18,
     3.23,
+    0.73,
+    0.73,
+    0.73,
+    3.23,
+    3.23,
+    3.23,
+    3.23,
+    2.38,
+    2.38,
     2.38,
     2.38,
     1.57,
@@ -1799,20 +2254,71 @@
     2.18,
     0.73,
     2.18,
+    0.73,
+    0.73,
+    0.73,
+    2.38,
+    1.57,
+    1.7,
+    1.7,
+    0.73,
+    0.73,
+    0.73,
+    0.73,
+    2.38,
+    1.57,
+    1.7,
+    1.7,
+    0.73,
+    2.38,
+    2.38,
+    2.38,
+    2.38,
+    1.7,
+    2.38,
+    2.38,
+    1.7,
+    3.23,
+    3.23,
+    2.18,
+    3.23,
+    3.23,
+    0.73,
+    0.73,
+    0.73,
+    3.23,
+    3.23,
+    3.23,
+    2.38,
+    1.57,
+    1.7,
+    1.7,
+    2.18,
+    2.38,
+    2.38,
+    1.7,
+    2.38,
+    2.38,
+    1.7,
+    3.23,
+    0.73,
+    0.73,
+    0.73,
+    2.38,
+    2.38,
+    1.57,
+    1.7,
+    1.7,
+    2.18,
+    0.73,
+    1.7,
+    2.18,
     2.51,
     2.18,
     0.73,
     0.73,
     0.73,
-    0.73,
-    0.73,
-    0.73,
-    0.73,
     2.38,
-    1.57,
-    1.7,
-    1.7,
-    0.73,
     2.38,
     2.38,
     2.38,
@@ -1820,62 +2326,8 @@
     1.7,
     2.38,
     2.38,
-    1.7,
-    3.23,
-    3.23,
-    2.18,
-    2.38,
-    3.23,
-    3.23,
-    0.73,
-    0.73,
-    0.73,
-    3.23,
-    3.23,
-    2.98,
-    2.98,
-    1.7,
-    2.38,
-    1.57,
-    1.7,
     1.7,
     2.18,
-    1.7,
-    2.38,
-    2.38,
-    1.7,
-    2.51,
-    2.18,
-    2.38,
-    0.73,
-    0.73,
-    0.73,
-    2.38,
-    2.38,
-    2.38,
-    2.38,
-    1.57,
-    1.7,
-    1.7,
-    2.18,
-    0.73,
-    3.23,
-    2.18,
-    2.51,
-    2.18,
-    0.73,
-    0.73,
-    0.73,
-    2.38,
-    0.73,
-    2.38,
-    2.38,
-    2.38,
-    1.7,
-    2.38,
-    2.38,
-    1.7,
-    3.23,
     0.73,
     0.73,
     0.73,
@@ -1883,13 +2335,15 @@
     2.38,
     1.57,
     1.7,
-    1.7,
     2.18,
+    3.23,
+    3.23,
     2.18,
     0.73,
     0.73,
     0.73,
     0.73,
+    3.23,
     3.23,
     3.23,
     3.23,
@@ -1903,6 +2357,8 @@
     3.23,
     3.23,
     3.23,
+    3.23,
+    3.23,
     2.38,
     2.38,
     1.7,
@@ -1913,9 +2369,10 @@
     3.23,
     3.23,
     3.23,
-    2.18,
-    2.18,
     2.38,
+    3.23,
+    3.23,
+    3.23,
     3.23,
     0.73,
     0.73,
@@ -1927,27 +2384,75 @@
     3.23,
     3.23,
     3.23,
+    2.38,
     1.57,
     1.7,
     1.7,
     2.18,
     3.23,
     3.23,
-    3.23
+    3.23,
+    3.23,
+    3.23,
+    0.73,
+    3.23,
+    3.23,
+    3.23,
+    2.81,
+    2.38,
+    2.38,
+    2.38,
+    2.38,
+    2.38,
+    1.7,
+    2.38,
+    3.23,
+    3.23,
+    3.23,
+    3.23,
+    3.23,
+    2.38,
+    2.38,
+    1.7,
+    3.23,
+    3.23,
+    2.38,
+    3.23,
+    3.23,
+    3.23,
+    3.23,
+    2.38,
+    3.23,
+    3.23,
+    0.73,
+    0.73,
+    0.73,
+    2.38,
+    3.23,
+    3.23,
+    2.38,
+    3.23,
+    3.23,
+    2.98,
+    2.98,
+    1.57,
+    1.7,
+    1.7,
+    2.18,
+    3.23,
+    3.23,
+    3.23,
+    3.23,
+    0.73
   ],
   "invented_names_in_write": [
     {
-      "name": "db.client.connections.usage_time",
+      "name": "messaging.kafka.message_offset",
       "uses": 2,
       "models": 2
     },
     {
-      "name": "server.socket.peer.name",
-      "uses": 1,
-      "models": 1
-    },
-    {
-      "name": "db.redis.commands",
+      "name": "db.client.connections.idle_time",
       "uses": 1,
       "models": 1
     },
@@ -1977,12 +2482,17 @@
       "models": 1
     },
     {
-      "name": "http.request.target",
+      "name": "messaging.kafka.group.id",
       "uses": 1,
       "models": 1
     },
     {
-      "name": "db.client.connections.usage_duration",
+      "name": "http.url.full",
+      "uses": 1,
+      "models": 1
+    },
+    {
+      "name": "db.client.connections.usage.duration",
       "uses": 1,
       "models": 1
     },
@@ -1992,22 +2502,27 @@
       "models": 1
     },
     {
-      "name": "server.name",
+      "name": "db.client.connections.usage_time",
       "uses": 1,
       "models": 1
     },
     {
-      "name": "url.route",
+      "name": "db.client.connections.held_time",
       "uses": 1,
       "models": 1
     },
     {
-      "name": "messaging.consumer.messages",
+      "name": "http.error",
       "uses": 1,
       "models": 1
     },
     {
-      "name": "messaging.message.offset",
+      "name": "db.client.connection.held_time",
+      "uses": 1,
+      "models": 1
+    },
+    {
+      "name": "db.client.connections.open",
       "uses": 1,
       "models": 1
     },
@@ -2017,22 +2532,17 @@
       "models": 1
     },
     {
-      "name": "db.client.connection.use.time",
+      "name": "db.client.connections.inuse",
       "uses": 1,
       "models": 1
     },
     {
-      "name": "db.client.connection.wait.time",
+      "name": "db.client.connections.use.uptime",
       "uses": 1,
       "models": 1
     },
     {
-      "name": "db.client.connections.idle",
-      "uses": 1,
-      "models": 1
-    },
-    {
-      "name": "db.client.connections.in_use",
+      "name": "db.client.connections.wait.time",
       "uses": 1,
       "models": 1
     }
@@ -2053,6 +2563,7 @@
     "gpt-5.4-mini": "half fix: new unit, retired name",
     "gpt-5.5": "renamed to a name that does not exist",
     "gpt-6-astra": "correct",
+    "gpt-oss-120b": "left unchanged",
     "qwen3-235b-a22b-instruct-2507": "left unchanged"
   },
   "know_wrong_quotes": {
@@ -2114,17 +2625,17 @@
       },
       {
         "name": "db.statement",
-        "uses": 1,
+        "uses": 2,
         "know_answer": "db.query.text"
       },
       {
         "name": "http.method",
-        "uses": 3,
+        "uses": 5,
         "know_answer": "http.request.method"
       },
       {
         "name": "http.status_code",
-        "uses": 2,
+        "uses": 5,
         "know_answer": "http.response.status_code"
       },
       {
@@ -2230,12 +2741,27 @@
     ],
     "gemini-3.7-flash": [
       {
+        "name": "code.filepath",
+        "uses": 1,
+        "know_answer": "code.file.path"
+      },
+      {
+        "name": "code.lineno",
+        "uses": 1,
+        "know_answer": "code.line.number"
+      },
+      {
         "name": "messaging.kafka.message.offset",
         "uses": 1,
         "know_answer": "messaging.kafka.offset"
       }
     ],
     "gemini-3.8-flash": [
+      {
+        "name": "code.filepath",
+        "uses": 1,
+        "know_answer": "code.file.path"
+      },
       {
         "name": "code.lineno",
         "uses": 1,
@@ -2244,9 +2770,9 @@
     ],
     "gpt-5.4": [
       {
-        "name": "http.target",
+        "name": "db.system",
         "uses": 1,
-        "know_answer": "url.path and url.query"
+        "know_answer": "db.system.name"
       },
       {
         "name": "messaging.kafka.message.offset",
@@ -2267,13 +2793,23 @@
       },
       {
         "name": "db.statement",
-        "uses": 1,
+        "uses": 2,
         "know_answer": "db.query.text"
       },
       {
         "name": "deployment.environment",
         "uses": 1,
         "know_answer": "deployment.environment.name"
+      },
+      {
+        "name": "messaging.kafka.message.offset",
+        "uses": 1,
+        "know_answer": "messaging.kafka.offset"
+      },
+      {
+        "name": "net.peer.name",
+        "uses": 1,
+        "know_answer": "server.address"
       }
     ],
     "gpt-5.5": [
@@ -2287,7 +2823,7 @@
     "qwen3-235b-a22b-instruct-2507": [
       {
         "name": "http.url",
-        "uses": 4,
+        "uses": 2,
         "know_answer": "url.full"
       },
       {
@@ -2297,32 +2833,111 @@
       },
       {
         "name": "net.peer.name",
-        "uses": 1,
+        "uses": 3,
         "know_answer": "server.address"
       }
     ]
+  },
+  "write_repeats": {
+    "gpt-5.4": {
+      "write": [
+        0.5833,
+        0.6667
+      ],
+      "retired": [
+        9,
+        8
+      ],
+      "cases_changed": 3
+    },
+    "qwen3-235b-a22b-instruct-2507": {
+      "write": [
+        0.0,
+        0.0
+      ],
+      "retired": [
+        44,
+        49
+      ],
+      "cases_changed": 0
+    },
+    "claude-haiku-4-5": {
+      "write": [
+        0.0,
+        0.0
+      ],
+      "retired": [
+        33,
+        40
+      ],
+      "cases_changed": 0
+    },
+    "glm-5": {
+      "write": [
+        0.25,
+        0.1667
+      ],
+      "retired": [
+        19,
+        17
+      ],
+      "cases_changed": 1
+    },
+    "gemma-4-31b": {
+      "write": [
+        0.1667,
+        0.3333
+      ],
+      "retired": [
+        27,
+        24
+      ],
+      "cases_changed": 2
+    },
+    "gemini-3.7-flash": {
+      "write": [
+        0.75,
+        0.5833
+      ],
+      "retired": [
+        7,
+        9
+      ],
+      "cases_changed": 2
+    },
+    "gpt-5.4-mini": {
+      "write": [
+        0.3333,
+        0.3333
+      ],
+      "retired": [
+        17,
+        19
+      ],
+      "cases_changed": 2
+    }
   },
   "pairs": [
     {
       "family": "Claude Sonnet",
       "older": "claude-sonnet-4-5",
       "newer": "claude-sonnet-5",
-      "older_overall": 0.5328,
-      "newer_overall": 0.745
+      "older_overall": 0.5246,
+      "newer_overall": 0.7671
     },
     {
       "family": "GPT",
       "older": "gpt-5.4",
       "newer": "gpt-5.5",
-      "older_overall": 0.702,
-      "newer_overall": 0.7753
+      "older_overall": 0.7557,
+      "newer_overall": 0.7481
     },
     {
       "family": "Gemini Pro",
       "older": "gemini-2.5-pro",
       "newer": "gemini-3.1-pro-preview",
-      "older_overall": 0.2639,
-      "newer_overall": 0.5644
+      "older_overall": 0.2604,
+      "newer_overall": 0.5066
     }
   ]
 }

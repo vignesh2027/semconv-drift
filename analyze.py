@@ -59,17 +59,27 @@ def download():
         subprocess.run([KAGGLE, "benchmarks", "tasks", "download", slug, "-o", str(RUNS / key), "-f"], capture_output=True)
 
 
-def latest_runs(key):
-    best = {}
+def all_runs(key):
+    """Every run of the newest task version per model, as {model: [(version, run), ...]}, oldest first."""
+    found = collections.defaultdict(list)
     for f in (RUNS / key).glob("*/*/*/*/*.run.json"):
         version = int(f.relative_to(RUNS / key).parts[1])
         run = json.loads(f.read_text())
-        model = short(run["modelVersion"]["slug"])
-        # Newest version first; within a version, a complete run beats an errored retry.
-        rank = (version, len(cases(run)), run.get("endTime") or "")
-        if model not in best or rank > best[model][2]:
-            best[model] = (version, run, rank)
-    return {m: (v, r) for m, (v, r, _) in best.items()}
+        found[short(run["modelVersion"]["slug"])].append((version, run))
+    out = {}
+    for model, runs in found.items():
+        newest = max(v for v, _ in runs)
+        out[model] = sorted([(v, r) for v, r in runs if v == newest], key=lambda vr: vr[1].get("endTime") or "")
+    return out
+
+
+def latest_runs(key):
+    # Newest version; within it the latest complete run, which is the run the Kaggle
+    # benchmark leaderboard shows. Earlier complete runs serve as the noise repeat.
+    best = {}
+    for model, runs in all_runs(key).items():
+        complete = [vr for vr in runs if len(cases(vr[1])) > 0 and score(vr[1]) is not None]
+        best[model] = complete[-1] if complete else max(runs, key=lambda vr: len(cases(vr[1])))
     return best
 
 
@@ -204,8 +214,12 @@ def main():
                 rpc_outcomes[m] = outcome
                 row["fix_traps"] = {t: by[t]["correct"] for t in ("server_span", "enum_value", "rpc_ms", "go_redis_pool")}
         row["complete"] = complete
-        if complete:
-            row["overall"] = round(sum(row[k] for k in MAIN) / 3, 4)
+        # Same rule as the Kaggle benchmark ("Average of task scores"): the mean of every
+        # task the model has a score for, so the post and the Kaggle leaderboard agree.
+        scored = [row[k] for k in TASKS if row.get(k) is not None]
+        if scored:
+            row["overall"] = round(sum(scored) / len(scored), 4)
+            row["tasks_scored"] = len(scored)
         board.append(row)
 
     # Knew it, wrote it anyway: retired names a model wrote in Write although the
@@ -224,6 +238,23 @@ def main():
         knew_but_wrote[m] = both
         row["knew_but_wrote"] = sum(b["uses"] for b in both)
 
+    # Noise floor: Kaggle's SDK drops the temperature, so the same prompt can give a
+    # different answer. Models with a second complete Write run show how far a score
+    # moves with nothing changed, which is the yardstick for the version-hint effect.
+    repeats = {}
+    for m, runs in all_runs("write").items():
+        done = [r for _, r in runs if len(cases(r)) == TASKS["write"][1] and score(r) is not None]
+        if len(done) >= 2:
+            a, b = done[0], done[1]
+            for c in cases(a) + cases(b):  # same pre-v1.21 relabel as the main runs
+                old = [x for x in c.get("invented", []) if x in PRE_V121]
+                c["retired"] = c.get("retired", []) + old
+            repeats[m] = {
+                "write": [round(sum(1 for c in cases(r) if c.get("clean")) / 12, 4) for r in (a, b)],
+                "retired": [sum(len(c["retired"]) for c in cases(r)) for r in (a, b)],
+                "cases_changed": sum(1 for x, y in zip(sorted(cases(a), key=lambda c: c["case"]), sorted(cases(b), key=lambda c: c["case"])) if bool(x.get("clean")) != bool(y.get("clean"))),
+            }
+
     board.sort(key=lambda r: (-(r.get("overall") if r.get("overall") is not None else -1), r["model"]))
     done = [r for r in board if r["complete"]]
     graded = sum(TASKS[k][1] for k in MAIN) * len(done)
@@ -232,6 +263,8 @@ def main():
         "models": len(models),
         "complete_models": len(done),
         "graded_answers_main": graded,
+        "graded_answers_all": sum(len(v) for t in matrix.values() for v in t.values()),
+        "repeat_answers": 12 * len(repeats),
         "board": board,
         "matrix": matrix,
         "retired_names_in_write": [
@@ -242,6 +275,7 @@ def main():
         "rpc_outcomes": rpc_outcomes,
         "know_wrong_quotes": quotes,
         "knew_but_wrote": knew_but_wrote,
+        "write_repeats": repeats,
         "pairs": [
             {"family": fam, "older": a, "newer": b,
              "older_overall": next((r.get("overall") for r in board if r["model"] == a), None),

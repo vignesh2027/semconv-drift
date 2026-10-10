@@ -136,7 +136,7 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: s
 
   <section id="leaderboard">
     <h2>Leaderboard</h2>
-    <p class="sub">Overall is the mean of Write, Know and Fix. Click a column to sort. "Retired" counts retired names written across the 12 Write requests. Hover a score for its 95% Wilson interval.</p>
+    <p class="sub">Overall is the average of a model's task scores, the same rule as the <a href="https://www.kaggle.com/benchmarks/applesone/semconv-drift">Kaggle leaderboard</a>. Click a column to sort. "Retired" counts retired names written across the 12 Write requests. Hover a score for its 95% Wilson interval.</p>
     <div class="card table-wrap">
       <table id="board">
         <thead><tr>
@@ -200,7 +200,7 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: s
       <h3>What one sentence of context changes</h3>
       <div class="card"><figure>
         <img src="results/charts/08_version_hint.png" alt="Write score without and with a one-sentence version hint" loading="lazy">
-        <figcaption>The same 12 Write requests with one added sentence naming the current spec version.</figcaption>
+        <figcaption>The same 12 Write requests with one added sentence naming the current spec version. Retired names fell by about a third, invented names rose, and only one model reached zero. The tick marks a second, unchanged Write run: the noise floor.</figcaption>
       </figure></div>
     </div>
   </section>
@@ -250,7 +250,7 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: s
   var rows = [], sortKey = "overall", asc = false;
 
   function cell(v, ci) {
-    if (v == null) return '<td class="num pending">pending</td>';
+    if (v == null) return '<td class="num pending">n/a</td>';
     var title = ci ? ' title="95% interval: ' + pct(ci[0]) + "% to " + pct(ci[1]) + '%"' : "";
     return '<td class="num bar"' + title + ' style="--v:' + v + '"><i></i><b>' + pct(v) + "%</b></td>";
   }
@@ -266,7 +266,7 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: s
       var retired = r.write_retired == null ? '<td class="num pending">n/a</td>'
         : '<td class="num"><span class="pill ' + (r.write_retired ? "bad" : "good") + '">' + r.write_retired + "</span></td>";
       return "<tr><td class=\"rank\">" + (r.rank || "") + '</td><td class="model">' + esc(r.name) + "</td>" +
-        (r.overall == null ? '<td class="num pending">pending</td>' : cell(r.overall)) +
+        (r.overall == null ? '<td class="num pending">n/a</td>' : cell(r.overall)) +
         cell(r.write, r.write_ci) + cell(r.know, r.know_ci) + cell(r.fix, r.fix_ci) + cell(r.hint, r.hint_ci) + retired +
         '<td class="num">$' + (r.cost_usd || 0).toFixed(2) + "</td></tr>";
     }).join("");
@@ -286,13 +286,14 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: s
   fetch("results/summary.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (S) {
     rows = S.board.filter(function (r) { return r.write != null || r.know != null || r.fix != null; });
     var n = 0;
-    rows.forEach(function (r) { if (r.complete) r.rank = ++n; });
+    rows.sort(function (a, b) { return (b.overall || 0) - (a.overall || 0); });
+    rows.forEach(function (r) { if (r.overall != null) r.rank = ++n; });
     document.getElementById("s-models").textContent = rows.length;
-    document.getElementById("s-answers").textContent = S.graded_answers_main.toLocaleString("en-US");
+    document.getElementById("s-answers").textContent = (S.graded_answers_all || S.graded_answers_main).toLocaleString("en-US");
     var partial = rows.filter(function (r) { return !r.complete; }).map(function (r) { return r.name; });
     document.getElementById("board-note").textContent =
-      S.complete_models + " models have complete runs on Write, Know and Fix." +
-      (partial.length ? " Still running: " + partial.join(", ") + "." : "");
+      S.complete_models + " models have all four tasks." +
+      (partial.length ? " No Know score (reasoning used the whole answer budget): " + partial.join(", ") + "." : "");
     var ages = S.retired_ages_years || [];
     if (ages.length) {
       var old = ages.filter(function (a) { return a >= 1; }).length;
@@ -300,7 +301,7 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: s
         " retired names that models wrote (" + Math.round(old / ages.length * 100) +
         "%) had been retired for more than a year when the benchmark ran. This is stale training data, not a fast-moving spec.";
     }
-    if (rows.some(function (r) { return r.hint != null && r.model !== "gemini-3.7-flash"; })) document.getElementById("hint-block").hidden = false;
+    document.getElementById("hint-block").hidden = false;
     document.getElementById("updated").textContent = "Results generated " + S.generated;
     render();
   }).catch(function () {

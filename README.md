@@ -26,6 +26,10 @@ Semconv Drift measures that on Kaggle Benchmarks, with four tasks and no AI judg
 
 Every retired name carries the release and date that retired it, so the analysis can separate stale training data from changes the model could not have seen.
 
+**Scores.** Each task score is the share of cases a model gets fully right. Overall is the average of the task scores a model has, the same rule as the Kaggle leaderboard, and `analyze.py` uses each model's latest complete run, which is the run Kaggle shows.
+
+**Noise floor.** Kaggle's benchmark library drops the temperature unless a model is flagged as supporting it, so the same prompt can give different answers. Seven models ran the Write task twice; `analyze.py` reports how far their results moved with nothing changed (`write_repeats` in `results/summary.json`), which is the yardstick for the version-hint effect.
+
 `build.py` checks every gold answer and required name against the ground truth before writing the task files, so a typo cannot become a wrong answer. `test_grader.py` covers the grader on known inputs.
 
 ## Ground truth
